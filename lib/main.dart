@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/pet_provider.dart';
 import 'providers/coin_provider.dart';
-import 'screens/home_screen.dart';
+import 'screens/pet_screen.dart';
 
 void main() {
   runApp(
@@ -19,6 +19,6 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: HomeScreen());
+    return MaterialApp(home: PetScreen());
   }
 }
