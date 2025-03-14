@@ -7,7 +7,12 @@ import '../widgets/pet_display.dart';
 import 'game_screen.dart';
 import 'shop_screen.dart';
 
-class PetScreen extends StatelessWidget {
+class PetScreen extends StatefulWidget {
+  @override
+  _PetScreenState createState() => _PetScreenState();
+}
+
+class _PetScreenState extends State<PetScreen> {
   @override
   Widget build(BuildContext context) {
     final petProvider = Provider.of<PetProvider>(context);
@@ -42,8 +47,17 @@ class PetScreen extends StatelessWidget {
           ),
           SizedBox(height: 20),
 
+          Text('Happiness:'),
+          LinearProgressIndicator(
+            value: petProvider.pet.happiness / 100,
+            backgroundColor: Colors.grey[300],
+            color: Colors.purple,
+          ),
+          SizedBox(height: 20),
+
           ElevatedButton(onPressed: petProvider.feedPet, child: Text('Feed')),
           ElevatedButton(onPressed: petProvider.cleanPet, child: Text('Clean')),
+          ElevatedButton(onPressed: petProvider.playWithPet, child: Text('Play')),
 
           ElevatedButton(
             onPressed:

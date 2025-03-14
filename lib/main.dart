@@ -19,6 +19,11 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(home: PetScreen());
+    return ChangeNotifierProvider(
+      create: (context) => PetProvider(),
+      child: MaterialApp(
+        home: PetScreen(),
+      ),
+    );
   }
 }
