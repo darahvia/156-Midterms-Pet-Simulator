@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 import '../providers/pet_provider.dart';
 
 class GameScreen extends StatefulWidget {
+  const GameScreen({super.key});
+
   @override
   _GameScreenState createState() => _GameScreenState();
 }

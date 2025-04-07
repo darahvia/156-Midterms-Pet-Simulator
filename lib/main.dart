@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'providers/pet_provider.dart';
 import 'providers/coin_provider.dart';
 import 'screens/pet_screen.dart';
+import 'package:path_provider/path_provider.dart';
 
 void main() {
   runApp(

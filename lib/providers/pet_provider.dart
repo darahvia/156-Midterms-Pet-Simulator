@@ -3,13 +3,29 @@ import '../models/pet.dart';
 import '../services/local_storage.dart';
 import 'dart:async';
 
-class PetProvider with ChangeNotifier {
+class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   Pet pet = Pet(name: 'Fluffy');
   LocalStorage storage = LocalStorage();
+  Timer? _timer;
 
   PetProvider() {
+    WidgetsBinding.instance.addObserver(this);
     loadPetStats();
-    startAutoDecrease();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+      // App is going into background or being closed
+      savePetStats();
+    }
   }
 
   void startAutoDecrease() {
@@ -50,14 +66,14 @@ class PetProvider with ChangeNotifier {
     pet.hunger += 20;
     if (pet.hunger > 100) pet.hunger = 100;
     pet.updateLastUpdated();
-    notifyListeners();
+    savePetStats();
   }
 
   void cleanPet() {
     pet.hygiene += 30;
     if (pet.hygiene > 100) pet.hygiene = 100;
     pet.updateLastUpdated();
-    notifyListeners();
+    savePetStats();
   }
 
   void playWithPet() {
@@ -67,20 +83,21 @@ class PetProvider with ChangeNotifier {
       if (pet.energy < 0) pet.energy = 0;
       if (pet.happiness > 100) pet.happiness = 100;
       pet.updateLastUpdated();
-      notifyListeners();
+      savePetStats();
     }
   }
 
   void addCoins(int amount) {
     pet.updateLastUpdated();
     pet.coins += amount;
+    savePetStats();
   }
 
   void spendCoins(int amount) {
     if (pet.coins >= amount) {
       pet.coins -= amount;
       pet.updateLastUpdated();
-      notifyListeners();
+      savePetStats();
     }
   }
 
