@@ -5,7 +5,7 @@ import '../models/pet.dart';
 class LocalStorage {
   static Future<String> _getFilePath(String filename) async {
     final dir = await getApplicationDocumentsDirectory();
-    return '${dir.path}/$filename.txt';
+    return '${dir.path}/$filename.txtR';
   }
 
   static Future<void> saveCoins(int coins) async {
@@ -29,12 +29,12 @@ class LocalStorage {
     final path = await _getFilePath('petData');
     final file = File(path);
     final content = '''
-      name:${pet.name}
-      hunger:${pet.hunger}
-      hygiene:${pet.hygiene}
-      happiness:${pet.happiness}
-      energy:${pet.energy}
-      lastUpdated:${pet.lastUpdated.toIso8601String()}
+      name:${pet.getName()}
+      hunger:${pet.getHunger()}
+      hygiene:${pet.getHygiene()}
+      happiness:${pet.getHappiness()}
+      energy:${pet.getEnergy()}
+      lastUpdated:${pet.getLastUpdated().toIso8601String()}
       ''';
     await file.writeAsString(content);
     print('Pet data saved to ${file.path}');
@@ -44,18 +44,25 @@ class LocalStorage {
     try {
       final path = await _getFilePath('petData');
       final file = File(path);
-      if (!await file.exists()) return {};
+      if (!await file.exists()) {
+        print("file does not exist!");
+        return {};
+      }
 
       final lines = await file.readAsLines();
       final data = <String, dynamic>{};
       for (var line in lines) {
         final parts = line.split(':');
         if (parts.length == 2) {
-          final key = parts[0];
+          final key = parts[0].trim();
           final value = parts[1];
           if (key == 'lastUpdated') {
             data[key] = DateTime.tryParse(value);
-          } else {
+          } 
+          else if (key == 'name') {
+            data[key] = value; // name is a string, so we keep it as a string
+          } 
+          else {
             data[key] = double.tryParse(value) ?? 0;
           }
         }

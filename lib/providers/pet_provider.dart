@@ -4,7 +4,7 @@ import '../services/local_storage.dart';
 import 'dart:async';
 
 class PetProvider with ChangeNotifier, WidgetsBindingObserver {
-  Pet pet = Pet(name: 'Fluffy');
+  Pet pet = Pet();
   LocalStorage storage = LocalStorage();
   Timer? _timer;
 
@@ -38,19 +38,19 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
 
   Future<void> loadPetStats() async {
     final stats = await storage.loadPetStats();
-    if (stats.isNotEmpty) {
-      pet = Pet(
-        name: 'fluffy',
-        hunger: stats["hunger"] ?? 100,
-        hygiene: stats["hygiene"] ?? 100,
-        happiness: stats["happiness"] ?? 100,
-        energy: stats["energy"] ?? 100,
-        lastUpdated: stats["lastUpdated"] != null ? DateTime.parse(stats["lastUpdated"]) : DateTime.now(),
-      );
-      pet.printStats('loaded');
-      pet.applyElapsedTime();
-      pet.printStats('elapsed');
-    }
+    print(stats);
+    stats.forEach((key, value) {
+      print('Key: $key, Value: $value');  // Print each key and its corresponding value
+    });
+    pet.setName(stats["name"] ?? "Fluffy");
+    pet.setHunger(stats["hunger"] ?? 100);
+    pet.setHygiene(stats["hygiene"] ?? 100);
+    pet.setHappiness(stats["happiness"] ?? 100);
+    pet.setEnergy(stats["energy"] ?? 100);
+    pet.setLastUpdated(stats["lastUpdated"] != null ? DateTime.parse(stats["lastUpdated"]) : DateTime.now());
+    pet.printStats('loaded');
+    pet.applyElapsedTime();
+    pet.printStats('elapsed');
     savePetStats();
     pet.printStats('saved');
     notifyListeners();
@@ -63,25 +63,21 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void feedPet() {
-    pet.hunger += 20;
-    if (pet.hunger > 100) pet.hunger = 100;
+    pet.setHunger((pet.getHunger() + 20).clamp(0,100));
     pet.updateLastUpdated();
     savePetStats();
   }
 
   void cleanPet() {
-    pet.hygiene += 30;
-    if (pet.hygiene > 100) pet.hygiene = 100;
+    pet.setHygiene((pet.getHygiene() + 30).clamp(0,100));
     pet.updateLastUpdated();
     savePetStats();
   }
 
   void playWithPet() {
-    if (pet.energy != 0){
-      pet.energy -= 15;
-      pet.happiness += 10;
-      if (pet.energy < 0) pet.energy = 0;
-      if (pet.happiness > 100) pet.happiness = 100;
+    if (pet.getEnergy() > 15){
+      pet.setEnergy((pet.getEnergy() - 15).clamp(0,100));
+      pet.setHappiness((pet.getHappiness() + 10).clamp(0,100));
       pet.updateLastUpdated();
       savePetStats();
     }
