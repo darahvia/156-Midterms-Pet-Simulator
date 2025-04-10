@@ -7,6 +7,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   Pet pet = Pet();
   LocalStorage storage = LocalStorage();
   Timer? _timer;
+  String mood = "normal";
 
   PetProvider() {
     WidgetsBinding.instance.addObserver(this);
@@ -58,6 +59,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void savePetStats() {
+    mood = pet.getPestState();
     storage.savePetStats(pet);
     notifyListeners();
   }

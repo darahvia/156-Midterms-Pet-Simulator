@@ -2,6 +2,7 @@
 
 class Pet {
   String _name = "";
+  String _petState = "normal";
   double _hunger = 0;
   double _energy = 0;
   double _hygiene = 0;
@@ -9,12 +10,32 @@ class Pet {
   int coins = 0;
   DateTime _lastUpdated = DateTime.now();
 
+
   void decreaseStats() {
     _hunger = (_hunger - 10).clamp(0.0, 100.0);
     _hygiene = (_hygiene - 5).clamp(0.0, 100.0);
     _energy = (_energy + 10).clamp(0.0, 100.0);
     _happiness = (_happiness - 5).clamp(0.0, 100.0);
     _lastUpdated = DateTime.now();
+    setState();
+  }
+
+  void setState(){
+    if (_hygiene < 30){
+      _petState = "dirty";
+    }
+    else if (_hunger < 30){
+      _petState = "hungry";
+    }
+    else if (_energy < 30){
+      _petState = "tired";
+    }
+    else if (_happiness < 30){
+      _petState = "sad";
+    }
+    else{
+      _petState = "normal";
+    }
   }
 
   void applyElapsedTime() {
@@ -28,7 +49,9 @@ class Pet {
       _energy = (_energy + (decreaseAmount * 10)).clamp(0, 100);
       _happiness = (_happiness - (decreaseAmount * 5)).clamp(0, 100);
       _lastUpdated = now;
+      setState();
     }
+
   }
 
   void updateLastUpdated() {
@@ -41,18 +64,22 @@ class Pet {
 
   void setHunger(double h){
     _hunger = h;
+    setState();
   }
 
   void setHygiene(double hy){
     _hygiene = hy;
+    setState();
   }
 
   void setEnergy(double e){
     _energy = e;
+    setState();
   }
 
   void setHappiness(double ha){
     _happiness = ha;
+    setState();
   }
   
   void setLastUpdated(DateTime lu){
@@ -81,6 +108,10 @@ class Pet {
   
   DateTime getLastUpdated(){
     return _lastUpdated;
+  }
+
+  String getPestState(){
+    return _petState;
   }
 
   void printStats(String action) {

@@ -38,6 +38,7 @@ dependencies:
   shared_preferences: ^2.5.2
   path_provider: ^2.1.5
   google_fonts: ^6.2.1
+  assets: ^0.0.2
 
 dev_dependencies:
   flutter_test:
@@ -63,7 +64,21 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - lib/assets/images/cat_normal.jpg
+    - lib/assets/images/cat_normal.png
+    - lib/assets/images/cat_hungry.png
+    - lib/assets/images/cat_dirty.png
+    - lib/assets/images/cat_tired.png
+    - lib/assets/images/livingRoom3.png
+    - lib/assets/images/cat_bowl.png
+    - lib/assets/images/cat_food_bag.png
+    - lib/assets/images/heart_blue.gif
+    - lib/assets/images/heart_orange.gif
+    - lib/assets/images/heart_pink.gif
+    - lib/assets/images/heart_purple.gif
+    - lib/assets/images/heart_red.gif
+    - lib/assets/images/soap.png
+    - lib/assets/images/toy_mouse.png
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
