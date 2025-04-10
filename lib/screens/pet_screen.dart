@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
 import '../widgets/coin_display.dart';
 import '../widgets/pet_display.dart';
+import '../services/music_manager.dart';
 import 'game_screen.dart';
 import 'shop_screen.dart';
 
@@ -155,7 +156,7 @@ class _PetScreenState extends State<PetScreen> {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'lib/assets/images/livingRoom3.png',
+            'assets/images/livingRoom3.png',
             fit: BoxFit.cover,
           ),
       
@@ -266,6 +267,7 @@ class _PetScreenState extends State<PetScreen> {
                       icon: Icons.fastfood,
                       color: Colors.redAccent,
                       onPressed: () {
+                        MusicManager.playSoundEffect('audio/eat.mp3');
                         petProvider.feedPet();
                       }
                     ),
@@ -273,13 +275,19 @@ class _PetScreenState extends State<PetScreen> {
                       label: 'Clean',
                       icon: Icons.bathtub,
                       color: Colors.blueAccent,
-                      onPressed: petProvider.cleanPet,
+                      onPressed: () {
+                        MusicManager.playSoundEffect('audio/bubbles.mp3');
+                        petProvider.cleanPet();
+                      }
                     ),
                     PixelButton(
                       label: 'Play',
                       icon: Icons.play_arrow,
                       color: Colors.purpleAccent,
-                      onPressed: petProvider.playWithPet,
+                      onPressed: () {
+                        MusicManager.playSoundEffect('audio/toy.mp3');
+                        petProvider.playWithPet();
+                      }
                     ),
                   ],
                 ),

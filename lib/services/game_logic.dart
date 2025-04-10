@@ -27,6 +27,21 @@ class GameLogic {
   void computerMove() {
     if (game.winner != "") return; // Don't make a move if the game is over
 
+    int? winningMove = _findWinningMove("O");
+    if (winningMove != null) {
+      game.board[winningMove] = "O";
+      checkWinner();
+      return;
+    }
+
+    // Computer try to block player from winning
+    int? blockingMove = _findWinningMove("X");
+    if (blockingMove != null) {
+      game.board[blockingMove] = "O";
+      checkWinner();
+      return;
+    }
+
     // Find available spots
     List<int> availableMoves = [];
     for (int i = 0; i < game.board.length; i++) {
@@ -41,7 +56,41 @@ class GameLogic {
       int randomIndex = availableMoves[random.nextInt(availableMoves.length)];
       game.board[randomIndex] = "O"; // Computer's move (O)
       checkWinner(); // Check if computer wins after the move
+      return;
     }
+  }
+
+  int? _findWinningMove(String symbol) {
+    List<List<int>> winConditions = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
+
+    for (var condition in winConditions) {
+      String a = game.board[condition[0]];
+      String b = game.board[condition[1]];
+      String c = game.board[condition[2]];
+
+      List<String> values = [a, b, c];
+      int matchCount = values.where((v) => v == symbol).length;
+      int emptyCount = values.where((v) => v == "").length;
+
+      if (matchCount == 2 && emptyCount == 1) {
+        for (int i in condition) {
+          if (game.board[i] == "") {
+            return i;
+          }
+        }
+      }
+    }
+
+    return null;
   }
 
   // Check if a player has won the game

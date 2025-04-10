@@ -11,15 +11,15 @@ class PetDisplay extends StatelessWidget {
 
     // Decide on the image based on the mood
     if (mood == "dirty") {
-      imagePath = 'lib/assets/images/cat_dirty.png';
+      imagePath = 'assets/images/cat_dirty.png';
     } else if (mood == "hungry") {
-      imagePath = 'lib/assets/images/cat_hungry.png';
+      imagePath = 'assets/images/cat_hungry.png';
     } else if (mood == "tired") {
-      imagePath = 'lib/assets/images/cat_tired.png';
+      imagePath = 'assets/images/cat_tired.png';
     } else if (mood == "sad") {
-      imagePath = 'lib/assets/images/cat_normal.png';
+      imagePath = 'assets/images/cat_normal.png';
     } else {
-      imagePath = 'lib/assets/images/cat_normal.png';
+      imagePath = 'assets/images/cat_normal.png';
     }
 
     return Stack(
