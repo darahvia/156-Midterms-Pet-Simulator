@@ -4,134 +4,14 @@ import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
 import '../widgets/coin_display.dart';
 import '../widgets/pet_display.dart';
+import '../widgets/bubble.dart';
+import '../widgets/pixel_button.dart';
+import '../widgets/pixel_progress_bar.dart';
 import '../services/music_manager.dart';
 import 'game_screen.dart';
 import 'shop_screen.dart';
+import 'dart:math';
 
-class PixelButton extends StatefulWidget {
-  final String label;
-  final IconData icon;
-  final VoidCallback? onPressed;
-  final bool isEnabled;
-  final Color color;
-
-  const PixelButton({
-    super.key,
-    required this.label,
-    required this.icon,
-    required this.onPressed,
-    this.isEnabled = true,
-    required this.color,
-  });
-
-  @override
-  State<PixelButton> createState() => _PixelButtonState();
-}
-
-class _PixelButtonState extends State<PixelButton> {
-  bool _isPressed = false;
-
-  void _updatePressed(bool pressed) {
-    if (widget.isEnabled) {
-      setState(() {
-        _isPressed = pressed;
-      });
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final offset = _isPressed ? Offset(0, 0) : const Offset(4, 4);
-    final bgColor = widget.isEnabled
-        ? widget.color
-        : widget.color.withOpacity(0.4);
-
-    return GestureDetector(
-      onTapDown: (_) => _updatePressed(true),
-      onTapUp: (_) {
-        _updatePressed(false);
-        widget.onPressed?.call();
-      },
-      onTapCancel: () => _updatePressed(false),
-      child: Stack(
-        children: [
-          if (!_isPressed && widget.isEnabled)
-            Positioned(
-              left: offset.dx,
-              top: offset.dy,
-              child: Container(
-                width: 110,
-                height: 50,
-                color: Colors.black,
-              ),
-            ),
-          Container(
-            width: 110,
-            height: 50,
-            decoration: BoxDecoration(
-              color: bgColor,
-              border: Border.all(color: Colors.black, width: 2),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(widget.icon, size: 16, color: widget.isEnabled ? Colors.black : Colors.grey),
-                const SizedBox(width: 4),
-                Text(
-                  widget.label,
-                  style: GoogleFonts.pressStart2p(
-                    fontSize: 6,
-                    color: widget.isEnabled ? Colors.black : Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class PixelProgressBar extends StatelessWidget {
-  final double progress; // Value between 0 and 1
-  final double width;
-  final double height;
-  final Color color;
-
-  const PixelProgressBar({
-    required this.progress,
-    required this.width,
-    required this.height,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.grey[300],
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(10),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: List.generate(10, (index) {
-            double segmentWidth = width / 10;
-            return Container(
-              width: segmentWidth,
-              height: height,
-              color: index / 10 <= progress ? color : Colors.transparent,
-            );
-          }),
-        ),
-      ),
-    );
-  }
-}
 
 class PetScreen extends StatefulWidget {
   @override
@@ -139,16 +19,63 @@ class PetScreen extends StatefulWidget {
 }
 
 class _PetScreenState extends State<PetScreen> {
+  final List<Widget> bubbles = [];
+  final List<String> hearts = ['assets/images/heart_blue.gif',
+      'assets/images/heart_orange.gif', 'assets/images/heart_pink.gif',
+      'assets/images/heart_purple.gif', 'assets/images/heart_red.gif'];
 
   @override
   Widget build(BuildContext context) {
     final petProvider = Provider.of<PetProvider>(context);
 
+    final GlobalKey feedButtonKey = GlobalKey();
+    final GlobalKey cleanButtonKey = GlobalKey();
+    final GlobalKey playButtonKey = GlobalKey();
+
+    void addBubble({GlobalKey? key, Offset? position, required String imagePath}) {
+      double startLeft;
+      double startBottom;
+
+      if (key != null) {
+        final RenderBox box = key.currentContext!.findRenderObject() as RenderBox;
+        final Offset widgetPosition = box.localToGlobal(Offset.zero);
+
+        startLeft = widgetPosition.dx + box.size.width / 2 - 20;
+        startBottom = MediaQuery.of(context).size.height - widgetPosition.dy - box.size.height / 2;
+      } else if (position != null) {
+        startLeft = position.dx - 20;
+        startBottom = MediaQuery.of(context).size.height - position.dy;
+      } else {
+        throw ArgumentError('Either key or position must be provided');
+      }
+
+      final bubbleKey = UniqueKey();
+
+      setState(() {
+        bubbles.add(
+          Bubble(
+            key: bubbleKey,
+            left: startLeft,
+            bottom: startBottom,
+            image: imagePath,
+            onComplete: () {
+              setState(() {
+                bubbles.removeWhere((b) => b.key == bubbleKey);
+              });
+            },
+          ),
+        );
+      });
+    }
+
+
     return Scaffold(
-      appBar: AppBar(title: Text('Your Pet',
+      backgroundColor: Colors.transparent,
+      appBar: AppBar(
+        title: Text(petProvider.pet.getName(),
           style: GoogleFonts.pressStart2p(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
           ),
         ),
       ),
@@ -156,7 +83,7 @@ class _PetScreenState extends State<PetScreen> {
         fit: StackFit.expand,
         children: [
           Image.asset(
-            'assets/images/livingRoom3.png',
+            'assets/images/livingRoom.png',
             fit: BoxFit.cover,
           ),
       
@@ -254,7 +181,9 @@ class _PetScreenState extends State<PetScreen> {
                 SizedBox(height: 20),
 
                 CoinDisplay(),
-                PetDisplay(),
+                PetDisplay(onTap: (tapPosition) {
+                  addBubble(position: tapPosition, imagePath: (hearts[Random().nextInt(hearts.length)]));
+                },),
 
                 SizedBox(height: 20),
                 Wrap(
@@ -266,8 +195,10 @@ class _PetScreenState extends State<PetScreen> {
                       label: 'Feed',
                       icon: Icons.fastfood,
                       color: Colors.redAccent,
+                      key: feedButtonKey,
                       onPressed: () {
                         MusicManager.playSoundEffect('audio/eat.mp3');
+                        addBubble(key: feedButtonKey, imagePath: 'assets/images/cat_bowl.png');
                         petProvider.feedPet();
                       }
                     ),
@@ -275,8 +206,10 @@ class _PetScreenState extends State<PetScreen> {
                       label: 'Clean',
                       icon: Icons.bathtub,
                       color: Colors.blueAccent,
+                      key: cleanButtonKey,
                       onPressed: () {
                         MusicManager.playSoundEffect('audio/bubbles.mp3');
+                        addBubble(key: cleanButtonKey, imagePath: 'assets/images/soap.png');
                         petProvider.cleanPet();
                       }
                     ),
@@ -284,8 +217,10 @@ class _PetScreenState extends State<PetScreen> {
                       label: 'Play',
                       icon: Icons.play_arrow,
                       color: Colors.purpleAccent,
+                      key: playButtonKey,
                       onPressed: () {
                         MusicManager.playSoundEffect('audio/toy.mp3');
+                        addBubble(key: playButtonKey, imagePath: 'assets/images/toy_mouse.png');
                         petProvider.playWithPet();
                       }
                     ),
@@ -319,6 +254,7 @@ class _PetScreenState extends State<PetScreen> {
               ],
             ),
           ),
+          ...bubbles,
         ]
       ),
     );

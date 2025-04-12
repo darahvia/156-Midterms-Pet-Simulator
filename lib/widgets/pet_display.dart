@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/pet_provider.dart';
+import '../services/music_manager.dart';
 
 class PetDisplay extends StatelessWidget {
+  final void Function(Offset tapPosition)? onTap;
+
+  const PetDisplay({super.key, this.onTap});
+
   @override
   Widget build(BuildContext context) {
     final mood = context.watch<PetProvider>().mood;
+    final petProvider = context.read<PetProvider>();
 
     String imagePath;
 
@@ -22,20 +28,24 @@ class PetDisplay extends StatelessWidget {
       imagePath = 'assets/images/cat_normal.png';
     }
 
-    return Stack(
-      children: [
-        // Centered image with smooth transition using AnimatedSwitcher
-        Center(
-          child: AnimatedSwitcher(
-            duration: Duration(milliseconds: 500),  // Adjust duration for smoother/faster transition
-            child: Image.asset(
-              imagePath,
-              key: ValueKey<String>(imagePath), // Ensures the image changes correctly
-              fit: BoxFit.cover,
-            ),
+    return GestureDetector(
+      onTapDown: (details) {
+        if (onTap != null) {
+          MusicManager.playSoundEffect('audio/meow.mp3');
+          petProvider.poke();
+          onTap!(details.globalPosition);
+        }
+      },
+      child: Center(
+        child: AnimatedSwitcher(
+          duration: Duration(milliseconds: 500),
+          child: Image.asset(
+            imagePath,
+            key: ValueKey<String>(imagePath),
+            fit: BoxFit.cover,
           ),
         ),
-      ],
+      ),
     );
   }
 }

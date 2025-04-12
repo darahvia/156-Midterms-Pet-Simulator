@@ -34,7 +34,10 @@ class LocalStorage {
       hygiene:${pet.getHygiene()}
       happiness:${pet.getHappiness()}
       energy:${pet.getEnergy()}
-      lastUpdated:${pet.getLastUpdated().toIso8601String()}
+      lastUpdatedHunger:${pet.getLastUpdated('hunger').toIso8601String()}
+      lastUpdatedHygiene:${pet.getLastUpdated('hygiene').toIso8601String()}
+      lastUpdatedEnergy:${pet.getLastUpdated('energy').toIso8601String()}
+      lastUpdatedHappiness:${pet.getLastUpdated('happiness').toIso8601String()}
       ''';
     await file.writeAsString(content);
     print('Pet data saved to ${file.path}');

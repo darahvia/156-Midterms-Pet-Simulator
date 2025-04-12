@@ -1,68 +1,79 @@
 import 'package:flutter/material.dart';
 
 class Bubble extends StatefulWidget {
-  final Offset startOffset;
+  final double left;
+  final double bottom;
   final VoidCallback onComplete;
+  final String image;
 
-  const Bubble({required this.startOffset, required this.onComplete});
+  const Bubble({
+    super.key,
+    required this.left,
+    required this.bottom,
+    required this.onComplete,
+    required this.image,
+  });
 
   @override
-  _BubbleState createState() => _BubbleState();
+  State<Bubble> createState() => _BubbleState();
 }
 
 class _BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<Offset> _animation;
-  late Animation<double> _fade;
+  late final AnimationController _controller;
+  late final Animation<double> _riseAnimation;
+  late final Animation<double> _opacityAnimation;
 
   @override
   void initState() {
     super.initState();
+
     _controller = AnimationController(
-      duration: Duration(milliseconds: 1000),
+      duration: const Duration(seconds: 5),
       vsync: this,
     );
 
-    _animation = Tween<Offset>(
-      begin: widget.startOffset,
-      end: Offset(widget.startOffset.dx, widget.startOffset.dy - 200), // Bubble moves up
-    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOut));
+    _riseAnimation = Tween<double>(begin: 0, end: 300).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeOut),
+    );
 
-    _fade = Tween<double>(begin: 1, end: 0).animate(_controller); // Fade out the bubble
+    _opacityAnimation = Tween<double>(begin: 1, end: 0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    );
 
-    _controller.forward().then((_) {
-      widget.onComplete(); // Call onComplete after animation
-      print('Animation completed');
+    _controller.forward();
+
+    _controller.addStatusListener((status) {
+      if (status == AnimationStatus.completed) {
+        widget.onComplete();
+      }
     });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
       animation: _controller,
-      builder: (_, __) {
+      builder: (context, child) {
         return Positioned(
-          left: 100, // Fixed position
-          top: 100,
+          left: widget.left,
+          bottom: widget.bottom + _riseAnimation.value,
           child: Opacity(
-            opacity: _fade.value,
-            child: Container(
-              width: 50,
-              height: 50,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: Colors.blue.withOpacity(0.8),
-              ),
-            ),
+            opacity: _opacityAnimation.value,
+            child: child,
           ),
         );
       },
+      child: Image.asset(
+        widget.image,
+        width: 100,
+        height: 100,
+      )
     );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 }

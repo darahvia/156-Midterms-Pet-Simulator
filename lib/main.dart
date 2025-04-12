@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/pet_provider.dart';
 import 'providers/coin_provider.dart';
-import 'screens/pet_screen.dart';
+import 'screens/start_screen.dart';
 import 'services/music_manager.dart';
 //import 'package:path_provider/path_provider.dart';
 
@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: PetScreen(),
+      home: StartScreen(),
       debugShowCheckedModeBanner: false,
     );
   }
