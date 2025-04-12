@@ -1,7 +1,17 @@
 // screens/shop_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
+import '../widgets/coin_display.dart';
+import '../widgets/pet_display.dart';
+import '../widgets/bubble.dart';
+import '../widgets/pixel_button.dart';
+import '../widgets/pixel_progress_bar.dart';
+import '../services/music_manager.dart';
+import 'game_screen.dart';
+import 'shop_screen.dart';
+import 'dart:math';
 
 class ShopScreen extends StatelessWidget {
   @override
@@ -28,11 +38,10 @@ class ShopScreen extends StatelessWidget {
                 SizedBox(width: 8),
                 Text(
                   '${petProvider.pet.coins} Coins',
-                  style: TextStyle(
+                  style: GoogleFonts.pressStart2p(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    fontFamily: 'PixelifySans',
                   ),
                 ),
               ],
@@ -57,18 +66,21 @@ class ShopScreen extends StatelessWidget {
                     _buildShopItem(
                       context,
                       title: 'Food - 10 coins',
+                      imagePath: 'lib/assets/images/food.png',
                       onBuy: () => _confirmPurchase(context, petProvider, 10, petProvider.feedPet),
                     ),
                     SizedBox(height: 16), // Space between buttons
                     _buildShopItem(
                       context,
                       title: 'Toy - 15 coins',
+                      imagePath: 'lib/assets/images/toy.png',
                       onBuy: () => _confirmPurchase(context, petProvider, 15, petProvider.playWithPet),
                     ),
                     SizedBox(height: 16), // Space between buttons
                     _buildShopItem(
                       context,
                       title: 'Medicine - 20 coins',
+                      imagePath: 'lib/assets/images/medicine.png',
                       onBuy: () => _confirmPurchase(context, petProvider, 20, petProvider.cleanPet),
                     ),
                   ],
@@ -93,10 +105,9 @@ class ShopScreen extends StatelessWidget {
               ),
               child: Text(
                 'Back',
-                style: TextStyle(
+                style: GoogleFonts.pressStart2p(
                   fontSize: 16,
                   color: Colors.black,
-                  fontFamily: 'PixelifySans',
                 ),
               ),
             ),
@@ -106,11 +117,11 @@ class ShopScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildShopItem(BuildContext context, {required String title, required VoidCallback onBuy}) {
+  Widget _buildShopItem(BuildContext context, {required String title, required String imagePath, required VoidCallback onBuy}) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 8),
       width: 150,
-      height: 50, // Fixed height for the button
+      height: 80, // Adjusted height to fit image and text
       decoration: BoxDecoration(
         color: Color(0xFFFBBF65), // Button color
         border: Border.all(color: Colors.black, width: 2), // Black border
@@ -121,19 +132,29 @@ class ShopScreen extends StatelessWidget {
           ),
         ],
       ),
-      child: TextButton(
-        onPressed: onBuy,
-        style: TextButton.styleFrom(
-          padding: EdgeInsets.zero, // Remove default padding
-        ),
-        child: Text(
-          title,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black,
-            fontFamily: 'PixelifySans', // Use Pixelify Sans font
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Image.asset(
+            imagePath,
+            width: 40,
+            height: 40,
           ),
-        ),
+          SizedBox(height: 4),
+          TextButton(
+            onPressed: onBuy,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero, // Remove default padding
+            ),
+            child: Text(
+              title,
+              style: GoogleFonts.pressStart2p(
+                fontSize: 10,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -145,19 +166,17 @@ class ShopScreen extends StatelessWidget {
         backgroundColor: Color(0xFFFF6F71),
         title: Text(
           'Confirm Purchase',
-          style: TextStyle(
+          style: GoogleFonts.pressStart2p(
             fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.white,
-            fontFamily: 'PixelifySans',
           ),
         ),
         content: Text(
           'Are you sure you want to buy this item for $cost coins?',
-          style: TextStyle(
+          style: GoogleFonts.pressStart2p(
             fontSize: 16,
             color: Colors.white,
-            fontFamily: 'PixelifySans',
           ),
         ),
         actions: [
@@ -165,10 +184,9 @@ class ShopScreen extends StatelessWidget {
             onPressed: () => Navigator.of(ctx).pop(),
             child: Text(
               'Cancel',
-              style: TextStyle(
+              style: GoogleFonts.pressStart2p(
                 fontSize: 16,
                 color: Colors.white,
-                fontFamily: 'PixelifySans',
               ),
             ),
           ),
@@ -189,10 +207,9 @@ class ShopScreen extends StatelessWidget {
             },
             child: Text(
               'Buy',
-              style: TextStyle(
+              style: GoogleFonts.pressStart2p(
                 fontSize: 16,
                 color: Colors.white,
-                fontFamily: 'PixelifySans',
               ),
             ),
           ),
