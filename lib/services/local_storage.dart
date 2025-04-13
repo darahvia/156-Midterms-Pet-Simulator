@@ -7,7 +7,7 @@ class LocalStorage {
   //getting file path of needed file
   static Future<String> _getFilePath(String filename) async {
     final dir = await getApplicationDocumentsDirectory();
-    return '${dir.path}/$filename.txtR';
+    return '${dir.path}/$filename.txt';
   }
 
   Future<void> saveInventory(Inventory inventory) async {
@@ -17,6 +17,7 @@ class LocalStorage {
       coin:${inventory.getCoin()}
       food:${inventory.getFood()}
       soap:${inventory.getSoap()}
+      medicine:${inventory.getMedicine()}
       ''';
     await file.writeAsString(content);
   }

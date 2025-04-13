@@ -16,7 +16,9 @@ class PetDisplay extends StatelessWidget {
     String imagePath;
 
     // Decide on the image based on the mood
-    if (mood == "dirty") {
+    if (petProvider.pet.getIsSick() == true) {
+      imagePath = 'assets/images/cat_sick.png';
+    } else if (mood == "dirty") {
       imagePath = 'assets/images/cat_dirty.png';
     } else if (mood == "hungry") {
       imagePath = 'assets/images/cat_hungry.png';
@@ -31,8 +33,14 @@ class PetDisplay extends StatelessWidget {
     return GestureDetector(
       onTapDown: (details) {
         if (onTap != null) {
-          MusicManager.playSoundEffect('audio/meow.mp3');
-          petProvider.poke();
+          if(mood != "sick"){
+            MusicManager.playSoundEffect('audio/meow.mp3');
+            petProvider.poke();
+          } else{
+            MusicManager.playSoundEffect('audio/angry_meow.mp3');
+            petProvider.poke();
+          }
+
           onTap!(details.globalPosition);
         }
       },

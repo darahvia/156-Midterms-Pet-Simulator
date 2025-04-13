@@ -41,12 +41,6 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
 
   Future<void> loadPetStats({String? petName}) async {
     final stats = await storage.loadPetStats();
-    print(stats);
-    stats.forEach((key, value) {
-      print(
-        'Key: $key, Value: $value',
-      ); // Print each key and its corresponding value
-    });
     pet.setName(stats["name"] ?? petName);
     pet.setHunger(stats["hunger"] ?? 100);
     pet.setHygiene(stats["hygiene"] ?? 100);
@@ -76,12 +70,13 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
           ? DateTime.parse(stats["lastUpdated"])
           : DateTime.now(),
     );
-    pet.printStats('loaded');
     pet.applyElapsedTime();
-    pet.printStats('elapsed');
+    if((pet.getHunger() == 0) && (pet.getHygiene() == 0) && (pet.getHappiness() == 0)){
+      pet.setIsSick(true);
+    }
     savePetStats();
     pet.printStats('saved');
-    notifyListeners();
+    //notifyListeners();
     startAutoDecrease();
   }
 
@@ -110,7 +105,21 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void poke() {
-    pet.setHappiness((pet.getHappiness() + 3).clamp(0, 100));
+    if (pet.getPetState() != "sick"){
+      pet.setHappiness((pet.getHappiness() + 3).clamp(0, 100));
+      savePetStats();
+    } else{
+      pet.setEnergy((pet.getEnergy() - 3).clamp(0, 100));
+      savePetStats();
+    }
+  }
+
+  void healPet(){
+    pet.setIsSick(false);
+    pet.setHunger(100);
+    pet.setHygiene(100);
+    pet.setEnergy(100);
+    pet.setHappiness(100);
     savePetStats();
   }
 }

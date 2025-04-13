@@ -74,6 +74,7 @@ flutter:
     - assets/images/cat_hungry.png
     - assets/images/cat_dirty.png
     - assets/images/cat_tired.png
+    - assets/images/cat_sick.png
     - assets/images/livingRoom.png
     - assets/images/gameRoom.png
     - assets/images/outdoor.png
@@ -84,6 +85,7 @@ flutter:
     - assets/images/heart_pink.gif
     - assets/images/heart_purple.gif
     - assets/images/heart_red.gif
+    - assets/images/heart_broken.png
     - assets/images/soap.png
     - assets/images/toy_mouse.png
     - assets/images/board.png
@@ -94,8 +96,7 @@ flutter:
     - assets/images/dead_bg.png
     - assets/images/cat_dead.png
     - assets/images/medicine.png
-    - lib/assets/images/board.png
-     
+    
     #audio
     - assets/audio/background_music.mp3
     - assets/audio/bubbles.mp3
@@ -106,6 +107,8 @@ flutter:
     - assets/audio/meow.mp3
     - assets/audio/move.mp3
     - assets/audio/button_tap.mp3
+    - assets/audio/angry_meow.mp3
+    - assets/audio/angry.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
