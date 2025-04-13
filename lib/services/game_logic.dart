@@ -11,25 +11,24 @@ class GameLogic {
   late Game game;
 
   GameLogic(this.coinProvider, this.difficulty) {
-    game = Game(); // Initialize the game state
+    game = Game(); //initialize the game state
   }
-  // Handle player move
+
+  //handle player move
   bool playerMove(int index) {
     if (game.board[index] == "" && game.winner == "") {
       game.board[index] = "X"; // Player's move (X)
       MusicManager.playSoundEffect('audio/move.mp3');
       checkWinner(); // Check if player wins after the move
-      if (game.winner == "") {
-        computerMove(); // If no winner, the computer will play next
-      }
       return true; // Move was successful
     }
     return false; // Invalid move (spot is taken)
   }
 
-  // Handle computer move (O)
-  void computerMove() {
+  //handle computer move (O)
+  Future<void> computerMove() async {
     if (game.winner != "") return;
+    MusicManager.playSoundEffect('audio/move.mp3');
 
     if (difficulty == Difficulty.easy) {
       _randomMove(); // only random
@@ -71,8 +70,8 @@ class GameLogic {
     if (availableMoves.isNotEmpty) {
       Random random = Random();
       int randomIndex = availableMoves[random.nextInt(availableMoves.length)];
-      game.board[randomIndex] = "O"; // Computer's move (O)
-      checkWinner(); // Check if computer wins after the move
+      game.board[randomIndex] = "O";
+      checkWinner();
     }
   }
 
@@ -131,7 +130,7 @@ class GameLogic {
 
       if (a != "" && a == b && b == c) {
         game.winner = a;
-        // Reward coins if the player (X) wins
+        //reward coins if the player (X) wins
         if (game.winner == "X") {
           int reward = 0;
           switch (difficulty) {
@@ -149,22 +148,21 @@ class GameLogic {
           MusicManager.playSoundEffect('audio/yay.mp3');
         } else {
           MusicManager.playSoundEffect('audio/boo.mp3');
-        } // Set the winner (either "X" or "O")
+        } //set the winner (either "X" or "O")
         return;
       }
     }
 
-    // Check if the game is a draw
+    //check if the game is a draw
     if (!game.board.contains("") && game.winner == "") {
       game.winner = "Draw";
     }
   }
 
-  // Reset the game
+  //reset the game
   void resetGame() {
     game.board = List.filled(9, ""); // Reset the board to empty
     game.currentPlayer = "X"; // Reset to player's turn (X)
     game.winner = ""; // No winner
-    coinProvider.addCoins(0);
   }
 }

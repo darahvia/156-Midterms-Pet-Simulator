@@ -28,22 +28,21 @@ class _GameScreenState extends State<GameScreen> {
       Provider.of<CoinProvider>(context, listen: false),
       selectedDifficulty,
     );
-
-    //auto-reduce energy or perform background action in PetProvider
-    //Future.delayed(Duration.zero, () async {
-    //  while (mounted) {
-    //    await Future.delayed(Duration(seconds: 2));
-    //this simulates playing with the pet which affects energy
-    //    Provider.of<PetProvider>(context, listen: false).playWithPet();
-    //  }
-    //});
   }
 
-  //handles player's move, updates score, and coins if they win
-  void _handleTap(int index) {
-    setState(() {
-      gameLogic.playerMove(index);
-    });
+  void _handleTap(int index) async {
+    bool moved = gameLogic.playerMove(index); // do not await here
+
+    if (moved) {
+      setState(() {}); // show player's move right away
+
+      // now wait for computer move
+      await Future.delayed(
+        Duration(milliseconds: 400),
+      ); // slight delay to allow UI update
+      await gameLogic.computerMove();
+      setState(() {}); // show computer's move
+    }
   }
 
   void _changeDifficulty(Difficulty diff) {
@@ -53,7 +52,7 @@ class _GameScreenState extends State<GameScreen> {
         Provider.of<CoinProvider>(context, listen: false),
         selectedDifficulty,
       );
-      gameLogic.resetGame(); // Reset the game when difficulty changes
+      gameLogic.resetGame(); //reset the game when difficulty changes
     });
   }
 
@@ -83,10 +82,9 @@ class _GameScreenState extends State<GameScreen> {
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Difficulty selection buttons
-              // Difficulty selection buttons
               Wrap(
                 spacing: 8,
+                //difficulty selection buttons
                 children:
                     Difficulty.values.map((diff) {
                       Color buttonColor;
@@ -164,7 +162,6 @@ class _GameScreenState extends State<GameScreen> {
               ),
               SizedBox(height: 20),
               // Show the winner or who's turn it is
-              // Show the winner or who's turn it is
               Column(
                 children: [
                   Text(
@@ -172,7 +169,7 @@ class _GameScreenState extends State<GameScreen> {
                         ? (game.winner == "Draw"
                             ? "Draw"
                             : "${game.winner} wins!")
-                        : "Turn: ${game.currentPlayer}",
+                        : "",
                     style: GoogleFonts.pressStart2p(
                       fontSize: 14, // Adjust the font size
                       fontWeight: FontWeight.bold,
@@ -180,7 +177,7 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                 ],
               ),
-              
+
               SizedBox(height: 10),
               // Button to end the game and go back to the previous screen
               Wrap(
