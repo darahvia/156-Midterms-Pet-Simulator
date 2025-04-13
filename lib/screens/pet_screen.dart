@@ -34,21 +34,25 @@ class _PetScreenState extends State<PetScreen> {
     final petProvider = Provider.of<PetProvider>(context);
     final coinProvider = Provider.of<CoinProvider>(context);
     // Check if all stats are zero
-    if (petProvider.pet.getHunger() == 0 &&
-        petProvider.pet.getEnergy() == 0 &&
-        petProvider.pet.getHygiene() == 0 &&
-        petProvider.pet.getHappiness() == 0) {
-      // Navigate to DeathScreen
-      Future.microtask(() {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const DeathScreen()),
-        );
-      });
-    }
     final GlobalKey feedButtonKey = GlobalKey();
     final GlobalKey cleanButtonKey = GlobalKey();
     final GlobalKey playButtonKey = GlobalKey();
+    @override
+    void initState() {
+      super.initState();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final pet = Provider.of<PetProvider>(context, listen: false).pet;
+        if (pet.getHunger() == 0 &&
+            pet.getEnergy() == 0 &&
+            pet.getHygiene() == 0 &&
+            pet.getHappiness() == 0) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DeathScreen()),
+          );
+        }
+      });
+    }
 
     void addBubble({
       GlobalKey? key,
