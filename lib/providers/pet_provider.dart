@@ -48,10 +48,10 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
       ); // Print each key and its corresponding value
     });
     pet.setName(stats["name"] ?? petName);
-    pet.setHunger(stats["hunger"] ?? 0);
-    pet.setHygiene(stats["hygiene"] ?? 0);
-    pet.setHappiness(stats["happiness"] ?? 0);
-    pet.setEnergy(stats["energy"] ?? 0);
+    pet.setHunger(stats["hunger"] ?? 100);
+    pet.setHygiene(stats["hygiene"] ?? 100);
+    pet.setHappiness(stats["happiness"] ?? 100);
+    pet.setEnergy(stats["energy"] ?? 100);
     pet.setLastUpdated(
       'hunger',
       stats["lastUpdatedHunger"] != null
