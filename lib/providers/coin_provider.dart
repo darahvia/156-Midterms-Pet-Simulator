@@ -39,6 +39,7 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver{
     inventory.setCoin(bag["coin"] ?? 50);
     inventory.setFood(bag["food"] ?? 10);
     inventory.setSoap(bag["soap"] ?? 10);
+    inventory.setMedicine(bag["medicine"] ?? 20);
     saveInventory();
     notifyListeners();
   }
@@ -80,6 +81,11 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver{
     inventory.setSoap(inventory.getFood() + num);
     saveInventory();
   }
+
+  void buyMedicine(int num) {
+  inventory.setMedicine(inventory.getMedicine() + num); // Add medicine to inventory
+  saveInventory();
+}
 
   //void resetCoins() {
   //  _coins = 0;

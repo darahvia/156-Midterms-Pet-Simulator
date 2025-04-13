@@ -47,7 +47,7 @@ class ShopScreen extends StatelessWidget {
                 Icon(Icons.monetization_on, color: Colors.yellow, size: 32),
                 SizedBox(width: 8),
                 Text(
-                  '${coinProvider.inventory.getCoin} Coins',
+                  '${coinProvider.inventory.getCoin()} Coins', // Use inventory.getCoin()
                   style: GoogleFonts.pressStart2p(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -87,21 +87,27 @@ class ShopScreen extends StatelessWidget {
                       context,
                       title: 'Food - 10 coins',
                       imagePath: 'assets/images/cat_food_bag.png',
-                      onBuy: () => _confirmPurchase(context, petProvider, coinProvider, 10, petProvider.feedPet),
+                      onBuy: () => _confirmPurchase(context, coinProvider, 10, () {
+                        coinProvider.buyFood(1); // Add 1 food to inventory
+                      }),
                     ),
                     SizedBox(height: 16),
                     _buildShopItem(
                       context,
-                      title: 'Soap - 15 coins',
+                      title: 'Soap - 10 coins',
                       imagePath: 'assets/images/soap.png',
-                      onBuy: () => _confirmPurchase(context, petProvider, coinProvider, 15, petProvider.playWithPet),
+                      onBuy: () => _confirmPurchase(context, coinProvider, 10, () {
+                        coinProvider.buySoap(1); // Add 1 soap to inventory
+                      }),
                     ),
                     SizedBox(height: 16),
                     _buildShopItem(
                       context,
                       title: 'Medicine - 20 coins',
                       imagePath: 'assets/images/medicine.png',
-                      onBuy: () => _confirmPurchase(context, petProvider, coinProvider, 20, petProvider.cleanPet),
+                      onBuy: () => _confirmPurchase(context, coinProvider, 20, () {
+                        coinProvider.buyMedicine(1); // Add 1 medicine to inventory
+                      }),
                     ),
                   ],
                 ),
@@ -206,7 +212,7 @@ class ShopScreen extends StatelessWidget {
     );
   }
 
-  void _confirmPurchase(BuildContext context, PetProvider petProvider, CoinProvider coinProvider, int cost, VoidCallback onSuccess) {
+  void _confirmPurchase(BuildContext context, CoinProvider coinProvider, int cost, VoidCallback onSuccess) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -241,8 +247,8 @@ class ShopScreen extends StatelessWidget {
             onPressed: () {
               Navigator.of(ctx).pop();
               if (coinProvider.inventory.getCoin() >= cost) {
-                coinProvider.spendCoins(cost);
-                onSuccess();
+                coinProvider.spendCoins(cost); // Deduct coins
+                onSuccess(); // Add item to inventory
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Purchase successful!')),
                 );
