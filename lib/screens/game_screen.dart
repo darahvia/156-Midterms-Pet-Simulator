@@ -40,12 +40,12 @@ class _GameScreenState extends State<GameScreen> {
       if (success) {
         //if player wins (X), reward them with coins (5 coins)
         if (gameLogic.game.winner == "X") {
-          Provider.of<PetProvider>(context, listen: false).addCoins(5);
+          Provider.of<CoinProvider>(context, listen: false).addCoins(5);
           score += 1; // Update coins in game logic
         }
         if (gameLogic.game.winner == "O") {
           //if computer wins (O), deduct coins (2 coins)
-          Provider.of<PetProvider>(context, listen: false).spendCoins(2);
+          Provider.of<CoinProvider>(context, listen: false).spendCoins(2);
         }
       }
     });
@@ -54,7 +54,7 @@ class _GameScreenState extends State<GameScreen> {
   @override
   Widget build(BuildContext context) {
     final game = gameLogic.game;
-    final coins = Provider.of<CoinProvider>(context).coins; // Fetch current coins
+    final coins = Provider.of<CoinProvider>(context).inventory.getCoin(); // Fetch current coins
 
     return Scaffold(
       appBar: AppBar(

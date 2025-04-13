@@ -7,7 +7,7 @@ class GameLogic {
   late Game game;
 
   GameLogic(this.coinProvider) {
-    game = coinProvider.game; // Initialize game with data from CoinProvider
+    game = Game(); // Initialize game with data from CoinProvider
   }
 
   // Handle player move

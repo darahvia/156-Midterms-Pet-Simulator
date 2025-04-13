@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../providers/pet_provider.dart';
+import '../providers/coin_provider.dart';
 
 class CoinDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final petProvider = Provider.of<PetProvider>(context);
+    final coinProvider = Provider.of<CoinProvider>(context);
 
     return Text(
-      'Coins: ${petProvider.pet.coins}',
+      'Coins: ${coinProvider.inventory.getCoin()}',
       style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
     );
   }
