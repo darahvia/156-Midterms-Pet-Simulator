@@ -1,5 +1,5 @@
 class Game {
-  int coins;
+  //int coins;
 
   //Tic Tac Toe board represented as a list of 9 strings (empty, X, or O)
   List<String> board;
@@ -12,7 +12,7 @@ class Game {
 
   //Constructor
   Game({
-    this.coins = 0,
+    //this.coins = 0,
     List<String>? board,
     this.currentPlayer = "X", // Player starts first
     this.winner = "",

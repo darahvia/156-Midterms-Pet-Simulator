@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import '../services/game_logic.dart';
 import '../providers/coin_provider.dart';
 import '../widgets/pixel_button.dart';
-import '../providers/pet_provider.dart';
+//import '../providers/pet_provider.dart';
+import '../widgets/coin_display.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
@@ -15,19 +17,23 @@ class GameScreen extends StatefulWidget {
 class _GameScreenState extends State<GameScreen> {
   late GameLogic gameLogic;
   int score = 0;
+  Difficulty selectedDifficulty = Difficulty.easy;
 
   @override
   void initState() {
     super.initState();
 
     //initialize gameLogic and pass the CoinProvider to it
-    gameLogic = GameLogic(Provider.of<CoinProvider>(context, listen: false));
+    gameLogic = GameLogic(
+      Provider.of<CoinProvider>(context, listen: false),
+      selectedDifficulty,
+    );
 
     //auto-reduce energy or perform background action in PetProvider
     //Future.delayed(Duration.zero, () async {
     //  while (mounted) {
     //    await Future.delayed(Duration(seconds: 2));
-        //this simulates playing with the pet which affects energy
+    //this simulates playing with the pet which affects energy
     //    Provider.of<PetProvider>(context, listen: false).playWithPet();
     //  }
     //});
@@ -36,48 +42,77 @@ class _GameScreenState extends State<GameScreen> {
   //handles player's move, updates score, and coins if they win
   void _handleTap(int index) {
     setState(() {
-      final success = gameLogic.playerMove(index);
-      if (success) {
-        //if player wins (X), reward them with coins (5 coins)
-        if (gameLogic.game.winner == "X") {
-          Provider.of<CoinProvider>(context, listen: false).addCoins(5);
-          score += 1; // Update coins in game logic
-        }
-        if (gameLogic.game.winner == "O") {
-          //if computer wins (O), deduct coins (2 coins)
-          Provider.of<CoinProvider>(context, listen: false).spendCoins(2);
-        }
-      }
+      gameLogic.playerMove(index);
+    });
+  }
+
+  void _changeDifficulty(Difficulty diff) {
+    setState(() {
+      selectedDifficulty = diff;
+      gameLogic = GameLogic(
+        Provider.of<CoinProvider>(context, listen: false),
+        selectedDifficulty,
+      );
+      gameLogic.resetGame(); // Reset the game when difficulty changes
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final game = gameLogic.game;
-    final coins = Provider.of<CoinProvider>(context).inventory.getCoin(); // Fetch current coins
-
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        title: Text("Tic Tac Toe Game"),
+        title: Text(
+          "Tic Tac Toe",
+          style: GoogleFonts.pressStart2p(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         actions: [
           // Display current coin count in the app bar
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Center(child: Text("Coins: $coins")),
-          ),
+          Padding(padding: const EdgeInsets.all(12.0), child: CoinDisplay()),
         ],
       ),
+
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/images/gameRoom.png',
-            fit: BoxFit.cover,
-          ),
+          Image.asset('assets/images/gameRoom.png', fit: BoxFit.cover),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Difficulty selection buttons
+              // Difficulty selection buttons
+              Wrap(
+                spacing: 8,
+                children:
+                    Difficulty.values.map((diff) {
+                      Color buttonColor;
+                      switch (diff) {
+                        case Difficulty.easy:
+                          buttonColor = Colors.green;
+                          break;
+                        case Difficulty.medium:
+                          buttonColor = Colors.yellow;
+                          break;
+                        case Difficulty.hard:
+                          buttonColor = Colors.blue;
+                          break;
+                      }
+
+                      return PixelButton(
+                        label: diff.name.toUpperCase(),
+                        icon: Icons.videogame_asset,
+                        color: buttonColor,
+                        isEnabled: selectedDifficulty != diff,
+                        onPressed: () => _changeDifficulty(diff),
+                      );
+                    }).toList(),
+              ),
+
+              SizedBox(height: 10),
               // Game grid (Tic Tac Toe board)
               Container(
                 margin: EdgeInsets.all(10),
@@ -99,19 +134,28 @@ class _GameScreenState extends State<GameScreen> {
                           game.currentPlayer == "X" &&
                                   game.board[index] == "" &&
                                   game.winner == ""
-                              ? () => _handleTap(index) // Allow player to make a move
+                              ? () => _handleTap(
+                                index,
+                              ) // Allow player to make a move
                               : null,
                       child: Container(
                         margin: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                          color: Colors.transparent,
-                        ),
+                        decoration: BoxDecoration(color: Colors.transparent),
                         child: Center(
-                          child: game.board[index] == "X"
-                            ? Image.asset('assets/images/X.png')
-                            : game.board[index] == "O"
-                                ? Image.asset('assets/images/O.png')
-                                : null,
+                          child:
+                              game.board[index] == "X"
+                                  ? SizedBox(
+                                    width: 60,
+                                    height: 60,
+                                    child: Image.asset('assets/images/X.png'),
+                                  )
+                                  : game.board[index] == "O"
+                                  ? SizedBox(
+                                    width: 60,
+                                    height: 60,
+                                    child: Image.asset('assets/images/O.png'),
+                                  )
+                                  : null,
                         ),
                       ),
                     );
@@ -125,15 +169,26 @@ class _GameScreenState extends State<GameScreen> {
                 children: [
                   Text(
                     game.winner != ""
-                        ? (game.winner == "Draw" ? "Draw" : "${game.winner} wins!")
+                        ? (game.winner == "Draw"
+                            ? "Draw"
+                            : "${game.winner} wins!")
                         : "Turn: ${game.currentPlayer}",
-                    style: TextStyle(fontSize: 24),
+                    style: GoogleFonts.pressStart2p(
+                      fontSize: 14, // Adjust the font size
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ],
               ),
 
               // Show the score that updates with each valid move
-              Text("Score: $score", style: TextStyle(fontSize: 20)),
+              Text(
+                "Score: $score",
+                style: GoogleFonts.pressStart2p(
+                  fontSize: 14, // Adjust the font size
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               SizedBox(height: 10),
               // Button to reset the game
               SizedBox(height: 10),
@@ -145,15 +200,16 @@ class _GameScreenState extends State<GameScreen> {
                   PixelButton(
                     label: 'Continue',
                     icon: Icons.exit_to_app,
-                    color: Colors.redAccent,
+                    color: Colors.greenAccent,
                     isEnabled: game.winner != "",
-                    onPressed: game.winner != ""
-                      ? () {
-                          setState(() {
-                            gameLogic.resetGame();
-                          });
-                        }
-                      : null,
+                    onPressed:
+                        game.winner != ""
+                            ? () {
+                              setState(() {
+                                gameLogic.resetGame();
+                              });
+                            }
+                            : null,
                   ),
                   PixelButton(
                     label: 'End Game',
@@ -161,8 +217,8 @@ class _GameScreenState extends State<GameScreen> {
                     color: Colors.redAccent,
                     onPressed: () => Navigator.pop(context),
                   ),
-                ]
-              )
+                ],
+              ),
             ],
           ),
         ],

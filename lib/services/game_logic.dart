@@ -1,15 +1,18 @@
 import '../providers/coin_provider.dart';
 import '../models/game.dart';
+import '../services/music_manager.dart';
 import 'dart:math'; // For generating random numbers
+
+enum Difficulty { easy, medium, hard }
 
 class GameLogic {
   final CoinProvider coinProvider;
+  final Difficulty difficulty;
   late Game game;
 
-  GameLogic(this.coinProvider) {
-    game = Game(); // Initialize game with data from CoinProvider
+  GameLogic(this.coinProvider, this.difficulty) {
+    game = Game(); // Initialize the game state
   }
-
   // Handle player move
   bool playerMove(int index) {
     if (game.board[index] == "" && game.winner == "") {
@@ -25,24 +28,41 @@ class GameLogic {
 
   // Handle computer move (O)
   void computerMove() {
-    if (game.winner != "") return; // Don't make a move if the game is over
+    if (game.winner != "") return;
 
-    int? winningMove = _findWinningMove("O");
-    if (winningMove != null) {
-      game.board[winningMove] = "O";
-      checkWinner();
-      return;
+    if (difficulty == Difficulty.easy) {
+      _randomMove(); // only random
+    } 
+    else if (difficulty == Difficulty.medium) {
+      int? win = _findWinningMove("O");
+      if (win != null) {
+        game.board[win] = "O";
+        checkWinner();
+        return;
+      }
+      _randomMove();
+    } 
+
+    else {
+      int? win = _findWinningMove("O");
+      if (win != null) {
+        game.board[win] = "O";
+        checkWinner();
+        return;
+      }
+
+      int? block = _findWinningMove("X");
+      if (block != null) {
+        game.board[block] = "O";
+        checkWinner();
+        return;
+      }
+
+      _randomMove();
     }
+  }
 
-    // Computer try to block player from winning
-    int? blockingMove = _findWinningMove("X");
-    if (blockingMove != null) {
-      game.board[blockingMove] = "O";
-      checkWinner();
-      return;
-    }
-
-    // Find available spots
+  void _randomMove() {
     List<int> availableMoves = [];
     for (int i = 0; i < game.board.length; i++) {
       if (game.board[i] == "") {
@@ -50,13 +70,11 @@ class GameLogic {
       }
     }
 
-    // Computer makes a random move in an empty spot
     if (availableMoves.isNotEmpty) {
       Random random = Random();
       int randomIndex = availableMoves[random.nextInt(availableMoves.length)];
       game.board[randomIndex] = "O"; // Computer's move (O)
       checkWinner(); // Check if computer wins after the move
-      return;
     }
   }
 
@@ -114,7 +132,26 @@ class GameLogic {
       String c = game.board[condition[2]];
 
       if (a != "" && a == b && b == c) {
-        game.winner = a; // Set the winner (either "X" or "O")
+        game.winner = a;
+        // Reward coins if the player (X) wins
+        if (game.winner == "X") {
+          int reward = 0;
+          switch (difficulty) {
+            case Difficulty.easy:
+              reward = 1;
+              break;
+            case Difficulty.medium:
+              reward = 5;
+              break;
+            case Difficulty.hard:
+              reward = 10;
+              break;
+          }
+          coinProvider.addCoins(reward); // Add coins to the player's total
+          MusicManager.playSoundEffect('audio/yay.mp3');
+        } else {
+          MusicManager.playSoundEffect('audio/boo.mp3');
+        } // Set the winner (either "X" or "O")
         return;
       }
     }

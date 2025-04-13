@@ -90,16 +90,4 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     savePetStats();
   }
 
-  void addCoins(int amount) {
-    pet.coins += amount;
-    savePetStats();
-  }
-
-  void spendCoins(int amount) {
-    if (pet.coins >= amount) {
-      pet.coins -= amount;
-      savePetStats();
-    }
-  }
-
 }
