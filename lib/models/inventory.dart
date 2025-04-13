@@ -2,6 +2,7 @@ class Inventory{
   int _coin = 0;
   int _food = 0;
   int _soap = 0;
+  int _medicine = 0;
 
   int getCoin(){
     return _coin;
@@ -15,6 +16,10 @@ class Inventory{
     return _soap;
   }
 
+  int getMedicine(){
+    return _soap;
+  }
+
   void setCoin(int c){
     _coin = c;
   }
@@ -25,5 +30,9 @@ class Inventory{
 
   void setSoap(int s){
     _soap = s;
+  }
+
+  void setMedicine(int m){
+    _medicine = m;
   }
 }

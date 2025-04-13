@@ -33,10 +33,11 @@ class _PetScreenState extends State<PetScreen> {
   Widget build(BuildContext context) {
     final petProvider = Provider.of<PetProvider>(context);
     final coinProvider = Provider.of<CoinProvider>(context);
-    // Check if all stats are zero
+
     final GlobalKey feedButtonKey = GlobalKey();
     final GlobalKey cleanButtonKey = GlobalKey();
     final GlobalKey playButtonKey = GlobalKey();
+
     @override
     void initState() {
       super.initState();
@@ -234,67 +235,87 @@ class _PetScreenState extends State<PetScreen> {
                 ),
 
                 SizedBox(height: 20),
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    PixelButton(
-                      label: 'Feed',
-                      icon: Icons.fastfood,
-                      color: Colors.redAccent,
-                      key: feedButtonKey,
-                      isEnabled: coinProvider.inventory.getFood() > 0,
-                      onPressed:
-                          coinProvider.inventory.getFood() > 0
-                              ? () {
-                                MusicManager.playSoundEffect('audio/eat.mp3');
-                                addBubble(
-                                  key: feedButtonKey,
-                                  imagePath: 'assets/images/cat_bowl.png',
-                                );
-                                petProvider.feedPet();
-                                coinProvider.useItem('food');
-                              }
-                              : null,
-                    ),
-                    PixelButton(
-                      label: 'Clean',
-                      icon: Icons.bathtub,
-                      color: Colors.blueAccent,
-                      key: cleanButtonKey,
-                      isEnabled: coinProvider.inventory.getSoap() > 0,
-                      onPressed:
-                          coinProvider.inventory.getSoap() > 0
-                              ? () {
-                                MusicManager.playSoundEffect(
-                                  'audio/bubbles.mp3',
-                                );
-                                addBubble(
-                                  key: cleanButtonKey,
-                                  imagePath: 'assets/images/soap.png',
-                                );
-                                petProvider.cleanPet();
-                                coinProvider.useItem('soap');
-                              }
-                              : null,
-                    ),
-                    PixelButton(
-                      label: 'Play',
-                      icon: Icons.play_arrow,
-                      color: Colors.purpleAccent,
-                      key: playButtonKey,
-                      onPressed: () {
-                        MusicManager.playSoundEffect('audio/toy.mp3');
-                        addBubble(
+                petProvider.pet.getPetState() != "sick"
+                  ? Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    alignment: WrapAlignment.center,
+                    children: [
+                      PixelButton(
+                        label: 'Feed',
+                        icon: Icons.fastfood,
+                        color: Colors.redAccent,
+                        key: feedButtonKey,
+                        isEnabled: coinProvider.inventory.getFood() > 0,
+                        onPressed:
+                            coinProvider.inventory.getFood() > 0
+                                ? () {
+                                  MusicManager.playSoundEffect('audio/eat.mp3');
+                                  addBubble(
+                                    key: feedButtonKey,
+                                    imagePath: 'assets/images/cat_bowl.png',
+                                  );
+                                  petProvider.feedPet();
+                                  coinProvider.useItem('food');
+                                }
+                                : null,
+                      ),
+                      PixelButton(
+                        label: 'Clean',
+                        icon: Icons.bathtub,
+                        color: Colors.blueAccent,
+                        key: cleanButtonKey,
+                        isEnabled: coinProvider.inventory.getSoap() > 0,
+                        onPressed:
+                            coinProvider.inventory.getSoap() > 0
+                                ? () {
+                                  MusicManager.playSoundEffect(
+                                    'audio/bubbles.mp3',
+                                  );
+                                  addBubble(
+                                    key: cleanButtonKey,
+                                    imagePath: 'assets/images/soap.png',
+                                  );
+                                  petProvider.cleanPet();
+                                  coinProvider.useItem('soap');
+                                }
+                                : null,
+                      ),
+                      PixelButton(
+                        label: 'Play',
+                        icon: Icons.play_arrow,
+                        color: Colors.purpleAccent,
+                        key: playButtonKey,
+                        onPressed: () {
+                          MusicManager.playSoundEffect('audio/toy.mp3');
+                          addBubble(
+                            key: playButtonKey,
+                            imagePath: 'assets/images/toy_mouse.png',
+                          );
+                          petProvider.playWithPet();
+                        },
+                      ),
+                    ],
+                  ): Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      alignment: WrapAlignment.center,
+                        children: [PixelButton(
+                          label: 'Medicate',
+                          icon: Icons.medication,
+                          color: Colors.redAccent,
                           key: playButtonKey,
-                          imagePath: 'assets/images/toy_mouse.png',
-                        );
-                        petProvider.playWithPet();
-                      },
-                    ),
-                  ],
-                ),
+                          onPressed: () {
+                            MusicManager.playSoundEffect('audio/eat.mp3');
+                            addBubble(
+                              key: playButtonKey,
+                              imagePath: 'assets/images/medicine.png',
+                            );
+                            petProvider.healPet();
+                          },
+                        ),
+                      ],
+                  ),
                 SizedBox(height: 10),
                 Wrap(
                   spacing: 8,

@@ -78,6 +78,7 @@ flutter:
     - assets/images/cat_hungry.png
     - assets/images/cat_dirty.png
     - assets/images/cat_tired.png
+    - assets/images/cat_sick.png
     - assets/images/livingRoom.png
     - assets/images/gameRoom.png
     - assets/images/outdoor.png
@@ -97,6 +98,7 @@ flutter:
     - assets/images/coin.png
     - assets/images/dead_bg.png
     - assets/images/cat_dead.png
+    - assets/images/medicine.png
      
     #audio
     - assets/audio/background_music.mp3
