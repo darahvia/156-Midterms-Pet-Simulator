@@ -11,8 +11,8 @@ import '../widgets/pixel_progress_bar.dart';
 import '../services/music_manager.dart';
 import 'game_screen.dart';
 import 'shop_screen.dart';
+import 'death_screen.dart';
 import 'dart:math';
-
 
 class PetScreen extends StatefulWidget {
   @override
@@ -21,29 +21,53 @@ class PetScreen extends StatefulWidget {
 
 class _PetScreenState extends State<PetScreen> {
   final List<Widget> bubbles = [];
-  final List<String> hearts = ['assets/images/heart_blue.gif',
-      'assets/images/heart_orange.gif', 'assets/images/heart_pink.gif',
-      'assets/images/heart_purple.gif', 'assets/images/heart_red.gif'];
+  final List<String> hearts = [
+    'assets/images/heart_blue.gif',
+    'assets/images/heart_orange.gif',
+    'assets/images/heart_pink.gif',
+    'assets/images/heart_purple.gif',
+    'assets/images/heart_red.gif',
+  ];
 
   @override
   Widget build(BuildContext context) {
     final petProvider = Provider.of<PetProvider>(context);
     final coinProvider = Provider.of<CoinProvider>(context);
-
+    // Check if all stats are zero
+    if (petProvider.pet.getHunger() == 0 &&
+        petProvider.pet.getEnergy() == 0 &&
+        petProvider.pet.getHygiene() == 0 &&
+        petProvider.pet.getHappiness() == 0) {
+      // Navigate to DeathScreen
+      Future.microtask(() {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const DeathScreen()),
+        );
+      });
+    }
     final GlobalKey feedButtonKey = GlobalKey();
     final GlobalKey cleanButtonKey = GlobalKey();
     final GlobalKey playButtonKey = GlobalKey();
 
-    void addBubble({GlobalKey? key, Offset? position, required String imagePath}) {
+    void addBubble({
+      GlobalKey? key,
+      Offset? position,
+      required String imagePath,
+    }) {
       double startLeft;
       double startBottom;
 
       if (key != null) {
-        final RenderBox box = key.currentContext!.findRenderObject() as RenderBox;
+        final RenderBox box =
+            key.currentContext!.findRenderObject() as RenderBox;
         final Offset widgetPosition = box.localToGlobal(Offset.zero);
 
         startLeft = widgetPosition.dx + box.size.width / 2 - 20;
-        startBottom = MediaQuery.of(context).size.height - widgetPosition.dy - box.size.height / 2;
+        startBottom =
+            MediaQuery.of(context).size.height -
+            widgetPosition.dy -
+            box.size.height / 2;
       } else if (position != null) {
         startLeft = position.dx - 20;
         startBottom = MediaQuery.of(context).size.height - position.dy;
@@ -70,14 +94,14 @@ class _PetScreenState extends State<PetScreen> {
       });
     }
 
-
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        title: Text(petProvider.pet.getName(),
+        title: Text(
+          petProvider.pet.getName(),
           style: GoogleFonts.pressStart2p(
-                              fontSize: 15,
-                              fontWeight: FontWeight.bold,
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
           ),
         ),
         actions: [
@@ -88,19 +112,21 @@ class _PetScreenState extends State<PetScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/images/livingRoom.png',
-            fit: BoxFit.cover,
-          ),
-      
+          Image.asset('assets/images/livingRoom.png', fit: BoxFit.cover),
+
           SingleChildScrollView(
             child: Column(
               children: [
                 // Hunger Progress Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0), // Padding on left and right
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                    horizontal: 16.0,
+                  ), // Padding on left and right
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween, // Space between label and progress bar
+                    mainAxisAlignment:
+                        MainAxisAlignment
+                            .spaceBetween, // Space between label and progress bar
                     children: [
                       Text(
                         'Hunger:',
@@ -120,7 +146,10 @@ class _PetScreenState extends State<PetScreen> {
                 ),
                 // Energy Progress Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                    horizontal: 16.0,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -142,7 +171,10 @@ class _PetScreenState extends State<PetScreen> {
                 ),
                 // Hygiene Progress Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                    horizontal: 16.0,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -164,7 +196,10 @@ class _PetScreenState extends State<PetScreen> {
                 ),
                 // Happiness Progress Bar
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 5.0,
+                    horizontal: 16.0,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -185,9 +220,14 @@ class _PetScreenState extends State<PetScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                PetDisplay(onTap: (tapPosition) {
-                  addBubble(position: tapPosition, imagePath: (hearts[Random().nextInt(hearts.length)]));
-                },),
+                PetDisplay(
+                  onTap: (tapPosition) {
+                    addBubble(
+                      position: tapPosition,
+                      imagePath: (hearts[Random().nextInt(hearts.length)]),
+                    );
+                  },
+                ),
 
                 SizedBox(height: 20),
                 Wrap(
@@ -201,14 +241,18 @@ class _PetScreenState extends State<PetScreen> {
                       color: Colors.redAccent,
                       key: feedButtonKey,
                       isEnabled: coinProvider.inventory.getFood() > 0,
-                      onPressed: 
-                        coinProvider.inventory.getFood() > 0
-                        ? () {
-                        MusicManager.playSoundEffect('audio/eat.mp3');
-                        addBubble(key: feedButtonKey, imagePath: 'assets/images/cat_bowl.png');
-                        petProvider.feedPet();
-                        coinProvider.useItem('food');
-                        } : null,
+                      onPressed:
+                          coinProvider.inventory.getFood() > 0
+                              ? () {
+                                MusicManager.playSoundEffect('audio/eat.mp3');
+                                addBubble(
+                                  key: feedButtonKey,
+                                  imagePath: 'assets/images/cat_bowl.png',
+                                );
+                                petProvider.feedPet();
+                                coinProvider.useItem('food');
+                              }
+                              : null,
                     ),
                     PixelButton(
                       label: 'Clean',
@@ -217,13 +261,19 @@ class _PetScreenState extends State<PetScreen> {
                       key: cleanButtonKey,
                       isEnabled: coinProvider.inventory.getSoap() > 0,
                       onPressed:
-                      coinProvider.inventory.getSoap() > 0 
-                      ? () {
-                      MusicManager.playSoundEffect('audio/bubbles.mp3');
-                      addBubble(key: cleanButtonKey, imagePath: 'assets/images/soap.png');
-                      petProvider.cleanPet();
-                      coinProvider.useItem('soap');
-                      } : null,
+                          coinProvider.inventory.getSoap() > 0
+                              ? () {
+                                MusicManager.playSoundEffect(
+                                  'audio/bubbles.mp3',
+                                );
+                                addBubble(
+                                  key: cleanButtonKey,
+                                  imagePath: 'assets/images/soap.png',
+                                );
+                                petProvider.cleanPet();
+                                coinProvider.useItem('soap');
+                              }
+                              : null,
                     ),
                     PixelButton(
                       label: 'Play',
@@ -232,9 +282,12 @@ class _PetScreenState extends State<PetScreen> {
                       key: playButtonKey,
                       onPressed: () {
                         MusicManager.playSoundEffect('audio/toy.mp3');
-                        addBubble(key: playButtonKey, imagePath: 'assets/images/toy_mouse.png');
+                        addBubble(
+                          key: playButtonKey,
+                          imagePath: 'assets/images/toy_mouse.png',
+                        );
                         petProvider.playWithPet();
-                      }
+                      },
                     ),
                   ],
                 ),
@@ -247,19 +300,25 @@ class _PetScreenState extends State<PetScreen> {
                       label: 'Shop',
                       icon: Icons.shopping_cart,
                       color: Colors.orangeAccent,
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ShopScreen()),
-                      ),
+                      onPressed:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ShopScreen(),
+                            ),
+                          ),
                     ),
                     PixelButton(
                       label: 'Game',
                       icon: Icons.sports_esports,
                       color: Colors.pinkAccent,
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => GameScreen()),
-                      ),
+                      onPressed:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GameScreen(),
+                            ),
+                          ),
                     ),
                   ],
                 ),
@@ -267,7 +326,7 @@ class _PetScreenState extends State<PetScreen> {
             ),
           ),
           ...bubbles,
-        ]
+        ],
       ),
     );
   }

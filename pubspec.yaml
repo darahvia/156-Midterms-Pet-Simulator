@@ -95,6 +95,8 @@ flutter:
     - assets/images/O.png
     - assets/images/PixelPawLogo_fin.png
     - assets/images/coin.png
+    - assets/images/dead_bg.png
+    - assets/images/cat_dead.png
      
     #audio
     - assets/audio/background_music.mp3
