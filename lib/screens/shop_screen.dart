@@ -60,7 +60,7 @@ class ShopScreen extends StatelessWidget {
                     _buildShopItem(
                       context,
                       title: 'Food - 10 coins',
-                      imagePath: 'assets/images/food_bag.png',
+                      imagePath: 'assets/images/cat_food_bag.png',
                       onBuy: () => _confirmPurchase(context, petProvider, coinProvider, 10, petProvider.feedPet),
                     ),
                     SizedBox(height: 16),
@@ -74,7 +74,7 @@ class ShopScreen extends StatelessWidget {
                     _buildShopItem(
                       context,
                       title: 'Medicine - 20 coins',
-                      imagePath: 'lib/assets/images/medicine.png',
+                      imagePath: 'assets/images/medicine.png',
                       onBuy: () => _confirmPurchase(context, petProvider, coinProvider, 20, petProvider.cleanPet),
                     ),
                   ],
