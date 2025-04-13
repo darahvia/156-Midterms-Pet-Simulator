@@ -34,7 +34,7 @@ class ShopScreen extends StatelessWidget {
           // Background image
           Positioned.fill(
             child: Image.asset(
-              'assets/images/livingRoom.png',
+              'lib/assets/images/livingroom.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -57,46 +57,59 @@ class ShopScreen extends StatelessWidget {
               ],
             ),
           ),
-          // Cat image based on mood
+          // Cat image positioned in the lower-right corner
           Positioned(
-            top: 100,
-            left: MediaQuery.of(context).size.width / 2 - 75, // Center the image
+            bottom: 16,
+            right: 16, // Position the cat in the lower-right corner
             child: Image.asset(
               catImagePath,
               width: 150,
               height: 150,
             ),
           ),
-          // Shop buttons
+          // Shop board with buttons
           Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
+              alignment: Alignment.center,
               children: [
-                PixelButton(
-                  label: 'Food - 10 coins',
-                  icon: Icons.fastfood,
-                  color: Colors.orange,
-                  onPressed: () => _confirmPurchase(context, coinProvider, 10, () {
-                    coinProvider.buyFood(1); // Add 1 food to inventory
-                  }),
+                // Board image
+                Image.asset(
+                  'lib/assets/images/board.png',
+                  width: 300,
+                  height: 300,
+                  fit: BoxFit.contain,
                 ),
-                SizedBox(height: 16),
-                PixelButton(
-                  label: 'Soap - 10 coins',
-                  icon: Icons.soap,
-                  color: Colors.blue,
-                  onPressed: () => _confirmPurchase(context, coinProvider, 10, () {
-                    coinProvider.buySoap(1); // Add 1 soap to inventory
-                  }),
-                ),
-                SizedBox(height: 16),
-                PixelButton(
-                  label: 'Medicine - 20 coins',
-                  icon: Icons.medical_services,
-                  color: Colors.red,
-                  onPressed: () => _confirmPurchase(context, coinProvider, 20, () {
-                    coinProvider.buyMedicine(1); // Add 1 medicine to inventory
-                  }),
+                // Buttons inside the board
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PixelButton(
+                      label: 'Food - 10 coins',
+                      icon: Icons.fastfood,
+                      color: Colors.orange,
+                      onPressed: () => _confirmPurchase(context, coinProvider, 10, () {
+                        coinProvider.buyFood(1); // Add 1 food to inventory
+                      }),
+                    ),
+                    SizedBox(height: 16),
+                    PixelButton(
+                      label: 'Soap - 10 coins',
+                      icon: Icons.soap,
+                      color: Colors.blue,
+                      onPressed: () => _confirmPurchase(context, coinProvider, 10, () {
+                        coinProvider.buySoap(1); // Add 1 soap to inventory
+                      }),
+                    ),
+                    SizedBox(height: 16),
+                    PixelButton(
+                      label: 'Medicine - 10 coins',
+                      icon: Icons.medical_services,
+                      color: Colors.red,
+                      onPressed: () => _confirmPurchase(context, coinProvider, 10, () {
+                        coinProvider.buyMedicine(1); // Add 1 medicine to inventory
+                      }),
+                    ),
+                  ],
                 ),
               ],
             ),
