@@ -3,15 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
-import '../widgets/coin_display.dart';
-import '../widgets/pet_display.dart';
-import '../widgets/bubble.dart';
-import '../widgets/pixel_button.dart';
-import '../widgets/pixel_progress_bar.dart';
-import '../services/music_manager.dart';
 import 'game_screen.dart';
-import 'shop_screen.dart';
-import 'dart:math';
 
 class ShopScreen extends StatelessWidget {
   @override
@@ -66,14 +58,14 @@ class ShopScreen extends StatelessWidget {
                     _buildShopItem(
                       context,
                       title: 'Food - 10 coins',
-                      imagePath: 'lib/assets/images/food.png',
+                      imagePath: 'assets/images/cat_bowl.png',
                       onBuy: () => _confirmPurchase(context, petProvider, 10, petProvider.feedPet),
                     ),
                     SizedBox(height: 16), // Space between buttons
                     _buildShopItem(
                       context,
                       title: 'Toy - 15 coins',
-                      imagePath: 'lib/assets/images/toy.png',
+                      imagePath: 'assets/images/toy_mouse.png',
                       onBuy: () => _confirmPurchase(context, petProvider, 15, petProvider.playWithPet),
                     ),
                     SizedBox(height: 16), // Space between buttons
@@ -108,6 +100,33 @@ class ShopScreen extends StatelessWidget {
                 style: GoogleFonts.pressStart2p(
                   fontSize: 16,
                   color: Colors.black,
+                ),
+              ),
+            ),
+          ),
+          // Game button
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => GameScreen()),
+                ); // Navigate to the game screen
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Color(0xFF6FCF97), // Green button color
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.zero, // No border radius
+                ),
+                padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+              ),
+              child: Text(
+                'Play Game',
+                style: GoogleFonts.pressStart2p(
+                  fontSize: 16,
+                  color: Colors.yellow,
                 ),
               ),
             ),
