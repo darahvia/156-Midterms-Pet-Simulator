@@ -12,13 +12,29 @@ class ShopScreen extends StatelessWidget {
     final petProvider = Provider.of<PetProvider>(context);
     final coinProvider = Provider.of<CoinProvider>(context);
 
+    // Determine the cat's expression based on its mood
+    String catImagePath;
+    switch (petProvider.mood) {
+      case "hungry":
+        catImagePath = 'assets/images/cat_hungry.png';
+        break;
+      case "tired":
+        catImagePath = 'assets/images/cat_tired.png';
+        break;
+      case "happy":
+        catImagePath = 'assets/images/cat_happy.png';
+        break;
+      default:
+        catImagePath = 'assets/images/cat_normal.png';
+    }
+
     return Scaffold(
       body: Stack(
         children: [
           // Background image
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/images/livingroom.png', 
+              'lib/assets/images/livingroom.png',
               fit: BoxFit.cover,
             ),
           ),
@@ -31,7 +47,7 @@ class ShopScreen extends StatelessWidget {
                 Icon(Icons.monetization_on, color: Colors.yellow, size: 32),
                 SizedBox(width: 8),
                 Text(
-                  '${petProvider.pet.coins} Coins',
+                  '${coinProvider.inventory.getCoin()} Coins', // Use inventory.getCoin()
                   style: GoogleFonts.pressStart2p(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -41,6 +57,16 @@ class ShopScreen extends StatelessWidget {
               ],
             ),
           ),
+          // Cat image based on mood
+          Positioned(
+            top: 100,
+            left: MediaQuery.of(context).size.width / 2 - 75, // Center the image
+            child: Image.asset(
+              catImagePath,
+              width: 150,
+              height: 150,
+            ),
+          ),
           // Shop board with buttons
           Center(
             child: Stack(
@@ -48,7 +74,7 @@ class ShopScreen extends StatelessWidget {
               children: [
                 // Board image
                 Image.asset(
-                  'lib/assets/images/board.png', 
+                  'lib/assets/images/board.png',
                   width: 850,
                   height: 850,
                   fit: BoxFit.contain,
@@ -61,21 +87,27 @@ class ShopScreen extends StatelessWidget {
                       context,
                       title: 'Food - 10 coins',
                       imagePath: 'assets/images/cat_food_bag.png',
-                      onBuy: () => _confirmPurchase(context, petProvider, coinProvider, 10, petProvider.feedPet),
+                      onBuy: () => _confirmPurchase(context, coinProvider, 10, () {
+                        coinProvider.buyFood(1); // Add 1 food to inventory
+                      }),
                     ),
                     SizedBox(height: 16),
                     _buildShopItem(
                       context,
-                      title: 'Toy - 15 coins',
-                      imagePath: 'assets/images/toy_mouse.png',
-                      onBuy: () => _confirmPurchase(context, petProvider, coinProvider, 15, petProvider.playWithPet),
+                      title: 'Soap - 10 coins',
+                      imagePath: 'assets/images/soap.png',
+                      onBuy: () => _confirmPurchase(context, coinProvider, 10, () {
+                        coinProvider.buySoap(1); // Add 1 soap to inventory
+                      }),
                     ),
                     SizedBox(height: 16),
                     _buildShopItem(
                       context,
                       title: 'Medicine - 20 coins',
                       imagePath: 'assets/images/medicine.png',
-                      onBuy: () => _confirmPurchase(context, petProvider, coinProvider, 20, petProvider.cleanPet),
+                      onBuy: () => _confirmPurchase(context, coinProvider, 20, () {
+                        coinProvider.buyMedicine(1); // Add 1 medicine to inventory
+                      }),
                     ),
                   ],
                 ),
@@ -128,7 +160,7 @@ class ShopScreen extends StatelessWidget {
                 'Play Game',
                 style: GoogleFonts.pressStart2p(
                   fontSize: 16,
-                  color: Colors.yellow,
+                  color: Colors.black,
                 ),
               ),
             ),
@@ -180,7 +212,7 @@ class ShopScreen extends StatelessWidget {
     );
   }
 
-  void _confirmPurchase(BuildContext context, PetProvider petProvider, CoinProvider coinProvider, int cost, VoidCallback onSuccess) {
+  void _confirmPurchase(BuildContext context, CoinProvider coinProvider, int cost, VoidCallback onSuccess) {
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -214,9 +246,9 @@ class ShopScreen extends StatelessWidget {
           TextButton(
             onPressed: () {
               Navigator.of(ctx).pop();
-              if (petProvider.pet.coins >= cost) {
-                coinProvider.spendCoins(cost);
-                onSuccess();
+              if (coinProvider.inventory.getCoin() >= cost) {
+                coinProvider.spendCoins(cost); // Deduct coins
+                onSuccess(); // Add item to inventory
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text('Purchase successful!')),
                 );

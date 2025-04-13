@@ -15,9 +15,8 @@ class Inventory{
   int getSoap(){
     return _soap;
   }
-
   int getMedicine(){
-    return _soap;
+    return _medicine;
   }
 
   void setCoin(int c){
@@ -31,7 +30,6 @@ class Inventory{
   void setSoap(int s){
     _soap = s;
   }
-
   void setMedicine(int m){
     _medicine = m;
   }
