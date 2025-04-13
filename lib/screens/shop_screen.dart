@@ -75,8 +75,8 @@ class ShopScreen extends StatelessWidget {
                 // Board image
                 Image.asset(
                   'lib/assets/images/board.png',
-                  width: 1050,
-                  height: 1000,
+                  width: 1300,
+                  height: 1200,
                   fit: BoxFit.contain,
                 ),
                 // Buttons inside the board
