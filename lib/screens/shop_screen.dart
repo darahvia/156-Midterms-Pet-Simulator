@@ -92,8 +92,8 @@ class ShopScreen extends StatelessWidget {
                     SizedBox(height: 16),
                     _buildShopItem(
                       context,
-                      title: 'Toy - 15 coins',
-                      imagePath: 'assets/images/toy_mouse.png',
+                      title: 'Soap - 15 coins',
+                      imagePath: 'assets/images/soap.png',
                       onBuy: () => _confirmPurchase(context, petProvider, coinProvider, 15, petProvider.playWithPet),
                     ),
                     SizedBox(height: 16),
