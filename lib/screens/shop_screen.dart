@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
+import '../providers/coin_provider.dart';
 
 class ShopScreen extends StatelessWidget {
   @override
@@ -18,7 +19,7 @@ class ShopScreen extends StatelessWidget {
             trailing: ElevatedButton(
               onPressed: () {
                 if (petProvider.pet.coins >= 10) {
-                  petProvider.spendCoins(10);
+                  coinProvider.spendCoins(10);
                   petProvider.feedPet();
                 } else {
                   ScaffoldMessenger.of(
@@ -36,7 +37,7 @@ class ShopScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 if (petProvider.pet.coins >= 15) {
-                  petProvider.spendCoins(15);
+                  coinProvider.spendCoins(15);
                   petProvider.playWithPet();
                 } else {
                   ScaffoldMessenger.of(
@@ -54,7 +55,7 @@ class ShopScreen extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () {
                 if (petProvider.pet.coins >= 20) {
-                  petProvider.spendCoins(20);
+                  coinProvider.spendCoins(20);
                   petProvider.cleanPet();
                 } else {
                   ScaffoldMessenger.of(
