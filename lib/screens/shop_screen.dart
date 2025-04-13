@@ -1,8 +1,8 @@
 // screens/shop_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
-import '../providers/coin_provider.dart';
 
 class ShopScreen extends StatelessWidget {
   @override
@@ -11,15 +11,14 @@ class ShopScreen extends StatelessWidget {
     final coinProvider = Provider.of<CoinProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Shop')),
-      body: Column(
+      body: Stack(
         children: [
           ListTile(
             title: Text('Food - 10 coins'),
             trailing: ElevatedButton(
               onPressed: () {
                 if (petProvider.pet.coins >= 10) {
-                  coinProvider.spendCoins(10);
+                  petProvider.spendCoins(10);
                   petProvider.feedPet();
                 } else {
                   ScaffoldMessenger.of(
@@ -30,13 +29,14 @@ class ShopScreen extends StatelessWidget {
               child: Text('Buy'),
             ),
           ),
-
-          ListTile(
-            title: Text('Toy - 15 coins'),
-            trailing: ElevatedButton(
+          // Back button
+          Positioned(
+            bottom: 16,
+            left: 16,
+            child: ElevatedButton(
               onPressed: () {
                 if (petProvider.pet.coins >= 15) {
-                  coinProvider.spendCoins(15);
+                  petProvider.spendCoins(15);
                   petProvider.playWithPet();
                 } else {
                   ScaffoldMessenger.of(
@@ -47,13 +47,14 @@ class ShopScreen extends StatelessWidget {
               child: Text('Buy'),
             ),
           ),
-
-          ListTile(
-            title: Text('Medicine - 20 coins'),
-            trailing: ElevatedButton(
+          // Game button
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: ElevatedButton(
               onPressed: () {
                 if (petProvider.pet.coins >= 20) {
-                  coinProvider.spendCoins(20);
+                  petProvider.spendCoins(20);
                   petProvider.cleanPet();
                 } else {
                   ScaffoldMessenger.of(
