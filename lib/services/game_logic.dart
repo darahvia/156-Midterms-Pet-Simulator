@@ -17,6 +17,7 @@ class GameLogic {
   bool playerMove(int index) {
     if (game.board[index] == "" && game.winner == "") {
       game.board[index] = "X"; // Player's move (X)
+      MusicManager.playSoundEffect('audio/move.mp3');
       checkWinner(); // Check if player wins after the move
       if (game.winner == "") {
         computerMove(); // If no winner, the computer will play next
@@ -32,8 +33,7 @@ class GameLogic {
 
     if (difficulty == Difficulty.easy) {
       _randomMove(); // only random
-    } 
-    else if (difficulty == Difficulty.medium) {
+    } else if (difficulty == Difficulty.medium) {
       int? win = _findWinningMove("O");
       if (win != null) {
         game.board[win] = "O";
@@ -41,9 +41,7 @@ class GameLogic {
         return;
       }
       _randomMove();
-    } 
-
-    else {
+    } else {
       int? win = _findWinningMove("O");
       if (win != null) {
         game.board[win] = "O";
