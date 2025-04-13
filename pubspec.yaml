@@ -68,10 +68,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
 
-    #- lib/assets/images/cat_normal.jpg
-    #- lib/assets/images/livingroom.png
-    #- lib/assets/images/board.png
-  #   - images/a_dot_ham.jpeg
     #images
     - assets/images/cat_normal.png
     - assets/images/cat_happy.png
@@ -89,6 +85,7 @@ flutter:
     - assets/images/heart_pink.gif
     - assets/images/heart_purple.gif
     - assets/images/heart_red.gif
+    - assets/images/heart_broken.png
     - assets/images/soap.png
     - assets/images/toy_mouse.png
     - assets/images/board.png
@@ -110,6 +107,8 @@ flutter:
     - assets/audio/meow.mp3
     - assets/audio/move.mp3
     - assets/audio/button_tap.mp3
+    - assets/audio/angry_meow.mp3
+    - assets/audio/angry.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

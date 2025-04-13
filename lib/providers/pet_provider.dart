@@ -105,8 +105,13 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void poke() {
-    pet.setHappiness((pet.getHappiness() + 3).clamp(0, 100));
-    savePetStats();
+    if (pet.getPetState() != "sick"){
+      pet.setHappiness((pet.getHappiness() + 3).clamp(0, 100));
+      savePetStats();
+    } else{
+      pet.setEnergy((pet.getEnergy() - 3).clamp(0, 100));
+      savePetStats();
+    }
   }
 
   void healPet(){

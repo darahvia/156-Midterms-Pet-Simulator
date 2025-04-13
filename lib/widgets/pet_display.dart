@@ -33,8 +33,14 @@ class PetDisplay extends StatelessWidget {
     return GestureDetector(
       onTapDown: (details) {
         if (onTap != null) {
-          MusicManager.playSoundEffect('audio/meow.mp3');
-          petProvider.poke();
+          if(mood != "sick"){
+            MusicManager.playSoundEffect('audio/meow.mp3');
+            petProvider.poke();
+          } else{
+            MusicManager.playSoundEffect('audio/angry_meow.mp3');
+            petProvider.poke();
+          }
+
           onTap!(details.globalPosition);
         }
       },

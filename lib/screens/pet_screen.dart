@@ -229,7 +229,9 @@ class _PetScreenState extends State<PetScreen> {
                   onTap: (tapPosition) {
                     addBubble(
                       position: tapPosition,
-                      imagePath: (hearts[Random().nextInt(hearts.length)]),
+                      imagePath: petProvider.pet.getPetState() != "sick"
+                        ? (hearts[Random().nextInt(hearts.length)]):
+                        ('assets/images/heart_broken.png')
                     );
                   },
                 ),
@@ -306,7 +308,7 @@ class _PetScreenState extends State<PetScreen> {
                           color: Colors.redAccent,
                           key: playButtonKey,
                           onPressed: () {
-                            MusicManager.playSoundEffect('audio/eat.mp3');
+                            MusicManager.playSoundEffect('audio/angry.mp3');
                             addBubble(
                               key: playButtonKey,
                               imagePath: 'assets/images/medicine.png',

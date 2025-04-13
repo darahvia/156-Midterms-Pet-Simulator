@@ -50,12 +50,12 @@ class Pet {
         _lastUpdatedHunger = DateTime.now();
       }
       if (elapsedSecondsHygiene > 0) {
-        final decreaseAmount = (elapsedSecondsHygiene / 5).ceil();
+        final decreaseAmount = (elapsedSecondsHygiene / 5).floor();
         _hygiene = (_hygiene - (decreaseAmount * 5)).clamp(0, 100);
         _lastUpdatedHygiene = DateTime.now();
       }
       if (elapsedSecondsEnergy > 0) {
-        final decreaseAmount = (elapsedSecondsEnergy / 5).floor();
+        final decreaseAmount = (elapsedSecondsEnergy / 5).ceil();
         _energy = (_energy + (decreaseAmount * 10)).clamp(0, 100);
         _lastUpdatedEnergy = DateTime.now();
       }
