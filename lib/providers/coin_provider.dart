@@ -39,11 +39,7 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver{
     inventory.setCoin(bag["coin"] ?? 50);
     inventory.setFood(bag["food"] ?? 10);
     inventory.setSoap(bag["soap"] ?? 10);
-<<<<<<< HEAD
     inventory.setMedicine(bag["medicine"] ?? 3);
-=======
-    inventory.setMedicine(bag["medicine"] ?? 20);
->>>>>>> 5bbebc567e72b2a5667f0ef9929fe1e7a03758ed
     saveInventory();
     notifyListeners();
   }

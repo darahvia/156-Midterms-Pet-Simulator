@@ -33,47 +33,22 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
 
   void startAutoDecrease() {
     Timer.periodic(Duration(seconds: 5), (timer) {
-      pet.applyElapsedTime();
+      pet.applyAutoDecrease();
       savePetStats();
-      notifyListeners();
+      //notifyListeners();
     });
   }
 
   Future<void> loadPetStats({String? petName}) async {
     final stats = await storage.loadPetStats();
     pet.setName(stats["name"] ?? petName);
-    pet.setHunger(stats["hunger"] ?? 100);
-    pet.setHygiene(stats["hygiene"] ?? 100);
-    pet.setHappiness(stats["happiness"] ?? 100);
+    pet.setHunger(stats["hunger"] ?? 0);
+    pet.setHygiene(stats["hygiene"] ?? 0);
+    pet.setHappiness(stats["happiness"] ?? 0);
     pet.setEnergy(stats["energy"] ?? 100);
-    pet.setLastUpdated(
-      'hunger',
-      stats["lastUpdatedHunger"] != null
-          ? DateTime.parse(stats["lastUpdated"])
-          : DateTime.now(),
-    );
-    pet.setLastUpdated(
-      'hygiene',
-      stats["lastUpdatedHygiene"] != null
-          ? DateTime.parse(stats["lastUpdated"])
-          : DateTime.now(),
-    );
-    pet.setLastUpdated(
-      'happiness',
-      stats["lastUpdatedHappiness"] != null
-          ? DateTime.parse(stats["lastUpdated"])
-          : DateTime.now(),
-    );
-    pet.setLastUpdated(
-      'energy',
-      stats["lastUpdatedEnergy"] != null
-          ? DateTime.parse(stats["lastUpdated"])
-          : DateTime.now(),
-    );
+    pet.setIsSick(stats["health"] ?? false);
+    pet.setLastUpdated(stats["lastUpdated"] ?? DateTime.now());
     pet.applyElapsedTime();
-    if((pet.getHunger() == 0) && (pet.getHygiene() == 0) && (pet.getHappiness() == 0)){
-      pet.setIsSick(true);
-    }
     savePetStats();
     pet.printStats('saved');
     //notifyListeners();

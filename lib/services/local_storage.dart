@@ -7,7 +7,7 @@ class LocalStorage {
   //getting file path of needed file
   static Future<String> _getFilePath(String filename) async {
     final dir = await getApplicationDocumentsDirectory();
-    return '${dir.path}/$filename.txt';
+    return '${dir.path}/$filename.txtR';
   }
 
   Future<void> saveInventory(Inventory inventory) async {
@@ -57,10 +57,8 @@ class LocalStorage {
       hygiene:${pet.getHygiene()}
       happiness:${pet.getHappiness()}
       energy:${pet.getEnergy()}
-      lastUpdatedHunger:${pet.getLastUpdated('hunger').toIso8601String()}
-      lastUpdatedHygiene:${pet.getLastUpdated('hygiene').toIso8601String()}
-      lastUpdatedEnergy:${pet.getLastUpdated('energy').toIso8601String()}
-      lastUpdatedHappiness:${pet.getLastUpdated('happiness').toIso8601String()}
+      health:${pet.getIsSick()}
+      lastUpdatedHunger:${pet.getLastUpdated().toIso8601String()}
       ''';
     await file.writeAsString(content);
     print('Pet data saved to ${file.path}');
@@ -87,7 +85,10 @@ class LocalStorage {
           } 
           else if (key == 'name') {
             data[key] = value; // name is a string, so we keep it as a string
-          } 
+          }
+          else if (key == 'health') {
+            data[key] = (value.toLowerCase() == 'true');
+          }
           else {
             data[key] = double.tryParse(value) ?? 0;
           }
