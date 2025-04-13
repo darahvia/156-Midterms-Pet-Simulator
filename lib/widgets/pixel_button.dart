@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/music_manager.dart';
 
 class PixelButton extends StatefulWidget {
   final String label;
@@ -35,14 +36,14 @@ class _PixelButtonState extends State<PixelButton> {
   @override
   Widget build(BuildContext context) {
     final offset = _isPressed ? Offset(0, 0) : const Offset(4, 4);
-    final bgColor = widget.isEnabled
-        ? widget.color
-        : widget.color.withOpacity(0.4);
+    final bgColor =
+        widget.isEnabled ? widget.color : widget.color.withOpacity(0.4);
 
     return GestureDetector(
       onTapDown: (_) => _updatePressed(true),
       onTapUp: (_) {
         _updatePressed(false);
+        MusicManager.playSoundEffect('audio/button_tap.mp3');
         widget.onPressed?.call();
       },
       onTapCancel: () => _updatePressed(false),
@@ -52,11 +53,7 @@ class _PixelButtonState extends State<PixelButton> {
             Positioned(
               left: offset.dx,
               top: offset.dy,
-              child: Container(
-                width: 110,
-                height: 50,
-                color: Colors.black,
-              ),
+              child: Container(width: 110, height: 50, color: Colors.black),
             ),
           Container(
             width: 110,
@@ -68,7 +65,11 @@ class _PixelButtonState extends State<PixelButton> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(widget.icon, size: 16, color: widget.isEnabled ? Colors.black : Colors.grey),
+                Icon(
+                  widget.icon,
+                  size: 16,
+                  color: widget.isEnabled ? Colors.black : Colors.grey,
+                ),
                 const SizedBox(width: 4),
                 Text(
                   widget.label,

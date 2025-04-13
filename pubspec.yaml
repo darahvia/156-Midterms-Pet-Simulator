@@ -107,6 +107,7 @@ flutter:
     - assets/audio/yay.mp3
     - assets/audio/meow.mp3
     - assets/audio/move.mp3
+    - assets/audio/button_tap.mp3
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

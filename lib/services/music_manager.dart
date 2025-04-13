@@ -4,7 +4,6 @@ class MusicManager {
   static final AudioPlayer _bgPlayer = AudioPlayer();
   static final AudioPlayer _effectPlayer = AudioPlayer();
 
-
   static bool _isPlaying = false;
 
   // Play background music (don't reset on sound effect trigger)
@@ -41,13 +40,15 @@ class MusicManager {
   static Future<void> playSoundEffect(String soundPath) async {
     // Stop the effect player before playing a new effect
     await _effectPlayer.stop();
-    
+
     // Play the sound effect with independent volume settings
     await _effectPlayer.setAudioContext(
-        AudioContext(
-          android: AudioContextAndroid(audioFocus: AndroidAudioFocus.gainTransientMayDuck),
+      AudioContext(
+        android: AudioContextAndroid(
+          audioFocus: AndroidAudioFocus.gainTransientMayDuck,
         ),
-      );
+      ),
+    );
     await _effectPlayer.play(AssetSource(soundPath));
     await _effectPlayer.setVolume(1.0);
   }

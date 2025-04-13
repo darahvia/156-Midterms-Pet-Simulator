@@ -18,6 +18,7 @@ class _GameScreenState extends State<GameScreen> {
   late GameLogic gameLogic;
   int score = 0;
   Difficulty selectedDifficulty = Difficulty.easy;
+  bool isComputerMoving = false;
 
   @override
   void initState() {
@@ -31,17 +32,21 @@ class _GameScreenState extends State<GameScreen> {
   }
 
   void _handleTap(int index) async {
+    if (isComputerMoving) return;
     bool moved = gameLogic.playerMove(index); // do not await here
 
     if (moved) {
       setState(() {}); // show player's move right away
 
       // now wait for computer move
+      isComputerMoving = true;
       await Future.delayed(
-        Duration(milliseconds: 400),
+        Duration(milliseconds: 1000),
       ); // slight delay to allow UI update
       await gameLogic.computerMove();
-      setState(() {}); // show computer's move
+      setState(() {
+        isComputerMoving = false;
+      }); // show computer's move
     }
   }
 
