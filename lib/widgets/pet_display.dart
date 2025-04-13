@@ -25,7 +25,7 @@ class PetDisplay extends StatelessWidget {
     } else if (mood == "sad") {
       imagePath = 'assets/images/cat_normal.png';
     } else {
-      imagePath = 'assets/images/cat_normal.png';
+      imagePath = 'assets/images/cat_happy.png';
     }
 
     return GestureDetector(

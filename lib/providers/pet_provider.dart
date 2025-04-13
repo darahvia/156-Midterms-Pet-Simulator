@@ -5,11 +5,12 @@ import 'dart:async';
 
 class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   Pet pet = Pet();
-  LocalStorage storage = LocalStorage();
+  late LocalStorage storage;
   Timer? _timer;
   String mood = "normal";
 
-  PetProvider() {
+  PetProvider(LocalStorage ls) {
+    storage = ls;
     WidgetsBinding.instance.addObserver(this);
     //loadPetStats();
   }
@@ -62,7 +63,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void savePetStats() {
-    mood = pet.getPestState();
+    mood = pet.getPetState();
     storage.savePetStats(pet);
     notifyListeners();
   }

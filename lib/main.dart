@@ -4,14 +4,16 @@ import 'providers/pet_provider.dart';
 import 'providers/coin_provider.dart';
 import 'screens/start_screen.dart';
 import 'services/music_manager.dart';
+import '../services/local_storage.dart';
 //import 'package:path_provider/path_provider.dart';
 
 void main() {
+  LocalStorage storage = LocalStorage();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => PetProvider()),
-        ChangeNotifierProvider(create: (_) => CoinProvider()),
+        ChangeNotifierProvider(create: (_) => PetProvider(storage)),
+        ChangeNotifierProvider(create: (_) => CoinProvider(storage)),
       ],
       child: MyApp(),
     ),

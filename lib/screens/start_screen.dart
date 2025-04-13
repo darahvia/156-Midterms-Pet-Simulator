@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/pet_provider.dart';
+import '../providers/coin_provider.dart';
 import '../services/local_storage.dart';
 import '../widgets/pixel_button.dart';
 import 'pet_screen.dart';
@@ -34,6 +35,7 @@ class _StartScreenState extends State<StartScreen> {
   @override
   Widget build(BuildContext context) {
     final petProvider = Provider.of<PetProvider>(context, listen: false);
+    final coinProvider = Provider.of<CoinProvider>(context);
 
     return Scaffold(
       body: Stack(
@@ -61,6 +63,7 @@ class _StartScreenState extends State<StartScreen> {
                       color: Colors.orange,
                       onPressed: () {
                         petProvider.loadPetStats(); // load with existing name
+                        coinProvider.loadInventory();
                         Navigator.push(context,
                           MaterialPageRoute(builder: (context) => PetScreen())
                         );
@@ -83,6 +86,7 @@ class _StartScreenState extends State<StartScreen> {
                           onPressed: _nameController.text.trim().isNotEmpty
                               ? () {
                                   petProvider.loadPetStats(petName: _nameController.text.trim());
+                                  coinProvider.loadInventory();
                                   Navigator.push(context,
                                     MaterialPageRoute(builder: (context) => PetScreen())
                                   );  

@@ -143,7 +143,7 @@ class Pet {
     return DateTime.now();
   }
 
-  String getPestState(){
+  String getPetState(){
     return _petState;
   }
 

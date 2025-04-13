@@ -74,6 +74,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
     #images
     - assets/images/cat_normal.png
+    - assets/images/cat_happy.png
     - assets/images/cat_hungry.png
     - assets/images/cat_dirty.png
     - assets/images/cat_tired.png
@@ -93,6 +94,7 @@ flutter:
     - assets/images/X.png
     - assets/images/O.png
     - assets/images/PixelPawLogo_fin.png
+    - assets/images/coin.png
      
     #audio
     - assets/audio/background_music.mp3

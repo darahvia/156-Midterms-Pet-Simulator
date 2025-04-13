@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
+import '../providers/coin_provider.dart';
 import '../widgets/coin_display.dart';
 import '../widgets/pet_display.dart';
 import '../widgets/bubble.dart';
@@ -27,6 +28,7 @@ class _PetScreenState extends State<PetScreen> {
   @override
   Widget build(BuildContext context) {
     final petProvider = Provider.of<PetProvider>(context);
+    final coinProvider = Provider.of<CoinProvider>(context);
 
     final GlobalKey feedButtonKey = GlobalKey();
     final GlobalKey cleanButtonKey = GlobalKey();
@@ -78,6 +80,10 @@ class _PetScreenState extends State<PetScreen> {
                               fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          // Display current coin count in the app bar
+          Padding(padding: const EdgeInsets.all(12.0), child: CoinDisplay()),
+        ],
       ),
       body: Stack(
         fit: StackFit.expand,
@@ -179,8 +185,6 @@ class _PetScreenState extends State<PetScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-
-                CoinDisplay(),
                 PetDisplay(onTap: (tapPosition) {
                   addBubble(position: tapPosition, imagePath: (hearts[Random().nextInt(hearts.length)]));
                 },),
@@ -196,22 +200,30 @@ class _PetScreenState extends State<PetScreen> {
                       icon: Icons.fastfood,
                       color: Colors.redAccent,
                       key: feedButtonKey,
-                      onPressed: () {
+                      isEnabled: coinProvider.inventory.getFood() > 0,
+                      onPressed: 
+                        coinProvider.inventory.getFood() > 0
+                        ? () {
                         MusicManager.playSoundEffect('audio/eat.mp3');
                         addBubble(key: feedButtonKey, imagePath: 'assets/images/cat_bowl.png');
                         petProvider.feedPet();
-                      }
+                        coinProvider.useItem('food');
+                        } : null,
                     ),
                     PixelButton(
                       label: 'Clean',
                       icon: Icons.bathtub,
                       color: Colors.blueAccent,
                       key: cleanButtonKey,
-                      onPressed: () {
-                        MusicManager.playSoundEffect('audio/bubbles.mp3');
-                        addBubble(key: cleanButtonKey, imagePath: 'assets/images/soap.png');
-                        petProvider.cleanPet();
-                      }
+                      isEnabled: coinProvider.inventory.getSoap() > 0,
+                      onPressed:
+                      coinProvider.inventory.getSoap() > 0 
+                      ? () {
+                      MusicManager.playSoundEffect('audio/bubbles.mp3');
+                      addBubble(key: cleanButtonKey, imagePath: 'assets/images/soap.png');
+                      petProvider.cleanPet();
+                      coinProvider.useItem('soap');
+                      } : null,
                     ),
                     PixelButton(
                       label: 'Play',

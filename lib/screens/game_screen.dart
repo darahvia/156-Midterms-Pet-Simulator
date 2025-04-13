@@ -180,17 +180,7 @@ class _GameScreenState extends State<GameScreen> {
                   ),
                 ],
               ),
-
-              // Show the score that updates with each valid move
-              Text(
-                "Score: $score",
-                style: GoogleFonts.pressStart2p(
-                  fontSize: 14, // Adjust the font size
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 10),
-              // Button to reset the game
+              
               SizedBox(height: 10),
               // Button to end the game and go back to the previous screen
               Wrap(
