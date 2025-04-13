@@ -31,14 +31,7 @@ class DeathScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Cat picture
-                Image.asset(
-                  'assets/images/cat_dead.png',
-                  height: 300,
-                  width: 300,
-                ),
-                const SizedBox(height: 20),
-                const SizedBox(height: 20),
+                SizedBox(height: 300),
                 Text(
                   '${petProvider.pet.getName()} passed away',
                   style: GoogleFonts.pressStart2p(
@@ -46,6 +39,12 @@ class DeathScreen extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ),
                   textAlign: TextAlign.center,
+                ),
+                // Cat picture
+                Image.asset(
+                  'assets/images/cat_dead.png',
+                  height: 150,
+                  width: 500,
                 ),
                 const SizedBox(height: 20),
                 PixelButton(
