@@ -41,7 +41,7 @@ class _GameScreenState extends State<GameScreen> {
       // now wait for computer move
       isComputerMoving = true;
       await Future.delayed(
-        Duration(milliseconds: 500),
+        Duration(milliseconds: 300),
       ); // slight delay to allow UI update
       await gameLogic.computerMove();
       setState(() {

@@ -5,6 +5,7 @@ import '../providers/coin_provider.dart';
 import '../services/local_storage.dart';
 import '../widgets/pixel_button.dart';
 import 'pet_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class StartScreen extends StatefulWidget {
   @override
@@ -42,65 +43,82 @@ class _StartScreenState extends State<StartScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset(
-            'assets/images/outdoor.png',
-            fit: BoxFit.cover,
-          ),
-          SizedBox(height:20),
-          Center(child: Image.asset(
+          Image.asset('assets/images/outdoor.png', fit: BoxFit.cover),
+          SizedBox(height: 20),
+          Center(
+            child: Image.asset(
               'assets/images/PixelPawLogo_fin.png',
               fit: BoxFit.cover,
             ),
           ),
-          SizedBox(height:20),
+          SizedBox(height: 20),
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
               padding: EdgeInsets.all(20),
-              child: petExists
-                  ? PixelButton(
-                      label: '$existingName',
-                      icon: Icons.pets,
-                      color: Colors.orange,
-                      onPressed: () {
-                        petProvider.loadPetStats(); // load with existing name
-                        coinProvider.loadInventory();
-                        Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => PetScreen())
-                        );
-                      },
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        TextField(
-                          controller: _nameController,
-                          decoration: InputDecoration(labelText: "Name Your Pixel Pet"),
-                          onChanged: (_) => setState(() {}),
-                        ),
-                        SizedBox(height: 20),
-                        PixelButton(
-                          label: 'Adopt',
-                          icon: Icons.pets,
-                          color: Colors.orangeAccent,
-                          isEnabled: _nameController.text.trim().isNotEmpty,
-                          onPressed: _nameController.text.trim().isNotEmpty
-                              ? () {
-                                  petProvider.loadPetStats(petName: _nameController.text.trim());
-                                  coinProvider.loadInventory();
-                                  Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) => PetScreen())
-                                  );  
-                                }
-                              : null,
-                        )
-                      ],
-                    ),
+              child:
+                  petExists
+                      ? PixelButton(
+                        label: '$existingName',
+                        icon: Icons.pets,
+                        color: Colors.orange,
+                        onPressed: () {
+                          petProvider.loadPetStats(); // load with existing name
+                          coinProvider.loadInventory();
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PetScreen(),
+                            ),
+                          );
+                        },
+                      )
+                      : Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          TextField(
+                            controller: _nameController,
+                            decoration: InputDecoration(
+                              labelText: "Name Your Pixel Pet",
+                              labelStyle: GoogleFonts.pressStart2p(
+                                fontSize: 12,
+                                color: Colors.black,
+                              ),
+                            ),
+                            style: GoogleFonts.pressStart2p(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                            onChanged: (_) => setState(() {}),
+                          ),
+                          SizedBox(height: 20),
+                          PixelButton(
+                            label: 'Adopt',
+                            icon: Icons.pets,
+                            color: Colors.orangeAccent,
+                            isEnabled: _nameController.text.trim().isNotEmpty,
+                            onPressed:
+                                _nameController.text.trim().isNotEmpty
+                                    ? () {
+                                      petProvider.loadPetStats(
+                                        petName: _nameController.text.trim(),
+                                      );
+                                      coinProvider.loadInventory();
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => PetScreen(),
+                                        ),
+                                      );
+                                    }
+                                    : null,
+                          ),
+                        ],
+                      ),
             ),
           ),
-        ]
-      )
+        ],
+      ),
     );
   }
 }
-

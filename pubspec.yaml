@@ -98,6 +98,7 @@ flutter:
     - assets/images/medicine.png
     - lib/assets/images/board.png
     - lib/assets/images/livingroom.png
+    - assets/images/store.png
 
     #audio
     - assets/audio/background_music.mp3
