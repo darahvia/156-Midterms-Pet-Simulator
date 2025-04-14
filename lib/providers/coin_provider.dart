@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-//import '../models/game.dart';
 import '../services/local_storage.dart';
 import '../models/inventory.dart';
 
-class CoinProvider with ChangeNotifier, WidgetsBindingObserver{
+class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
   Inventory inventory = Inventory();
   late LocalStorage storage;
-  //Game game = Game();
-  //int _coins = 0;
-
-  //int get coins => inventory.getCoin();
   CoinProvider(LocalStorage ls) {
     storage = ls;
     WidgetsBinding.instance.addObserver(this);
-    //loadPetStats();
   }
 
   @override
@@ -24,7 +18,8 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver{
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused || state == AppLifecycleState.detached) {
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached) {
       // App is going into background or being closed
       saveInventory();
     }
@@ -34,7 +29,9 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver{
     final bag = await storage.loadInventory();
     print(bag);
     bag.forEach((key, value) {
-      print('Key: $key, Value: $value');  // Print each key and its corresponding value
+      print(
+        'Key: $key, Value: $value',
+      ); // Print each key and its corresponding value
     });
     inventory.setCoin(bag["coin"] ?? 50);
     inventory.setFood(bag["food"] ?? 10);
@@ -61,16 +58,16 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver{
     }
   }
 
-  void useItem(String item){
-    if (item == 'food'){
+  void useItem(String item) {
+    if (item == 'food') {
       inventory.setFood(inventory.getFood() - 1);
       saveInventory();
     }
-    if (item == 'soap'){
+    if (item == 'soap') {
       inventory.setSoap(inventory.getSoap() - 1);
       saveInventory();
     }
-    if (item == 'medicine'){
+    if (item == 'medicine') {
       inventory.setMedicine(inventory.getMedicine() - 1);
       saveInventory();
     }
@@ -87,12 +84,9 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver{
   }
 
   void buyMedicine(int num) {
-  inventory.setMedicine(inventory.getMedicine() + num); // Add medicine to inventory
-  saveInventory();
-}
-
-  //void resetCoins() {
-  //  _coins = 0;
-  //  notifyListeners();
-  //}
+    inventory.setMedicine(
+      inventory.getMedicine() + num,
+    ); // Add medicine to inventory
+    saveInventory();
+  }
 }

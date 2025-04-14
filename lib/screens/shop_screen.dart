@@ -1,11 +1,13 @@
 // screens/shop_screen.dart
 import 'package:flutter/material.dart';
+import 'package:pet_simulator/widgets/pet_display.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
 import '../providers/coin_provider.dart';
 import '../widgets/pixel_button.dart';
 import '../widgets/coin_display.dart';
+import '../widgets/pet_display.dart';
 
 class ShopScreen extends StatelessWidget {
   @override
@@ -15,19 +17,6 @@ class ShopScreen extends StatelessWidget {
 
     // Determine the cat's expression based on its mood
     String catImagePath;
-    switch (petProvider.mood) {
-      case "hungry":
-        catImagePath = 'assets/images/cat_hungry.png';
-        break;
-      case "tired":
-        catImagePath = 'assets/images/cat_tired.png';
-        break;
-      case "happy":
-        catImagePath = 'assets/images/cat_happy.png';
-        break;
-      default:
-        catImagePath = 'assets/images/cat_normal.png';
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -57,7 +46,7 @@ class ShopScreen extends StatelessWidget {
           Positioned(
             bottom: 16,
             right: 16, // Position the cat in the lower-right corner
-            child: Image.asset(catImagePath, width: 150, height: 150),
+            child: PetDisplay(onTap: (tapPosition) {}),
           ),
           Positioned(
             top: 16,
@@ -159,11 +148,11 @@ class ShopScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 16),
                     PixelButton(
-                      label: 'Meds - 10',
+                      label: 'Meds - 20',
                       icon: Icons.medical_services,
                       color: Colors.red,
                       onPressed:
-                          () => _confirmPurchase(context, coinProvider, 10, () {
+                          () => _confirmPurchase(context, coinProvider, 20, () {
                             coinProvider.buyMedicine(
                               1,
                             ); // Add 1 medicine to inventory

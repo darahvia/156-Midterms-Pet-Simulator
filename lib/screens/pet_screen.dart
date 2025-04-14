@@ -28,21 +28,6 @@ class _PetScreenState extends State<PetScreen> {
     'assets/images/heart_purple.gif',
     'assets/images/heart_red.gif',
   ];
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final pet = Provider.of<PetProvider>(context, listen: false).pet;
-      if (pet.getHunger() == 0 &&
-          pet.getEnergy() == 0 &&
-          pet.getHygiene() == 0 &&
-          pet.getHappiness() == 0) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const DeathScreen()),
-        );
-      }
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -334,6 +319,7 @@ class _PetScreenState extends State<PetScreen> {
                               imagePath: 'assets/images/medicine.png',
                             );
                             petProvider.healPet();
+                            coinProvider.useItem('medicine');
                           },
                         ),
                       ],

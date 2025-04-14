@@ -1,6 +1,4 @@
 class Game {
-  //int coins;
-
   //Tic Tac Toe board represented as a list of 9 strings (empty, X, or O)
   List<String> board;
 
