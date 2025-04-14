@@ -58,7 +58,10 @@ class LocalStorage {
       happiness:${pet.getHappiness()}
       energy:${pet.getEnergy()}
       health:${pet.getIsSick()}
-      lastUpdatedHunger:${pet.getLastUpdated().toIso8601String()}
+      lastUpdatedHunger:${pet.getLastUpdated('hunger').toIso8601String()}
+      lastUpdatedHygiene:${pet.getLastUpdated('hygiene').toIso8601String()}
+      lastUpdatedEnergy:${pet.getLastUpdated('energy').toIso8601String()}
+      lastUpdatedHappiness:${pet.getLastUpdated('happiness').toIso8601String()}
       ''';
     await file.writeAsString(content);
     print('Pet data saved to ${file.path}');
@@ -80,7 +83,7 @@ class LocalStorage {
         if (parts.length == 2) {
           final key = parts[0].trim();
           final value = parts[1];
-          if (key == 'lastUpdated') {
+          if (key == 'lastUpdatedHunger' || key == 'lastUpdatedHygiene' || key == 'lastUpdatedEnergy' || key == 'lastUpdatedHappiness') {
             data[key] = DateTime.tryParse(value);
           } 
           else if (key == 'name') {

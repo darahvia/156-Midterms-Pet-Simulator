@@ -23,7 +23,8 @@ class _StartScreenState extends State<StartScreen> {
   }
 
   Future<void> checkExistingPet() async {
-    final stats = await LocalStorage().loadPetStats();
+    final petProvider = Provider.of<PetProvider>(context, listen: false);
+    final stats = await petProvider.storage.loadPetStats();
     if (stats.isNotEmpty && stats["name"] != null) {
       setState(() {
         petExists = true;
@@ -58,7 +59,7 @@ class _StartScreenState extends State<StartScreen> {
               padding: EdgeInsets.all(20),
               child: petExists
                   ? PixelButton(
-                      label: 'Check on $existingName',
+                      label: '$existingName',
                       icon: Icons.pets,
                       color: Colors.orange,
                       onPressed: () {

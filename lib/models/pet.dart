@@ -9,7 +9,10 @@ class Pet {
   double _happiness = 0;
   bool _isSick = false;
   int coins = 0;
-  DateTime _lastUpdated = DateTime.now();
+  DateTime _lastUpdatedHunger = DateTime.now();
+  DateTime _lastUpdatedHygiene = DateTime.now();
+  DateTime _lastUpdatedEnergy = DateTime.now();
+  DateTime _lastUpdatedHappiness = DateTime.now();
 
 
   void setState(){
@@ -34,44 +37,44 @@ class Pet {
   }
 
   void applyElapsedTime() {
-    final now = DateTime.now();
-    final elapsedSeconds = now.difference(_lastUpdated).inSeconds;
-    final decreaseAmount = (elapsedSeconds / 5).floor();
+    if (!_isSick){
+      final now = DateTime.now();
+      final elapsedSecondsHunger = now.difference(_lastUpdatedHunger).inSeconds;
+      final elapsedSecondsHygiene = now.difference(_lastUpdatedHygiene).inSeconds;
+      final elapsedSecondsEnergy = now.difference(_lastUpdatedEnergy).inSeconds;
+      final elapsedSecondsHappiness = now.difference(_lastUpdatedHappiness).inSeconds;
 
-    if (elapsedSeconds > 0) {
-      _hunger = (_hunger - (decreaseAmount * 10)).clamp(0, 100);
-      _hygiene = (_hygiene - (decreaseAmount * 5)).clamp(0, 100);
-      _happiness = (_happiness - (decreaseAmount * 5)).clamp(0, 100);
-      _lastUpdated = DateTime.now();
-    }
-
-    if ((_hunger == 0) && (_happiness == 0) && (_hygiene == 0) && (_isSick == false)){
-      _isSick = true; 
-    }
-
-    if (elapsedSeconds > 0 && _isSick) {
-      _energy = (_energy - (decreaseAmount * 5)).clamp(0, 100);
-      _lastUpdated = DateTime.now();
-    } else if (elapsedSeconds > 0 && !_isSick) {
-      _energy = (_energy + (decreaseAmount * 5)).clamp(0, 100);
-      _lastUpdated = DateTime.now();
+      if (elapsedSecondsHunger > 0) {
+        final decreaseAmount = (elapsedSecondsHunger / 5).floor();
+        _hunger = (_hunger - (decreaseAmount * 10)).clamp(0, 100);
+        _lastUpdatedHunger = DateTime.now();
+      }
+      if (elapsedSecondsHygiene > 0) {
+        final decreaseAmount = (elapsedSecondsHygiene / 5).floor();
+        _hygiene = (_hygiene - (decreaseAmount * 5)).clamp(0, 100);
+        _lastUpdatedHygiene = DateTime.now();
+      }
+      if (elapsedSecondsEnergy > 0) {
+        final decreaseAmount = (elapsedSecondsEnergy / 5).ceil();
+        _energy = (_energy + (decreaseAmount * 10)).clamp(0, 100);
+        _lastUpdatedEnergy = DateTime.now();
+      }
+      if (elapsedSecondsHappiness > 0) {
+        final decreaseAmount = (elapsedSecondsHappiness / 5).floor();
+        _happiness = (_happiness - (decreaseAmount * 10)).clamp(0, 100);
+        _lastUpdatedHappiness = DateTime.now();
+      }
+    } else {
+      final elapsedSecondsEnergy = DateTime.now().difference(_lastUpdatedEnergy).inSeconds;
+      if (elapsedSecondsEnergy > 0) {
+        final decreaseAmount = (elapsedSecondsEnergy / 5).floor();
+        _energy = (_energy - (decreaseAmount * 10)).clamp(0, 100);
+        _lastUpdatedEnergy = DateTime.now();
+      }
     }
     printStats('updated');
     setState();
-  }
-
-  void applyAutoDecrease(){
-    if (!_isSick){
-      _hunger = (_hunger - 10).clamp(0,100);
-      _hygiene = (_hygiene - 10).clamp(0,100);
-      _energy = (_energy + 5).clamp(0,100);
-      _happiness = (_happiness - 5);
-      _lastUpdated = DateTime.now();
-    }
-    else{
-      _energy = (_energy - 5).clamp(0,100);
-      _lastUpdated = DateTime.now();
-    }
+    
   }
 
   void setName(String n) {
@@ -80,25 +83,25 @@ class Pet {
 
   void setHunger(double h){
     _hunger = h;
-    _lastUpdated = DateTime.now();
+    _lastUpdatedHunger = DateTime.now();
     setState();
   }
 
   void setHygiene(double hy){
     _hygiene = hy;
-    _lastUpdated = DateTime.now();
+    _lastUpdatedHygiene = DateTime.now();
     setState();
   }
 
   void setEnergy(double e){
     _energy = e;
-    _lastUpdated = DateTime.now();
+    _lastUpdatedEnergy = DateTime.now();
     setState();
   }
 
   void setHappiness(double ha){
     _happiness = ha;
-    _lastUpdated = DateTime.now();
+    _lastUpdatedHappiness = DateTime.now();
     setState();
   }
 
@@ -107,8 +110,19 @@ class Pet {
     setState();
   }
   
-  void setLastUpdated(DateTime lu){
-    _lastUpdated = lu;
+  void setLastUpdated(String stat, DateTime lu){
+    if (stat == 'hunger'){
+      _lastUpdatedHunger = lu;
+    }
+    else if (stat == 'hygiene'){
+      _lastUpdatedHygiene = lu;
+    }
+    else if (stat == 'energy'){
+      _lastUpdatedEnergy = lu;
+    }
+    else if (stat == 'happiness'){
+      _lastUpdatedHappiness = lu;
+    }
   }
 
   String getName() {
@@ -135,8 +149,21 @@ class Pet {
     return _isSick;
   }
   
-  DateTime getLastUpdated(){
-    return _lastUpdated;
+  DateTime getLastUpdated(String stat){
+    if (stat == 'hunger'){
+      return _lastUpdatedHunger;
+    }
+    else if (stat == 'hygiene'){
+      return _lastUpdatedHygiene;
+    }
+    else if (stat == 'energy'){
+      return _lastUpdatedEnergy;
+    }
+    else if (stat == 'happiness'){
+      return _lastUpdatedHappiness;
+    }
+
+    return DateTime.now();
   }
 
   String getPetState(){
