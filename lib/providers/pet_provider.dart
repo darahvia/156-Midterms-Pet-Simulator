@@ -3,6 +3,7 @@ import '../models/pet.dart';
 import '../services/local_storage.dart';
 import 'dart:async';
 
+//handles interactions with pet
 class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   Pet pet = Pet();
   late LocalStorage storage;
@@ -12,7 +13,6 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   PetProvider(LocalStorage ls) {
     storage = ls;
     WidgetsBinding.instance.addObserver(this);
-    //loadPetStats();
   }
 
   @override
@@ -22,26 +22,26 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     super.dispose();
   }
 
+  //saves petData when app in backround or closed
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.detached) {
-      // App is going into background or being closed
       savePetStats();
     }
   }
 
+  //handles autodecrease of stats: currently set at 5s intervals
   void startAutoDecrease() {
     Timer.periodic(Duration(seconds: 5), (timer) {
       pet.applyElapsedTime();
       savePetStats();
-      //notifyListeners();
     });
   }
 
+  //takes map of pet stats and assigns it to current Pet object
   Future<void> loadPetStats({String? petName}) async {
     final stats = await storage.loadPetStats();
-    print(stats);
     stats.forEach((key, value) {
       print(
         'Key: $key, Value: $value',
@@ -79,23 +79,24 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     );
     pet.applyElapsedTime();
     savePetStats();
+    //checks if pet sick upon loading
     if ((pet.getHunger() == 0) &&
         (pet.getHygiene() == 0) &&
         (pet.getHappiness() == 0)) {
       pet.setIsSick(true);
     }
     savePetStats();
-    pet.printStats('saved');
-    //notifyListeners();
     startAutoDecrease();
   }
 
+  //saving and notifying of listeners
   void savePetStats() {
     mood = pet.getPetState();
     storage.savePetStats(pet);
     notifyListeners();
   }
 
+  //pet interactions
   void feedPet() {
     pet.setHunger((pet.getHunger() + 20).clamp(0, 100));
     savePetStats();
@@ -114,6 +115,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
+  //if pet is not sick, poke increases happiness else, decreases energy
   void poke() {
     if (pet.getPetState() != "sick") {
       pet.setHappiness((pet.getHappiness() + 3).clamp(0, 100));
@@ -124,6 +126,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
+  //medicine interaction: all stat 100
   void healPet() {
     pet.setIsSick(false);
     pet.setHunger(100);

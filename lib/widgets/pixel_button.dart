@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/music_manager.dart';
 
+//button pixel design
 class PixelButton extends StatefulWidget {
   final String label;
   final IconData icon;

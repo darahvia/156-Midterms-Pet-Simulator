@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/local_storage.dart';
 import '../models/inventory.dart';
 
+//handles every user interaction with inventory
 class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
   Inventory inventory = Inventory();
   late LocalStorage storage;
@@ -16,18 +17,18 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
     super.dispose();
   }
 
+  //saves inventory data when app is in background or closed
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.detached) {
-      // App is going into background or being closed
       saveInventory();
     }
   }
 
+  //takes map of pet stats and assigns values to current Inventory object
   Future<void> loadInventory() async {
     final bag = await storage.loadInventory();
-    print(bag);
     bag.forEach((key, value) {
       print(
         'Key: $key, Value: $value',
@@ -41,11 +42,13 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
     notifyListeners();
   }
 
+  //save inventory and notify's listener
   void saveInventory() {
     storage.saveInventory(inventory);
     notifyListeners();
   }
 
+  //coin inteactions
   void addCoins(int amount) {
     inventory.setCoin(inventory.getCoin() + amount);
     notifyListeners();
@@ -58,6 +61,7 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
+  //item usage interaction: everytime an item is used -1
   void useItem(String item) {
     if (item == 'food') {
       inventory.setFood(inventory.getFood() - 1);
@@ -73,6 +77,7 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
+  //item buying interactions
   void buyFood(int num) {
     inventory.setFood(inventory.getFood() + num);
     saveInventory();
@@ -86,7 +91,7 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
   void buyMedicine(int num) {
     inventory.setMedicine(
       inventory.getMedicine() + num,
-    ); // Add medicine to inventory
+    ); 
     saveInventory();
   }
 }

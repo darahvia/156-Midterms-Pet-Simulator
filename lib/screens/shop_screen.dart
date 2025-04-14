@@ -3,20 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:pet_simulator/widgets/pet_display.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../providers/pet_provider.dart';
 import '../providers/coin_provider.dart';
 import '../widgets/pixel_button.dart';
 import '../widgets/coin_display.dart';
-import '../widgets/pet_display.dart';
 
 class ShopScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final petProvider = Provider.of<PetProvider>(context);
     final coinProvider = Provider.of<CoinProvider>(context);
-
-    // Determine the cat's expression based on its mood
-    String catImagePath;
 
     return Scaffold(
       appBar: AppBar(
@@ -45,7 +39,7 @@ class ShopScreen extends StatelessWidget {
           // Cat image positioned in the lower-right corner
           Positioned(
             bottom: 16,
-            right: 16, // Position the cat in the lower-right corner
+            right: 16, 
             child: PetDisplay(onTap: (tapPosition) {}),
           ),
           Positioned(
@@ -58,7 +52,7 @@ class ShopScreen extends StatelessWidget {
                 Row(
                   children: [
                     Image.asset(
-                      'assets/images/cat_food_bag.png', // Replace with your food image
+                      'assets/images/cat_food_bag.png', 
                       width: 40,
                       height: 40,
                     ),
@@ -76,7 +70,7 @@ class ShopScreen extends StatelessWidget {
                 Row(
                   children: [
                     Image.asset(
-                      'assets/images/soap.png', // Replace with your soap image
+                      'assets/images/soap.png', 
                       width: 40,
                       height: 40,
                     ),
@@ -94,7 +88,7 @@ class ShopScreen extends StatelessWidget {
                 Row(
                   children: [
                     Image.asset(
-                      'assets/images/medicine.png', // Replace with your medicine image
+                      'assets/images/medicine.png', 
                       width: 40,
                       height: 40,
                     ),
@@ -171,6 +165,7 @@ class ShopScreen extends StatelessWidget {
     );
   }
 
+  //handles purchases with confirmation query
   void _confirmPurchase(
     BuildContext context,
     CoinProvider coinProvider,

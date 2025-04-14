@@ -8,6 +8,7 @@ import '../providers/coin_provider.dart';
 import 'dart:io';
 import 'start_screen.dart';
 
+//if death condition met, navigate to this screen
 class DeathScreen extends StatelessWidget {
   const DeathScreen({Key? key}) : super(key: key);
 
@@ -39,10 +40,8 @@ class DeathScreen extends StatelessWidget {
       ),
       body: Stack(
         fit: StackFit.expand,
-        children: [
-          // Background image
+        children: [ 
           Image.asset('assets/images/dead_bg.png', fit: BoxFit.cover),
-          // Foreground content
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -67,6 +66,7 @@ class DeathScreen extends StatelessWidget {
                   label: 'Main Menu',
                   icon: Icons.home,
                   color: Colors.redAccent,
+                  //navigate back to start screen and delete petData
                   onPressed: () async {
                     print('Pet Name: ${petProvider.pet.getName()}');
                     print('Hunger: ${petProvider.pet.getHunger()}');

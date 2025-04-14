@@ -1,16 +1,22 @@
-# pet_simulator
+# Pixel Pet
 
-A new Flutter project.
+Pet Simulation Game
 
-## Getting Started
+# Specs
 
-This project is a starting point for a Flutter application.
+- User can adopt and name pet cat
+- Pets will have the following stats: 
+    - Hunger: decreases steadily over time
+    - Energy: decreases during play
+    - Hygiene: increases steadily over time, decreases whan playing
+    - Happiness: decreases over time, increases when playing
+    - Users can feed, play with, and clean their pet to maintain their stats.
+- Pet Sickness: If hunger, happiness and hygiene reaches zero
+    - sick pet stats cannot increase, and energy will slowly decrease
+    - poking will make pet lose energy faster
+    - medicate pet to remove sick condition and get stats to full
+- Shop: buy medicine, food and soap needed to interact with pet
+- Coin System: User earns coins by playing tictactoe in 3 difficulty levels: easy(1), medium(5), hard(10).
+    - coins can be used for buying in shop 
+- Pet progress and inventory will be stored in local data so user can visit pet again with stats that will update accordingly to how longer user last opened app
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.

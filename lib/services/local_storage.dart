@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import '../models/pet.dart';
 import '../models/inventory.dart';
 
+//handles manipulation of data saved in txt files
 class LocalStorage {
   //getting file path of needed file
   static Future<String> _getFilePath(String filename) async {
@@ -10,6 +11,7 @@ class LocalStorage {
     return '${dir.path}/$filename.txtR';
   }
 
+  //saves inventoryData
   Future<void> saveInventory(Inventory inventory) async {
     final path = await _getFilePath('inventoryData');
     final file = File(path);
@@ -22,6 +24,7 @@ class LocalStorage {
     await file.writeAsString(content);
   }
 
+  //finds inventoryData and returns it as map of inventory values
   Future<Map<String, dynamic>> loadInventory() async {
     try {
       final path = await _getFilePath('inventoryData');
@@ -47,7 +50,7 @@ class LocalStorage {
     }
   }
 
-
+  // handles saving of petData as txt file
   Future<void> savePetStats(Pet pet) async {
     final path = await _getFilePath('petData');
     final file = File(path);
@@ -67,6 +70,7 @@ class LocalStorage {
     print('Pet data saved to ${file.path}');
   }
 
+  //finds and accesses petData, returns it as map with keys and values
   Future<Map<String, dynamic>> loadPetStats() async {
     try {
       final path = await _getFilePath('petData');
@@ -83,11 +87,12 @@ class LocalStorage {
         if (parts.length == 2) {
           final key = parts[0].trim();
           final value = parts[1];
+          //handles parsing of diff data
           if (key == 'lastUpdatedHunger' || key == 'lastUpdatedHygiene' || key == 'lastUpdatedEnergy' || key == 'lastUpdatedHappiness') {
             data[key] = DateTime.tryParse(value);
           } 
           else if (key == 'name') {
-            data[key] = value; // name is a string, so we keep it as a string
+            data[key] = value; 
           }
           else if (key == 'health') {
             data[key] = (value.toLowerCase() == 'true');

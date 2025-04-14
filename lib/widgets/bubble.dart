@@ -6,6 +6,7 @@ class Bubble extends StatefulWidget {
   final VoidCallback onComplete;
   final String image;
 
+  //handles creation of bubble images with animation in given position
   const Bubble({
     super.key,
     required this.left,
@@ -32,10 +33,12 @@ class _BubbleState extends State<Bubble> with SingleTickerProviderStateMixin {
       vsync: this,
     );
 
+    //movement
     _riseAnimation = Tween<double>(begin: 0, end: 300).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeOut),
     );
-
+    
+    //fading
     _opacityAnimation = Tween<double>(begin: 1, end: 0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );

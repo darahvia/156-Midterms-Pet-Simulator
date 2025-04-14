@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+//progressbar design
 class PixelProgressBar extends StatelessWidget {
   final double progress; // Value between 0 and 1
   final double width;

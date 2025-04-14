@@ -1,4 +1,4 @@
-//import 'dart:ffi';
+//tracks pet data from when app is opened until it is closed
 
 class Pet {
   String _name = "";
@@ -32,6 +32,7 @@ class Pet {
   }
 
   // autodecrease and restart
+  //((seconds between last update of stat and now)/set interval between decrease of stats) * set amount of value being added or taken away)
   void applyElapsedTime() {
     if (!_isSick) {
       final now = DateTime.now();
@@ -164,6 +165,7 @@ class Pet {
     return _petState;
   }
 
+  //for debugging
   void printStats(String action) {
     print(
       '$action - Hunger: $_hunger, Hygiene: $_hygiene, Happiness: $_happiness, Energy: $_energy Health: $_isSick',

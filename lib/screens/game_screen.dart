@@ -7,6 +7,7 @@ import '../widgets/pixel_button.dart';
 import '../widgets/coin_display.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+//ui for game screen
 class GameScreen extends StatefulWidget {
   const GameScreen({super.key});
 
@@ -189,6 +190,7 @@ class _GameScreenState extends State<GameScreen> {
                 spacing: 8,
                 alignment: WrapAlignment.center,
                 children: [
+                  //disable continue when game not done
                   PixelButton(
                     label: 'Continue',
                     icon: Icons.exit_to_app,

@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/pet_provider.dart';
 import '../providers/coin_provider.dart';
-import '../services/local_storage.dart';
 import '../widgets/pixel_button.dart';
 import 'pet_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+//welcome page for user
 class StartScreen extends StatefulWidget {
   @override
   _StartScreenState createState() => _StartScreenState();
@@ -23,6 +23,7 @@ class _StartScreenState extends State<StartScreen> {
     checkExistingPet();
   }
 
+  //check if user already has pet and assign existing name
   Future<void> checkExistingPet() async {
     final petProvider = Provider.of<PetProvider>(context, listen: false);
     final stats = await petProvider.storage.loadPetStats();
@@ -57,6 +58,7 @@ class _StartScreenState extends State<StartScreen> {
             child: Padding(
               padding: EdgeInsets.all(20),
               child:
+                  //if pet exists button shows petName and loads available data
                   petExists
                       ? PixelButton(
                         label: '$existingName',
@@ -73,6 +75,8 @@ class _StartScreenState extends State<StartScreen> {
                           );
                         },
                       )
+                      //if no pet, ask for name and load fixed data for new pet created
+                      //button to adopt disabled when textfield empty
                       : Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -102,7 +106,7 @@ class _StartScreenState extends State<StartScreen> {
                                     ? () {
                                       petProvider.loadPetStats(
                                         petName: _nameController.text.trim(),
-                                      );
+                                      ); //get name from text field
                                       coinProvider.loadInventory();
                                       Navigator.push(
                                         context,

@@ -1,3 +1,4 @@
+//tracks inventory items
 class Inventory {
   int _coin = 0;
   int _food = 0;

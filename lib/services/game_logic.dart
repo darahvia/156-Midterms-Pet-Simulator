@@ -32,7 +32,7 @@ class GameLogic {
 
     if (difficulty == Difficulty.easy) {
       _randomMove(); // only random
-    } else if (difficulty == Difficulty.medium) {
+    } else if (difficulty == Difficulty.medium) { //will prioritize winning conditions over random
       int? win = _findWinningMove("O");
       if (win != null) {
         game.board[win] = "O";
@@ -40,7 +40,7 @@ class GameLogic {
         return;
       }
       _randomMove();
-    } else {
+    } else {  //will prioritize winning and block user win
       int? win = _findWinningMove("O");
       if (win != null) {
         game.board[win] = "O";
@@ -59,6 +59,7 @@ class GameLogic {
     }
   }
 
+  //handle random move
   void _randomMove() {
     List<int> availableMoves = [];
     for (int i = 0; i < game.board.length; i++) {
@@ -75,6 +76,7 @@ class GameLogic {
     }
   }
 
+  //find if computer has a winning combination and return index that will complete it
   int? _findWinningMove(String symbol) {
     List<List<int>> winConditions = [
       [0, 1, 2],

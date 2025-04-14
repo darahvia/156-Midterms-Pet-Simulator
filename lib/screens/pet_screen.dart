@@ -11,9 +11,9 @@ import '../widgets/pixel_progress_bar.dart';
 import '../services/music_manager.dart';
 import 'game_screen.dart';
 import 'shop_screen.dart';
-import 'death_screen.dart';
 import 'dart:math';
 
+//ui for main pet screen
 class PetScreen extends StatefulWidget {
   @override
   _PetScreenState createState() => _PetScreenState();
@@ -34,10 +34,12 @@ class _PetScreenState extends State<PetScreen> {
     final petProvider = Provider.of<PetProvider>(context);
     final coinProvider = Provider.of<CoinProvider>(context);
 
+    //button keys for tracking positions
     final GlobalKey feedButtonKey = GlobalKey();
     final GlobalKey cleanButtonKey = GlobalKey();
     final GlobalKey playButtonKey = GlobalKey();
 
+    // handle creation of image bubbles with bubble animation 
     @override
     void addBubble({
       GlobalKey? key,
@@ -66,6 +68,7 @@ class _PetScreenState extends State<PetScreen> {
 
       final bubbleKey = UniqueKey();
 
+      //adds bubble object to bubbles list
       setState(() {
         bubbles.add(
           Bubble(
@@ -112,7 +115,7 @@ class _PetScreenState extends State<PetScreen> {
                   padding: const EdgeInsets.symmetric(
                     vertical: 5.0,
                     horizontal: 16.0,
-                  ), // Padding on left and right
+                  ),
                   child: Row(
                     mainAxisAlignment:
                         MainAxisAlignment
@@ -121,13 +124,13 @@ class _PetScreenState extends State<PetScreen> {
                       Text(
                         'Hunger:',
                         style: GoogleFonts.pressStart2p(
-                          fontSize: 8, // Pixel font style
+                          fontSize: 8,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       PixelProgressBar(
                         progress: petProvider.pet.getHunger() / 100,
-                        width: 200, // You can adjust the width as needed
+                        width: 200,
                         height: 20,
                         color: Colors.red,
                       ),
@@ -210,20 +213,26 @@ class _PetScreenState extends State<PetScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
+                //showing petDisplay and handles tapping
                 PetDisplay(
                   onTap: (tapPosition) {
                     addBubble(
                       position: tapPosition,
                       imagePath:
+                          //creates heart bubbles when petDisplay is tapped
                           petProvider.pet.getPetState() != "sick"
-                              ? (hearts[Random().nextInt(hearts.length)])
-                              : ('assets/images/heart_broken.png'),
+                              ? (hearts[Random().nextInt(hearts.length)])//from hearts list
+                              : ('assets/images/heart_broken.png'),//broken heart for when sick
                     );
                   },
                 ),
 
+                //pet interaction buttons
                 SizedBox(height: 20),
                 petProvider.pet.getPetState() != "sick"
+                //when sick only show medicate button
+                //if inventory doesn't have necessary items, disable button
+                //if pet stat for interaction is full, disable button
                     ? Wrap(
                       spacing: 8,
                       runSpacing: 8,
@@ -325,6 +334,7 @@ class _PetScreenState extends State<PetScreen> {
                       ],
                     ),
                 SizedBox(height: 10),
+                //navigation buttons: Shop & Game
                 Wrap(
                   spacing: 8,
                   alignment: WrapAlignment.center,
@@ -358,7 +368,7 @@ class _PetScreenState extends State<PetScreen> {
               ],
             ),
           ),
-          ...bubbles,
+          ...bubbles, //renders bubbles list
         ],
       ),
     );

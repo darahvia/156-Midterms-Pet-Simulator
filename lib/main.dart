@@ -5,10 +5,10 @@ import 'providers/coin_provider.dart';
 import 'screens/start_screen.dart';
 import 'services/music_manager.dart';
 import '../services/local_storage.dart';
-//import 'package:path_provider/path_provider.dart';
+
 
 void main() {
-  LocalStorage storage = LocalStorage();
+  LocalStorage storage = LocalStorage(); //initialize local storage
   runApp(
     MultiProvider(
       providers: [
@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    MusicManager.playMusic(); // Start music once
+    MusicManager.playMusic(); // Start background music once
   }
 
   @override
@@ -38,7 +38,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
-
+  
+  //music control when App not active
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||

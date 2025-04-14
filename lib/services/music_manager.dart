@@ -1,5 +1,6 @@
 import 'package:audioplayers/audioplayers.dart';
 
+//handle music
 class MusicManager {
   static final AudioPlayer _bgPlayer = AudioPlayer();
   static final AudioPlayer _effectPlayer = AudioPlayer();
@@ -36,12 +37,12 @@ class MusicManager {
     }
   }
 
-  // Play sound effect (ensure it doesn't interfere with background music)
+  // handle sfx
   static Future<void> playSoundEffect(String soundPath) async {
     // Stop the effect player before playing a new effect
     await _effectPlayer.stop();
 
-    // Play the sound effect with independent volume settings
+    // ensures that effect and bg music is not occupying the same channel for synchronous playing
     await _effectPlayer.setAudioContext(
       AudioContext(
         android: AudioContextAndroid(

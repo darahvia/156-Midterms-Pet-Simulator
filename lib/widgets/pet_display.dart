@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/pet_provider.dart';
 import '../services/music_manager.dart';
 
+//controls pet display
 class PetDisplay extends StatelessWidget {
   final void Function(Offset tapPosition)? onTap;
 
@@ -30,6 +31,7 @@ class PetDisplay extends StatelessWidget {
       imagePath = 'assets/images/cat_happy.png';
     }
 
+    //handles tapping on pet display
     return GestureDetector(
       onTapDown: (details) {
         if (onTap != null) {
@@ -45,7 +47,7 @@ class PetDisplay extends StatelessWidget {
         }
       },
       child: Center(
-        child: AnimatedSwitcher(
+        child: AnimatedSwitcher( //animation for fading between image change
           duration: Duration(milliseconds: 500),
           child: Image.asset(
             imagePath,
