@@ -11,7 +11,7 @@ Pet Simulation Game
     - Hygiene: increases steadily over time, decreases whan playing
     - Happiness: decreases over time, increases when playing
     - Users can feed, play with, and clean their pet to maintain their stats.
-- Pet Sickness: If hunger, happiness and hygiene reaches zero
+- Pet Sickness: If hunger, happiness and hygiene reaches zero while app is closed
     - sick pet stats cannot increase, and energy will slowly decrease
     - poking will make pet lose energy faster
     - medicate pet to remove sick condition and get stats to full
