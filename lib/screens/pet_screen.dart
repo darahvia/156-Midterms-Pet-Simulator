@@ -15,6 +15,8 @@ import 'dart:math';
 
 //ui for main pet screen
 class PetScreen extends StatefulWidget {
+  const PetScreen({super.key});
+
   @override
   _PetScreenState createState() => _PetScreenState();
 }

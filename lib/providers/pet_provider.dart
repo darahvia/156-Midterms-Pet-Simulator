@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import '../models/pet.dart';
-import '../services/local_storage.dart';
+import '../services/handle_storage.dart';
 import 'dart:async';
 
 //handles interactions with pet
 class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   Pet pet = Pet();
-  late LocalStorage storage;
+  late HandleStorage storage;
   Timer? _timer;
   String mood = "normal";
 
-  PetProvider(LocalStorage ls) {
-    storage = ls;
+  PetProvider() {
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -29,6 +28,10 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
         state == AppLifecycleState.detached) {
       savePetStats();
     }
+  }
+
+  void setStorage(HandleStorage handle) {
+    storage = handle;
   }
 
   //handles autodecrease of stats: currently set at 5s intervals

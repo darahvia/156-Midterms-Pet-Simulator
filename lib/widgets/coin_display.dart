@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 
 //handles coin display
 class CoinDisplay extends StatelessWidget {
+  const CoinDisplay({super.key});
+
   @override
   Widget build(BuildContext context) {
     final coinProvider = Provider.of<CoinProvider>(context);

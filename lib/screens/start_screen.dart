@@ -5,9 +5,12 @@ import '../providers/coin_provider.dart';
 import '../widgets/pixel_button.dart';
 import 'pet_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../services/handle_storage.dart';
 
 //welcome page for user
 class StartScreen extends StatefulWidget {
+  const StartScreen({super.key});
+
   @override
   _StartScreenState createState() => _StartScreenState();
 }
@@ -20,7 +23,16 @@ class _StartScreenState extends State<StartScreen> {
   @override
   void initState() {
     super.initState();
+    createStorage();
     checkExistingPet();
+  }
+
+  Future<void> createStorage() async{
+      HandleStorage storage = HandleStorage();
+      final petProvider = Provider.of<PetProvider>(context, listen: false);
+      final coinProvider = Provider.of<CoinProvider>(context, listen: false);
+      petProvider.setStorage(storage);
+      coinProvider.setStorage(storage);
   }
 
   //check if user already has pet and assign existing name
@@ -61,7 +73,7 @@ class _StartScreenState extends State<StartScreen> {
                   //if pet exists button shows petName and loads available data
                   petExists
                       ? PixelButton(
-                        label: '$existingName',
+                        label: existingName,
                         icon: Icons.pets,
                         color: Colors.orange,
                         onPressed: () {

@@ -8,6 +8,8 @@ import '../widgets/pixel_button.dart';
 import '../widgets/coin_display.dart';
 
 class ShopScreen extends StatelessWidget {
+  const ShopScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     final coinProvider = Provider.of<CoinProvider>(context);
@@ -32,7 +34,7 @@ class ShopScreen extends StatelessWidget {
           // Background image
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/images/livingroom.png',
+              'lib/assets/images/store.png',
               fit: BoxFit.cover,
             ),
           ),

@@ -2,18 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/pet_provider.dart';
 import 'providers/coin_provider.dart';
-import 'screens/start_screen.dart';
+import 'screens/login_page.dart';
 import 'services/music_manager.dart';
-import '../services/local_storage.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import '../services/handle_storage.dart';
 
 
-void main() {
-  LocalStorage storage = LocalStorage(); //initialize local storage
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(
     MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => PetProvider(storage)),
-        ChangeNotifierProvider(create: (_) => CoinProvider(storage)),
+        ChangeNotifierProvider(create: (_) => PetProvider()),
+        ChangeNotifierProvider(create: (_) => CoinProvider()),
       ],
       child: MyApp(),
     ),
@@ -21,6 +24,8 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -54,8 +59,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: StartScreen(),
+      home: LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
+
+

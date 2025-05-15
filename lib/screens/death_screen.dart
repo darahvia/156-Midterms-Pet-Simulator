@@ -10,7 +10,7 @@ import 'start_screen.dart';
 
 //if death condition met, navigate to this screen
 class DeathScreen extends StatelessWidget {
-  const DeathScreen({Key? key}) : super(key: key);
+  const DeathScreen({super.key});
 
   Future<void> _deleteAllData(BuildContext context) async {
     final petProvider = Provider.of<PetProvider>(context, listen: false);

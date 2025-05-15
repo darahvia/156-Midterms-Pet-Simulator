@@ -7,7 +7,7 @@ class PixelProgressBar extends StatelessWidget {
   final double height;
   final Color color;
 
-  const PixelProgressBar({
+  const PixelProgressBar({super.key, 
     required this.progress,
     required this.width,
     required this.height,

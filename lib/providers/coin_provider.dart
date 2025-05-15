@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import '../services/local_storage.dart';
+import '../services/handle_storage.dart';
 import '../models/inventory.dart';
 
 //handles every user interaction with inventory
 class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
   Inventory inventory = Inventory();
-  late LocalStorage storage;
-  CoinProvider(LocalStorage ls) {
-    storage = ls;
+  late HandleStorage storage;
+  CoinProvider() {
     WidgetsBinding.instance.addObserver(this);
   }
 
@@ -24,6 +23,10 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
         state == AppLifecycleState.detached) {
       saveInventory();
     }
+  }
+
+  void setStorage(HandleStorage handle) {
+    storage = handle;
   }
 
   //takes map of pet stats and assigns values to current Inventory object
