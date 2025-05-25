@@ -110,6 +110,14 @@ flutter:
     - assets/images/bowtie.png
     - assets/images/cowboyhat.png
     - assets/images/necktie.png
+    - assets/images/bone.png
+    - assets/images/ball.png
+    - assets/images/chicken.png
+    - assets/images/fish_bone.png
+    - assets/images/ cat_likes.png
+    - assets/images/cat_dislikes.png
+    - assets/images/teddy.png
+    - assets/images/scary_teddy.png
 
     #audio
     - assets/audio/background_music.mp3
