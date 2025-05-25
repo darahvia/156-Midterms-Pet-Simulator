@@ -9,6 +9,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   late HandleStorage storage;
   Timer? _timer;
   String mood = "normal";
+  String? currentClothing;
 
   PetProvider() {
     WidgetsBinding.instance.addObserver(this);
@@ -137,5 +138,10 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     pet.setEnergy(100);
     pet.setHappiness(100);
     savePetStats();
+  }
+
+  void setCurrentClothing(String clothing) {
+    currentClothing = clothing;
+    notifyListeners();
   }
 }

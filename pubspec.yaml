@@ -104,6 +104,12 @@ flutter:
     - assets/images/cat_dead.png
     - assets/images/medicine.png
     - assets/images/store.png
+    - assets/images/shop_icon.png
+    - assets/images/glasses.png
+    - assets/images/hat.png
+    - assets/images/bowtie.png
+    - assets/images/cowboyhat.png
+    - assets/images/necktie.png
 
     #audio
     - assets/audio/background_music.mp3

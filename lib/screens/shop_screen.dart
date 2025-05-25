@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../providers/coin_provider.dart';
 import '../widgets/pixel_button.dart';
 import '../widgets/coin_display.dart';
+import '../screens/clothing_shop_screen.dart';
 
 class ShopScreen extends StatelessWidget {
   const ShopScreen({super.key});
@@ -153,6 +154,21 @@ class ShopScreen extends StatelessWidget {
                               1,
                             ); // Add 1 medicine to inventory
                           }),
+                    ),
+                    SizedBox(height:16),
+                    //Clothing Shop Button
+                    PixelButton(
+                      label: 'Clothing',
+                      icon: Icons.checkroom,
+                      color: Colors.purple,
+                      onPressed: (){
+                        Navigator.push(
+                          context, 
+                          MaterialPageRoute(
+                            builder: (context) => ClothingShopScreen(),
+                          ),
+                        );
+                      },
                     ),
                     const SizedBox(height: 82),
                   ],

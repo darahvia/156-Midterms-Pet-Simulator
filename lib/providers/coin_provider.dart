@@ -97,4 +97,13 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
     ); 
     saveInventory();
   }
+
+  void buyClothing(String clothing) {
+    if (inventory.getCoin() >= 5 && !inventory.ownsClothing(clothing)) {
+    inventory.setCoin(inventory.getCoin() - 5);
+    inventory.addClothing(clothing);
+    saveInventory();
+    notifyListeners();
+    }
+  }
 }
