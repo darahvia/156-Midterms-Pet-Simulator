@@ -4,8 +4,10 @@ import '../providers/pet_provider.dart';
 import '../providers/coin_provider.dart';
 import '../widgets/pixel_button.dart';
 import 'pet_screen.dart';
+import 'login_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/handle_storage.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 //welcome page for user
 class StartScreen extends StatefulWidget {
@@ -47,6 +49,15 @@ class _StartScreenState extends State<StartScreen> {
     }
   }
 
+  Future<void> _logout() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final petProvider = Provider.of<PetProvider>(context, listen: false);
@@ -72,21 +83,34 @@ class _StartScreenState extends State<StartScreen> {
               child:
                   //if pet exists button shows petName and loads available data
                   petExists
-                      ? PixelButton(
-                        label: existingName,
-                        icon: Icons.pets,
-                        color: Colors.orange,
-                        onPressed: () {
-                          petProvider.loadPetStats(); // load with existing name
-                          coinProvider.loadInventory();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => PetScreen(),
-                            ),
-                          );
-                        },
+                      ? Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          PixelButton(
+                            label: existingName,
+                            icon: Icons.pets,
+                            color: Colors.orange,
+                            onPressed: () {
+                              petProvider.loadPetStats();
+                              coinProvider.loadInventory();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => PetScreen(),
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(width: 12),
+                          PixelButton(
+                            label: 'Logout',
+                            icon: Icons.logout,
+                            color: Colors.red,
+                            onPressed: _logout,
+                          ),
+                        ],
                       )
+
                       //if no pet, ask for name and load fixed data for new pet created
                       //button to adopt disabled when textfield empty
                       : Column(
@@ -128,6 +152,13 @@ class _StartScreenState extends State<StartScreen> {
                                       );
                                     }
                                     : null,
+                          ),
+                          SizedBox(width: 12),
+                          PixelButton(
+                            label: 'Logout',
+                            icon: Icons.logout,
+                            color: Colors.red,
+                            onPressed: _logout,
                           ),
                         ],
                       ),
