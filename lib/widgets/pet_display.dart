@@ -47,13 +47,31 @@ class PetDisplay extends StatelessWidget {
         }
       },
       child: Center(
-        child: AnimatedSwitcher( //animation for fading between image change
-          duration: Duration(milliseconds: 500),
-          child: Image.asset(
-            imagePath,
-            key: ValueKey<String>(imagePath),
-            fit: BoxFit.cover,
-          ),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            AnimatedSwitcher( //animation for fading between image change
+              duration: Duration(milliseconds: 500),
+              child: Image.asset(
+                imagePath,
+                key: ValueKey<String>(imagePath),
+                fit: BoxFit.cover,
+              ),
+            ),
+            if (petProvider.currentClothing != null)
+              Image.asset(
+                'assets/images/${petProvider.currentClothing}_${mood}.png',
+                width: 200,
+                height: 200,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'assets/images/${petProvider.currentClothing}.png',
+                    width: 200,
+                    height: 200,
+                  );
+                },
+              ),
+          ],
         ),
       ),
     );

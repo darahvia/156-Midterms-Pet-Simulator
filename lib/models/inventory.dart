@@ -5,6 +5,19 @@ class Inventory {
   int _soap = 0;
   int _medicine = 0;
 
+  // Add clothing inventory
+  List<String> ownedClothing = [];
+
+  void addClothing(String clothing) {
+    if (!ownedClothing.contains(clothing)) {
+      ownedClothing.add(clothing);
+    }
+  }
+
+  bool ownsClothing(String clothing) {
+    return ownedClothing.contains(clothing);
+  }
+  
   // getter
   int getCoin() {
     return _coin;
