@@ -26,6 +26,7 @@ class HandleStorage {
       food:${inventory.getFood()}
       soap:${inventory.getSoap()}
       medicine:${inventory.getMedicine()}
+      lastUpdated:${DateTime.now().toIso8601String()}
       ''';
     await file.writeAsString(content);
 
@@ -59,7 +60,13 @@ class HandleStorage {
           if (parts.length == 2) {
             final key = parts[0].trim();
             final value = parts[1];
-            localData[key] = int.tryParse(value) ?? 0;
+            if (key == 'lastUpdated'){
+              localData[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+              localLastUpdated = localData[key];
+            }
+            else{
+              localData[key] = int.tryParse(value) ?? 0;
+            }
           }
         }
       }
@@ -85,6 +92,7 @@ class HandleStorage {
               food:${fbData['food']}
               soap:${fbData['soap']}
               medicine:${fbData['medicine']}
+              lastUpdated:${DateTime.now().toIso8601String()}
               ''';
             await file.writeAsString(content);
 
@@ -94,6 +102,7 @@ class HandleStorage {
               'food': fbData['food'],
               'soap': fbData['soap'],
               'medicine': fbData['medicine'],
+              'lastUpdated': DateTime.now().toIso8601String(),
             };
           }
         }
@@ -121,6 +130,7 @@ class HandleStorage {
       lastUpdatedHygiene:${pet.getLastUpdated('hygiene').toIso8601String()}
       lastUpdatedEnergy:${pet.getLastUpdated('energy').toIso8601String()}
       lastUpdatedHappiness:${pet.getLastUpdated('happiness').toIso8601String()}
+      lastUpdated:${DateTime.now().toIso8601String()}
       ''';
     await file.writeAsString(content);
     print('Pet data saved locally to ${file.path}');
@@ -138,6 +148,7 @@ class HandleStorage {
         'lastUpdatedHygiene': pet.getLastUpdated('hygiene').toIso8601String(),
         'lastUpdatedEnergy': pet.getLastUpdated('energy').toIso8601String(),
         'lastUpdatedHappiness': pet.getLastUpdated('happiness').toIso8601String(),
+        'lastUpdated': DateTime.now().toIso8601String(),
       };
       await _firestore.collection('users').doc(uid).set(
         {'petStats': petData},
@@ -150,8 +161,7 @@ class HandleStorage {
   // ---------------- Load Pet Stats (Local first, then Firebase to update local if newer)
   Future<Map<String, dynamic>> loadPetStats() async {
     Map<String, dynamic> localData = {};
-    Map<String, DateTime> localTimestamps = {};
-
+    DateTime? localLastUpdated;
     try {
       final path = await _getFilePath('petData');
       final file = File(path);
@@ -162,9 +172,11 @@ class HandleStorage {
           if (parts.length == 2) {
             final key = parts[0].trim();
             final value = parts[1];
-
-            if (key == 'lastUpdatedHunger' || key == 'lastUpdatedHygiene' || key == 'lastUpdatedEnergy' || key == 'lastUpdatedHappiness') {
-              localTimestamps[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+            if (key == 'lastUpdated') {
+              localData[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+              localLastUpdated = localData[key];
+            } else if (key == 'lastUpdatedHunger' || key == 'lastUpdatedHygiene' || key == 'lastUpdatedEnergy' || key == 'lastUpdatedHappiness') {
+              localData[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
             } else if (key == 'name') {
               localData[key] = value;
             } else if (key == 'health') {
@@ -184,28 +196,11 @@ class HandleStorage {
       if (doc.exists) {
         final fbData = doc.data()?['petStats'];
         if (fbData != null) {
-          bool firebaseIsNewer = false;
+          final fbLastUpdatedStr = fbData['lastUpdated'] as String?;
+          DateTime? fbLastUpdated = fbLastUpdatedStr != null ? DateTime.tryParse(fbLastUpdatedStr) : null;
 
-          // Compare timestamps to check if Firebase data is newer
-          for (var tsKey in [
-            'lastUpdatedHunger',
-            'lastUpdatedHygiene',
-            'lastUpdatedEnergy',
-            'lastUpdatedHappiness'
-          ]) {
-            final fbTsStr = fbData[tsKey] as String?;
-            if (fbTsStr == null) continue;
-            final fbTs = DateTime.tryParse(fbTsStr);
-            final localTs = localTimestamps[tsKey] ?? DateTime.fromMillisecondsSinceEpoch(0);
-
-            if (fbTs != null && fbTs.isAfter(localTs)) {
-              firebaseIsNewer = true;
-              break;
-            }
-          }
-
-          if (firebaseIsNewer) {
-            // Update local file with Firebase data
+          if (fbLastUpdated != null && (localLastUpdated == null || fbLastUpdated.isAfter(localLastUpdated))) {
+            // Update local file
             final file = File(await _getFilePath('petData'));
             final content = '''
               name:${fbData['name']}
@@ -218,11 +213,23 @@ class HandleStorage {
               lastUpdatedHygiene:${fbData['lastUpdatedHygiene']}
               lastUpdatedEnergy:${fbData['lastUpdatedEnergy']}
               lastUpdatedHappiness:${fbData['lastUpdatedHappiness']}
+              lastUpdated:${DateTime.now().toIso8601String()}
               ''';
             await file.writeAsString(content);
 
-            // Return firebase data
-            return Map<String, dynamic>.from(fbData);
+            return {
+              'name': fbData['name'],
+              'hunger': fbData['hunger'],
+              'hygiene': fbData['hygiene'],
+              'happiness': fbData['happiness'],
+              'energy': fbData['energy'],
+              'health': fbData['health'],
+              'lastUpdatedHunger': fbData['lastUpdatedHunger'],
+              'lastUpdatedHygiene': fbData['lastUpdatedHygiene'],
+              'lastUpdatedEnergy': fbData['lastUpdatedEnergy'],
+              'lastUpdatedHappiness': fbData['lastUpdatedHappiness'],
+              'lastUpdated': DateTime.now().toIso8601String(),
+            };
           }
         }
       }

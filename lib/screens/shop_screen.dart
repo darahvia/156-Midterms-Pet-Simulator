@@ -34,7 +34,7 @@ class ShopScreen extends StatelessWidget {
           // Background image
           Positioned.fill(
             child: Image.asset(
-              'lib/assets/images/store.png',
+              'assets/images/store.png',
               fit: BoxFit.cover,
             ),
           ),

@@ -75,7 +75,7 @@ class _PixelButtonState extends State<PixelButton> {
                 Text(
                   widget.label,
                   style: GoogleFonts.pressStart2p(
-                    fontSize: 6,
+                    fontSize: 10,
                     color: widget.isEnabled ? Colors.black : Colors.grey,
                   ),
                 ),
