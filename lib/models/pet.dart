@@ -33,7 +33,7 @@ class Pet {
 
   // autodecrease and restart
   //((seconds between last update of stat and now)/set interval between decrease of stats) * set amount of value being added or taken away)
-  void applyElapsedTime() {
+  Future applyElapsedTime(int interval) async{
     if (!_isSick) {
       final now = DateTime.now();
       final elapsedSecondsHunger = now.difference(_lastUpdatedHunger).inSeconds;
@@ -44,22 +44,22 @@ class Pet {
           now.difference(_lastUpdatedHappiness).inSeconds;
 
       if (elapsedSecondsHunger > 0) {
-        final decreaseAmount = (elapsedSecondsHunger / 5).floor();
+        final decreaseAmount = (elapsedSecondsHunger / interval).floor();
         _hunger = (_hunger - (decreaseAmount * 10)).clamp(0, 100);
         _lastUpdatedHunger = DateTime.now();
       }
       if (elapsedSecondsHygiene > 0) {
-        final decreaseAmount = (elapsedSecondsHygiene / 5).floor();
+        final decreaseAmount = (elapsedSecondsHygiene / interval).floor();
         _hygiene = (_hygiene - (decreaseAmount * 5)).clamp(0, 100);
         _lastUpdatedHygiene = DateTime.now();
       }
       if (elapsedSecondsEnergy > 0) {
-        final decreaseAmount = (elapsedSecondsEnergy / 5).ceil();
+        final decreaseAmount = (elapsedSecondsEnergy / interval).ceil();
         _energy = (_energy + (decreaseAmount * 10)).clamp(0, 100);
         _lastUpdatedEnergy = DateTime.now();
       }
       if (elapsedSecondsHappiness > 0) {
-        final decreaseAmount = (elapsedSecondsHappiness / 5).floor();
+        final decreaseAmount = (elapsedSecondsHappiness / interval).floor();
         _happiness = (_happiness - (decreaseAmount * 10)).clamp(0, 100);
         _lastUpdatedHappiness = DateTime.now();
       }
@@ -67,7 +67,7 @@ class Pet {
       final elapsedSecondsEnergy =
           DateTime.now().difference(_lastUpdatedEnergy).inSeconds;
       if (elapsedSecondsEnergy > 0) {
-        final decreaseAmount = (elapsedSecondsEnergy / 5).floor();
+        final decreaseAmount = (elapsedSecondsEnergy / interval).floor();
         _energy = (_energy - (decreaseAmount * 10)).clamp(0, 100);
         _lastUpdatedEnergy = DateTime.now();
       }

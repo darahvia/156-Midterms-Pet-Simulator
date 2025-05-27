@@ -41,7 +41,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   void startAutoDecrease() {
     _autoDecreaseTimer?.cancel();
     _autoDecreaseTimer = Timer.periodic(Duration(seconds: 5), (timer) {
-      pet.applyElapsedTime();
+      pet.applyElapsedTime(5);
       savePetStats();
     });
   }
@@ -89,7 +89,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
           ? DateTime.parse(stats["lastUpdatedEnergy"])
           : DateTime.now(),
     );
-    pet.applyElapsedTime();
+    pet.applyElapsedTime(10);
     savePetStats();
     //checks if pet sick upon loading
     if ((pet.getHunger() == 0) &&

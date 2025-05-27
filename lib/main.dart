@@ -3,10 +3,10 @@ import 'package:provider/provider.dart';
 import 'providers/pet_provider.dart';
 import 'providers/coin_provider.dart';
 import 'screens/login_page.dart';
+import 'screens/start_screen.dart';
 import 'services/music_manager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../services/handle_storage.dart';
 
 
 void main() async {
@@ -58,8 +58,10 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
+
     return MaterialApp(
-      home: LoginPage(),
+      home: user != null ? StartScreen() : LoginPage(),
       debugShowCheckedModeBanner: false,
     );
   }
