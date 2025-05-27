@@ -1,4 +1,6 @@
+import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_simulator/models/flappy-game.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
@@ -362,6 +364,30 @@ class _PetScreenState extends State<PetScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => GameScreen(),
+                            ),
+                          ),
+                    ),
+                    PixelButton(
+                      label: 'Game',
+                      icon: Icons.sports_esports,
+                      color: Colors.pinkAccent,
+                      onPressed:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GameScreen(),
+                            ),
+                          ),
+                    ),
+                    PixelButton(
+                      label: 'Flappy Bird',
+                      icon: Icons.sports_esports,
+                      color: Colors.pinkAccent,
+                      onPressed:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => GameWidget(game: FlappyBirdGame()),
                             ),
                           ),
                     ),
