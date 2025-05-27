@@ -102,7 +102,7 @@ class HandleStorage {
               'food': fbData['food'],
               'soap': fbData['soap'],
               'medicine': fbData['medicine'],
-              'lastUpdated': DateTime.now().toIso8601String(),
+              'lastUpdated': DateTime.now(),
             };
           }
         }
@@ -213,22 +213,22 @@ class HandleStorage {
               lastUpdatedHygiene:${fbData['lastUpdatedHygiene']}
               lastUpdatedEnergy:${fbData['lastUpdatedEnergy']}
               lastUpdatedHappiness:${fbData['lastUpdatedHappiness']}
-              lastUpdated:${DateTime.now().toIso8601String()}
+              lastUpdated:${fbLastUpdated.toIso8601String()}
               ''';
             await file.writeAsString(content);
 
             return {
               'name': fbData['name'],
-              'hunger': fbData['hunger'],
-              'hygiene': fbData['hygiene'],
-              'happiness': fbData['happiness'],
-              'energy': fbData['energy'],
+              'hunger': (fbData['hunger'] as num).toDouble(),
+              'hygiene': (fbData['hygiene'] as num).toDouble(),
+              'happiness': (fbData['happiness'] as num).toDouble(),
+              'energy': (fbData['energy'] as num).toDouble(),
               'health': fbData['health'],
               'lastUpdatedHunger': fbData['lastUpdatedHunger'],
               'lastUpdatedHygiene': fbData['lastUpdatedHygiene'],
               'lastUpdatedEnergy': fbData['lastUpdatedEnergy'],
               'lastUpdatedHappiness': fbData['lastUpdatedHappiness'],
-              'lastUpdated': DateTime.now().toIso8601String(),
+              'lastUpdated': fbLastUpdated,
             };
           }
         }
@@ -236,5 +236,21 @@ class HandleStorage {
     }
 
     return localData;
+  }
+
+  Future<void> deleteLocalData() async {
+    try {
+      final petFile = File(await _getFilePath("petData"));
+      final inventoryFile = File(await _getFilePath("inventoryData"));
+
+      if (await petFile.exists()) {
+        await petFile.delete();
+      }
+      if (await inventoryFile.exists()) {
+        await inventoryFile.delete();
+      }
+    } catch (e) {
+      print("Error deleting local data: $e");
+    }
   }
 }

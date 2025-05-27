@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../providers/pet_provider.dart';
-import '../providers/coin_provider.dart';
 import '../widgets/pixel_button.dart';
 import 'start_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'register_page.dart';
 
-//welcome page for user
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -45,7 +40,7 @@ class _LoginPageState extends State<LoginPage> {
 
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => StartScreen()),
+        MaterialPageRoute(builder: (_) => const StartScreen()),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -56,51 +51,69 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    final petProvider = Provider.of<PetProvider>(context, listen: false);
-    final coinProvider = Provider.of<CoinProvider>(context);
 
     return Scaffold(
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset('assets/images/outdoor.png', fit: BoxFit.cover),
-          SizedBox(height: 20),
-          Center(
-            child: Image.asset(
-              'assets/images/PixelPawLogo_fin.png',
-              fit: BoxFit.cover,
+      body: SafeArea(
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Image.asset('assets/images/outdoor.png', fit: BoxFit.cover),
+            SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 20),
+                    Image.asset(
+                      'assets/images/PixelPawLogo_fin.png',
+                      fit: BoxFit.cover,
+                    ),
+                    const SizedBox(height: 20),
+                    TextField(
+                      controller: usernameController,
+                      decoration: InputDecoration(
+                        labelText: 'Username',
+                        labelStyle: GoogleFonts.pressStart2p(fontSize: 12),
+                      ),
+                      style: GoogleFonts.pressStart2p(fontSize: 12),
+                    ),
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: passwordController,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        labelStyle: GoogleFonts.pressStart2p(fontSize: 12),
+                      ),
+                      style: GoogleFonts.pressStart2p(fontSize: 12),
+                      obscureText: true,
+                    ),
+                    const SizedBox(height: 20),
+                    PixelButton(
+                      label: 'Login',
+                      icon: Icons.login,
+                      color: Colors.yellow,
+                      onPressed: login,
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => RegisterPage()),
+                        );
+                      },
+                      child: Text(
+                        'Create an account',
+                        style: GoogleFonts.pressStart2p(fontSize: 10),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-          SizedBox(height: 20),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.all(20),
-              child:
-                  Column(
-                    children: [
-                      TextField(
-                        controller: usernameController,
-                        decoration: InputDecoration(labelText: 'Username'),
-                      ),
-                      TextField(
-                        controller: passwordController,
-                        decoration: InputDecoration(labelText: 'Password'),
-                        obscureText: true,
-                      ),
-                      ElevatedButton(onPressed: login, child: Text('Login')),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => RegisterPage()));
-                        },
-                        child: Text('Create an account'),
-                      ),
-                    ],
-                  ),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

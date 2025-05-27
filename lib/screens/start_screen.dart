@@ -25,8 +25,12 @@ class _StartScreenState extends State<StartScreen> {
   @override
   void initState() {
     super.initState();
-    createStorage();
-    checkExistingPet();
+    setup();
+  }
+
+  Future<void> setup() async {
+    await createStorage();
+    await checkExistingPet();
   }
 
   Future<void> createStorage() async{
@@ -50,6 +54,9 @@ class _StartScreenState extends State<StartScreen> {
   }
 
   Future<void> _logout() async {
+    final petProvider = Provider.of<PetProvider>(context, listen: false);
+    petProvider.stopAutoDecrease();
+    await petProvider.storage.deleteLocalData();
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(
       context,
@@ -57,6 +64,7 @@ class _StartScreenState extends State<StartScreen> {
       (route) => false,
     );
   }
+  
 
   @override
   Widget build(BuildContext context) {
