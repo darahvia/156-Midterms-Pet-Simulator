@@ -58,7 +58,7 @@ class _PixelButtonState extends State<PixelButton> {
               child: Container(width: 110, height: 50, color: Colors.black),
             ),
           Container(
-            width: 110,
+            width: 100,
             height: 50,
             decoration: BoxDecoration(
               color: bgColor,
@@ -80,7 +80,7 @@ class _PixelButtonState extends State<PixelButton> {
                     maxLines: 1,
                     textAlign: TextAlign.center,
                     style: GoogleFonts.pressStart2p(
-                      fontSize: 10,
+                      fontSize: 15,
                       color: widget.isEnabled ? Colors.black : Colors.grey,
                     ),
                     minFontSize: 2,

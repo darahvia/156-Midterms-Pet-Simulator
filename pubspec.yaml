@@ -135,6 +135,7 @@ flutter:
     - assets/images/cat_normal_bowtie.png
     - assets/images/cabinet.png
     - assets/images/vet_background.png
+    - assets/images/background-day.png
 
     #audio
     - assets/audio/background_music.mp3

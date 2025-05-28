@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_simulator/models/flappy-game.dart';
+import 'package:pet_simulator/screens/pet_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
@@ -128,7 +129,7 @@ class _VetScreenState extends State<VetScreen> {
                       Text(
                         'Hunger:',
                         style: GoogleFonts.pressStart2p(
-                          fontSize: 8,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -153,7 +154,7 @@ class _VetScreenState extends State<VetScreen> {
                       Text(
                         'Energy:',
                         style: GoogleFonts.pressStart2p(
-                          fontSize: 8,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -178,7 +179,7 @@ class _VetScreenState extends State<VetScreen> {
                       Text(
                         'Hygiene:',
                         style: GoogleFonts.pressStart2p(
-                          fontSize: 8,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -203,7 +204,7 @@ class _VetScreenState extends State<VetScreen> {
                       Text(
                         'Happiness:',
                         style: GoogleFonts.pressStart2p(
-                          fontSize: 8,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -289,6 +290,18 @@ class _VetScreenState extends State<VetScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ShopScreen(),
+                            ),
+                          ),
+                    ),
+                    PixelButton(
+                      label: 'Home',
+                      icon: Icons.home,
+                      color: Colors.green,
+                      onPressed:
+                          () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PetScreen(),
                             ),
                           ),
                     ),

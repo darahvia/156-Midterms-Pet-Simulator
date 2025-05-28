@@ -55,10 +55,7 @@ class _PetScreenState extends State<PetScreen> {
         context: context,
         barrierDismissible: true,
         builder: (context) => AlertDialog(
-          backgroundColor: Colors.grey[900],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
+          backgroundColor: Colors.white,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -69,7 +66,7 @@ class _PetScreenState extends State<PetScreen> {
                     style: GoogleFonts.pressStart2p(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.yellowAccent,
+                      color: const Color.fromARGB(255, 0, 0, 0),
                     ),
                   ),
                 ),
@@ -78,7 +75,7 @@ class _PetScreenState extends State<PetScreen> {
                 onTap: () => Navigator.pop(context),
                 child: Icon(
                   Icons.close,
-                  color: Colors.grey,
+                  color: Colors.black,
                 ),
               ),
             ],
@@ -109,7 +106,7 @@ class _PetScreenState extends State<PetScreen> {
                   PixelButton(
                     label: 'Flappy Bird',
                     icon: Icons.sports_esports,
-                    color: Colors.pinkAccent,
+                    color: Colors.greenAccent,
                     onPressed: () {
                       Navigator.pop(context); // close dialog first
                       Navigator.push(
@@ -225,7 +222,7 @@ class _PetScreenState extends State<PetScreen> {
                       Text(
                         'Hunger:',
                         style: GoogleFonts.pressStart2p(
-                          fontSize: 8,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -250,7 +247,7 @@ class _PetScreenState extends State<PetScreen> {
                       Text(
                         'Energy:',
                         style: GoogleFonts.pressStart2p(
-                          fontSize: 8,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -275,7 +272,7 @@ class _PetScreenState extends State<PetScreen> {
                       Text(
                         'Hygiene:',
                         style: GoogleFonts.pressStart2p(
-                          fontSize: 8,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -300,7 +297,7 @@ class _PetScreenState extends State<PetScreen> {
                       Text(
                         'Happiness:',
                         style: GoogleFonts.pressStart2p(
-                          fontSize: 8,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -437,10 +434,11 @@ class _PetScreenState extends State<PetScreen> {
                         ),
                       ],
                     ),
-                SizedBox(height: 10),
+                    SizedBox(height: 10),
                 //navigation buttons: Shop & Game
                 Wrap(
                   spacing: 8,
+                  runSpacing: 8,
                   alignment: WrapAlignment.center,
                   children: [
                     PixelButton(
@@ -467,16 +465,16 @@ class _PetScreenState extends State<PetScreen> {
                             ),
                           ),
                     ),
+                    PixelButton(
+                      label: 'Games',
+                      icon: Icons.sports_esports,
+                      color: Colors.pinkAccent,
+                      onPressed:
+                          () => chooseGame(context)
+                    ),
                   ],
                 ),
-                SizedBox(height: 10),
-                PixelButton(
-                  label: 'Games',
-                  icon: Icons.sports_esports,
-                  color: Colors.pinkAccent,
-                  onPressed:
-                      () => chooseGame(context)
-                ),
+
               ],
             ),
           ),
