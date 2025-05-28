@@ -92,7 +92,7 @@ class HandleStorage {
               food:${fbData['food']}
               soap:${fbData['soap']}
               medicine:${fbData['medicine']}
-              lastUpdated:${DateTime.now().toIso8601String()}
+              lastUpdated:${fbLastUpdated.toIso8601String()}
               ''';
             await file.writeAsString(content);
 

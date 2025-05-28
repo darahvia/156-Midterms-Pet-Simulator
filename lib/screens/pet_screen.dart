@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_simulator/models/flappy-game.dart';
+import 'package:pet_simulator/screens/flappy_bird_game_screen.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/pet_provider.dart';
@@ -11,7 +12,7 @@ import '../widgets/bubble.dart';
 import '../widgets/pixel_button.dart';
 import '../widgets/pixel_progress_bar.dart';
 import '../services/music_manager.dart';
-import 'game_screen.dart';
+import 'tic_tac_toe_screen.dart';
 import 'shop_screen.dart';
 import 'vet_screen.dart';
 import 'death_screen.dart';
@@ -48,6 +49,86 @@ class _PetScreenState extends State<PetScreen> {
       });
     }
   }
+  
+    void chooseGame(BuildContext context) {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context) => AlertDialog(
+          backgroundColor: Colors.grey[900],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Center(
+                  child: Text(
+                    "Choose Game",
+                    style: GoogleFonts.pressStart2p(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.yellowAccent,
+                    ),
+                  ),
+                ),
+              ),
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Icon(
+                  Icons.close,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  PixelButton(
+                    label: 'Tic Tac Toe',
+                    icon: Icons.sports_esports,
+                    color: Colors.pinkAccent,
+                    onPressed: () {
+                      Navigator.pop(context); // close dialog first
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TicTacToeScreen(),
+                        ),
+                      );
+                    },
+
+                  ),
+                  SizedBox(height: 5),
+
+                  PixelButton(
+                    label: 'Flappy Bird',
+                    icon: Icons.sports_esports,
+                    color: Colors.pinkAccent,
+                    onPressed: () {
+                      Navigator.pop(context); // close dialog first
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => FlappyBirdGameScreen(),
+                        ),
+                      );
+                    },
+
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
 
   @override
   Widget build(BuildContext context) {
@@ -386,31 +467,15 @@ class _PetScreenState extends State<PetScreen> {
                             ),
                           ),
                     ),
-                    PixelButton(
-                      label: 'Game',
-                      icon: Icons.sports_esports,
-                      color: Colors.pinkAccent,
-                      onPressed:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GameScreen(),
-                            ),
-                          ),
-                    ),
-                    PixelButton(
-                      label: 'Flappy Bird',
-                      icon: Icons.sports_esports,
-                      color: Colors.pinkAccent,
-                      onPressed:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GameWidget(game: FlappyBirdGame()),
-                            ),
-                          ),
-                    ),
                   ],
+                ),
+                SizedBox(height: 10),
+                PixelButton(
+                  label: 'Games',
+                  icon: Icons.sports_esports,
+                  color: Colors.pinkAccent,
+                  onPressed:
+                      () => chooseGame(context)
                 ),
               ],
             ),

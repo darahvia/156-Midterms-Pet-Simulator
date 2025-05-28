@@ -6,16 +6,14 @@ class FlappyLeaderboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[900],
       appBar: AppBar(
-        backgroundColor: Colors.black,
         centerTitle: true,
         title: Text(
           'Flappy Leaderboard',
           style: GoogleFonts.pressStart2p(
             fontSize: 15,
             fontWeight: FontWeight.bold,
-            color: Colors.yellowAccent,
+            color: const Color.fromARGB(255, 0, 0, 0),
           ),
         ),
       ),
@@ -37,7 +35,7 @@ class FlappyLeaderboard extends StatelessWidget {
                 'No scores yet!',
                 style: GoogleFonts.pressStart2p(
                   fontSize: 13,
-                  color: Colors.white,
+                  color: Colors.black,
                 ),
               ),
             );
@@ -53,7 +51,7 @@ class FlappyLeaderboard extends StatelessWidget {
                   style: GoogleFonts.pressStart2p(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: Colors.black,
                   ),
                 ),
                 title: Text(
@@ -61,7 +59,7 @@ class FlappyLeaderboard extends StatelessWidget {
                   style: GoogleFonts.pressStart2p(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.yellowAccent,
+                    color: Colors.black,
                   ),
                 ),
                 trailing: Text(
@@ -69,7 +67,7 @@ class FlappyLeaderboard extends StatelessWidget {
                   style: GoogleFonts.pressStart2p(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
-                    color: Colors.greenAccent,
+                    color: const Color.fromARGB(255, 1, 134, 74),
                   ),
                 ),
               );
