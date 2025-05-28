@@ -5,8 +5,14 @@ class Inventory {
   int _soap = 0;
   int _medicine = 0;
 
-  // Add clothing inventory
+  // Clothing inventory
   List<String> ownedClothing = [];
+
+  // Toy inventory
+  List<String> ownedToys = [];
+
+  // Food inventory (for special foods)
+  List<String> ownedFoods = [];
 
   void addClothing(String clothing) {
     if (!ownedClothing.contains(clothing)) {
@@ -16,6 +22,28 @@ class Inventory {
 
   bool ownsClothing(String clothing) {
     return ownedClothing.contains(clothing);
+  }
+
+  // Toy methods
+  void addToy(String toy) {
+    if (!ownedToys.contains(toy)) {
+      ownedToys.add(toy);
+    }
+  }
+
+  bool ownsToy(String toy) {
+    return ownedToys.contains(toy);
+  }
+
+  // Food methods (for special foods)
+  void addFood(String food) {
+    if (!ownedFoods.contains(food)) {
+      ownedFoods.add(food);
+    }
+  }
+
+  bool ownsFood(String food) {
+    return ownedFoods.contains(food);
   }
   
   // getter

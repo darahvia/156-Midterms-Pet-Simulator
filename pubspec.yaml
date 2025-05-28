@@ -114,10 +114,24 @@ flutter:
     - assets/images/ball.png
     - assets/images/chicken.png
     - assets/images/fish_bone.png
-    - assets/images/ cat_likes.png
+    - assets/images/cat_likes.png
     - assets/images/cat_dislikes.png
     - assets/images/teddy.png
     - assets/images/scary_teddy.png
+    - assets/images/fresh_meat.png
+    - assets/images/wet_canned_food.png
+    - assets/images/clothing_room.png
+    - assets/images/cat_happy_bowtie.png
+    - assets/images/cat_happy_cowboyhat.png
+    - assets/images/cat_happy_glasses.png
+    - assets/images/cat_happy_hat.png
+    - assets/images/cat_happy_necktie.png
+    - assets/images/cat_normal_cowboyhat.png
+    - assets/images/cat_normal_glasses.png
+    - assets/images/cat_normal_hat.png
+    - assets/images/cat_normal_necktie.png
+    - assets/images/cat_normal_bowtie.png
+    - assets/images/cabinet.png
 
     #audio
     - assets/audio/background_music.mp3
