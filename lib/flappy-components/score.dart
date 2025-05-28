@@ -3,10 +3,15 @@ import 'dart:async';
 import 'package:flame/components.dart';
 import 'package:flame/text.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pet_simulator/models/flappy-game.dart';
 
 class ScoreText extends TextComponent with HasGameRef<FlappyBirdGame> {
-  ScoreText() : super(text: '0', textRenderer: TextPaint(style:TextStyle(color: Colors.black, fontSize: 48)));
+  ScoreText() : super(text: '0', textRenderer: TextPaint(style: GoogleFonts.pressStart2p(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),));
 
   // load
   @override

@@ -11,7 +11,6 @@ import '../widgets/bubble.dart';
 import '../widgets/pixel_button.dart';
 import '../widgets/pixel_progress_bar.dart';
 import '../services/music_manager.dart';
-import 'game_screen.dart';
 import 'shop_screen.dart';
 import 'death_screen.dart';
 import 'dart:math';
@@ -290,42 +289,6 @@ class _VetScreenState extends State<VetScreen> {
                             context,
                             MaterialPageRoute(
                               builder: (context) => ShopScreen(),
-                            ),
-                          ),
-                    ),
-                    PixelButton(
-                      label: 'Game',
-                      icon: Icons.sports_esports,
-                      color: Colors.pinkAccent,
-                      onPressed:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GameScreen(),
-                            ),
-                          ),
-                    ),
-                    PixelButton(
-                      label: 'Game',
-                      icon: Icons.sports_esports,
-                      color: Colors.pinkAccent,
-                      onPressed:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GameScreen(),
-                            ),
-                          ),
-                    ),
-                    PixelButton(
-                      label: 'Flappy Bird',
-                      icon: Icons.sports_esports,
-                      color: Colors.pinkAccent,
-                      onPressed:
-                          () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => GameWidget(game: FlappyBirdGame()),
                             ),
                           ),
                     ),

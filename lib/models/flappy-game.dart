@@ -25,6 +25,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late Ground ground;
   late PipeManager pipeManager;
   late ScoreText scoreText;
+  bool isPlaying = false;
 
   // LOAD
   @override
@@ -70,8 +71,13 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
         height: 600,
         child: FlappyLeaderboard(),
       ),
-    );
+    ).then((_) {
+      // Resume game when leaderboard closes
+      isGameOver = false;
+      resumeEngine();
+    });
   }
+
 
   // GAME OVER
   bool isGameOver = false;
@@ -211,11 +217,11 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     // Add the score to the current coins
     final newCoins = currentCoins + score;
 
-    await doc.set({
-      'inventoryData': {
-        'coin': newCoins,
-      }
-    }, SetOptions(merge: true));
+    await doc.update({
+      'inventoryData.coin': newCoins,
+    });
+
+
   }
 
   void resetGame() {

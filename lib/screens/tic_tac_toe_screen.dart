@@ -8,14 +8,14 @@ import '../widgets/coin_display.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 //ui for game screen
-class GameScreen extends StatefulWidget {
-  const GameScreen({super.key});
+class TicTacToeScreen extends StatefulWidget {
+  const TicTacToeScreen({super.key});
 
   @override
-  _GameScreenState createState() => _GameScreenState();
+  _TicTacToeScreenState createState() => _TicTacToeScreenState();
 }
 
-class _GameScreenState extends State<GameScreen> {
+class _TicTacToeScreenState extends State<TicTacToeScreen> {
   late GameLogic gameLogic;
   int score = 0;
   Difficulty selectedDifficulty = Difficulty.easy;
