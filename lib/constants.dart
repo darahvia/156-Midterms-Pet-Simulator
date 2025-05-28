@@ -1,6 +1,6 @@
 const double birdStartX = 100; // starting position
 const double birdStartY = 100;
-const double birdWidth = 60; // size
+const double birdWidth = 40; // size
 const double birdHeight = 40;
 const double gravity = 800;
 const double jumpStrength = -300;
