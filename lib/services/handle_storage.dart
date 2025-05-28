@@ -121,6 +121,7 @@ class HandleStorage {
     final file = File(path);
     final content = '''
       name:${pet.getName()}
+      type:${pet.getType()}
       hunger:${pet.getHunger()}
       hygiene:${pet.getHygiene()}
       happiness:${pet.getHappiness()}
@@ -139,6 +140,7 @@ class HandleStorage {
     if (uid != null) {
       final petData = {
         'name': pet.getName(),
+        'type': pet.getType(),
         'hunger': pet.getHunger(),
         'hygiene': pet.getHygiene(),
         'happiness': pet.getHappiness(),
@@ -177,7 +179,7 @@ class HandleStorage {
               localLastUpdated = localData[key];
             } else if (key == 'lastUpdatedHunger' || key == 'lastUpdatedHygiene' || key == 'lastUpdatedEnergy' || key == 'lastUpdatedHappiness') {
               localData[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
-            } else if (key == 'name') {
+            } else if (key == 'name' || key == 'type') {
               localData[key] = value;
             } else if (key == 'health') {
               localData[key] = (value.toLowerCase() == 'true');
@@ -204,6 +206,7 @@ class HandleStorage {
             final file = File(await _getFilePath('petData'));
             final content = '''
               name:${fbData['name']}
+              type:${fbData['type']}
               hunger:${fbData['hunger']}
               hygiene:${fbData['hygiene']}
               happiness:${fbData['happiness']}
@@ -219,6 +222,7 @@ class HandleStorage {
 
             return {
               'name': fbData['name'],
+              'type': fbData['type'],
               'hunger': (fbData['hunger'] as num).toDouble(),
               'hygiene': (fbData['hygiene'] as num).toDouble(),
               'happiness': (fbData['happiness'] as num).toDouble(),
