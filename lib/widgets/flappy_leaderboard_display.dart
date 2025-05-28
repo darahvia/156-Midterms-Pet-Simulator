@@ -17,63 +17,77 @@ class FlappyLeaderboard extends StatelessWidget {
           ),
         ),
       ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('users')
-            .orderBy('highScore', descending: true)
-            .limit(10)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return Center(child: CircularProgressIndicator());
-          }
+      body: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset(
+            'assets/images/background-day.png',  
+            fit: BoxFit.cover,
+          ),
+          // semi-transparent overlay
+          Container(
+            color: Colors.black.withOpacity(0.3),
+          ),
+          // leaderboard list
+          StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('users')
+                .orderBy('highScore', descending: true)
+                .limit(10)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                return Center(child: CircularProgressIndicator());
+              }
 
-          final docs = snapshot.data!.docs;
-          if (docs.isEmpty) {
-            return Center(
-              child: Text(
-                'No scores yet!',
-                style: GoogleFonts.pressStart2p(
-                  fontSize: 13,
-                  color: Colors.black,
-                ),
-              ),
-            );
-          }
+              final docs = snapshot.data!.docs;
+              if (docs.isEmpty) {
+                return Center(
+                  child: Text(
+                    'No scores yet!',
+                    style: GoogleFonts.pressStart2p(
+                      fontSize: 13,
+                      color: Colors.white,
+                    ),
+                  ),
+                );
+              }
 
-          return ListView.builder(
-            itemCount: docs.length,
-            itemBuilder: (context, i) {
-              final data = docs[i].data() as Map<String, dynamic>;
-              return ListTile(
-                leading: Text(
-                  '#${i + 1}',
-                  style: GoogleFonts.pressStart2p(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                title: Text(
-                  data['username'] ?? data['name'] ?? 'Anonymous',
-                  style: GoogleFonts.pressStart2p(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
-                  ),
-                ),
-                trailing: Text(
-                  '${data['highScore'] ?? 0}',
-                  style: GoogleFonts.pressStart2p(
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 1, 134, 74),
-                  ),
-                ),
+              return ListView.builder(
+                itemCount: docs.length,
+                itemBuilder: (context, i) {
+                  final data = docs[i].data() as Map<String, dynamic>;
+                  return ListTile(
+                    leading: Text(
+                      '#${i + 1}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    title: Text(
+                      data['username'] ?? 'Anonymous',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                    trailing: Text(
+                      '${data['highScore'] ?? 0}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(255, 82, 255, 177),
+                      ),
+                    ),
+                  );
+                },
               );
             },
-          );
-        },
+          ),
+        ],
       ),
     );
   }

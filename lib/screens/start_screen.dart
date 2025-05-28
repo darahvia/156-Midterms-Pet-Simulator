@@ -95,9 +95,12 @@ class _StartScreenState extends State<StartScreen> {
               child:
                   //if pet exists button shows petName and loads available data
                   petExists
-                      ? Row(
+                      ? Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Row(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
                           PixelButton(
                             label: existingName,
                             icon: Icons.pets,
@@ -113,21 +116,27 @@ class _StartScreenState extends State<StartScreen> {
                               );
                             },
                           ),
+                          SizedBox(width: 10),
+                          PixelButton(
+                            label: 'Pets',
+                            icon: Icons.book,
+                            color: Colors.green,
+                            onPressed: () async {
+                              List<String> history = await petProvider.storage.loadPetHistory();
+                              showPetHistoryDialog(context, history);
+                            },
+                          ),
+                          ]
+                          ),  
+                          SizedBox(height: 10),
+
                           PixelButton(
                             label: 'Logout',
                             icon: Icons.logout,
                             color: Colors.red,
                             onPressed: _logout,
                           ),
-                          PixelButton(
-                            label: 'Pets',
-                            icon: Icons.book,
-                            color: Colors.red,
-                            onPressed: () async {
-                              List<String> history = await petProvider.storage.loadPetHistory();
-                              showPetHistoryDialog(context, history);
-                            },
-                          ),
+
                         ],
                       )
 
@@ -135,6 +144,7 @@ class _StartScreenState extends State<StartScreen> {
                       //button to adopt disabled when textfield empty
                       : Column(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(
                             "What kind of pet?",
@@ -198,7 +208,8 @@ class _StartScreenState extends State<StartScreen> {
                           ),
                           SizedBox(height: 20),
                           Row(
-                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+
                             children: [
                               PixelButton(
                                 label: 'Adopt',
@@ -221,16 +232,11 @@ class _StartScreenState extends State<StartScreen> {
                                       }
                                     : null,
                               ),
-                              PixelButton(
-                                label: 'Logout',
-                                icon: Icons.logout,
-                                color: Colors.red,
-                                onPressed: _logout,
-                              ),
+                              SizedBox(width: 10),
                               PixelButton(
                                 label: 'Pets',
                                 icon: Icons.book,
-                                color: Colors.red,
+                                color: Colors.green,
                                 onPressed: () async {
                                   List<String> history = await petProvider.storage.loadPetHistory();
                                   showPetHistoryDialog(context, history);
@@ -238,6 +244,17 @@ class _StartScreenState extends State<StartScreen> {
                               ),
                             ],
                           ),
+                          SizedBox(height: 10),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                                PixelButton(
+                                label: 'Logout',
+                                icon: Icons.logout,
+                                color: Colors.red,
+                                onPressed: _logout,
+                              ),
+                          ],)
                         ],
                       ),
             ),
@@ -250,31 +267,62 @@ class _StartScreenState extends State<StartScreen> {
   void showPetHistoryDialog(BuildContext context, List<String> historyList) {
     showDialog(
       context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Pet History'),
-          content: historyList.isEmpty
-              ? Text('No history yet.')
-              : Container(
-                  width: double.maxFinite,
-                  child: ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: historyList.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(historyList[index]),
-                      );
-                    },
+      barrierDismissible: true,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.white,
+
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              child: Center(
+                child: Text(
+                  "Pet History",
+                  style: GoogleFonts.pressStart2p(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: const Color.fromARGB(255, 0, 85, 34),
                   ),
                 ),
-          actions: [
-            TextButton(
-              child: Text('Close'),
-              onPressed: () => Navigator.of(context).pop(),
+              ),
+            ),
+            GestureDetector(
+              onTap: () => Navigator.pop(context),
+              child: Icon(
+                Icons.close,
+                color: Colors.grey,
+              ),
             ),
           ],
-        );
-      },
+        ),
+        content: historyList.isEmpty
+            ? Text(
+                'No history yet.',
+                style: GoogleFonts.pressStart2p(
+                  color: Colors.black,
+                ),
+              )
+            : Container(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: historyList.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(
+                        historyList[index],
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+      ),
     );
   }
 }
+
+
