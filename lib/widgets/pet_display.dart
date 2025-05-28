@@ -13,23 +13,24 @@ class PetDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     final mood = context.watch<PetProvider>().mood;
     final petProvider = context.read<PetProvider>();
+    final petType = petProvider.pet.getType().toLowerCase();
 
     String imagePath;
 
     // Decide on the image based on the mood
     if (petProvider.pet.getIsSick() == true) {
-      imagePath = 'assets/images/cat_sick.png';
-    } else if (mood == "dirty") {
-      imagePath = 'assets/images/cat_dirty.png';
-    } else if (mood == "hungry") {
-      imagePath = 'assets/images/cat_hungry.png';
-    } else if (mood == "tired") {
-      imagePath = 'assets/images/cat_tired.png';
-    } else if (mood == "sad") {
-      imagePath = 'assets/images/cat_normal.png';
-    } else {
-      imagePath = 'assets/images/cat_happy.png';
-    }
+    imagePath = 'assets/images/$petType/${petType}_sick.png';
+  } else if (mood == "dirty") {
+    imagePath = 'assets/images/$petType/${petType}_dirty.png';
+  } else if (mood == "hungry") {
+    imagePath = 'assets/images/$petType/${petType}_hungry.png';
+  } else if (mood == "tired") {
+    imagePath = 'assets/images/$petType/${petType}_tired.png';
+  } else if (mood == "sad") {
+    imagePath = 'assets/images/$petType/${petType}_normal.png';
+  } else {
+    imagePath = 'assets/images/$petType/${petType}_happy.png';
+  }
 
     //handles tapping on pet display
     return GestureDetector(
