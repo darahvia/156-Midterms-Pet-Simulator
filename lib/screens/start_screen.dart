@@ -21,6 +21,8 @@ class _StartScreenState extends State<StartScreen> {
   final TextEditingController _nameController = TextEditingController();
   bool petExists = false;
   String existingName = "";
+  // Pet Selection
+  String selectedPetType = '';
 
   @override
   void initState() {
@@ -144,14 +146,59 @@ class _StartScreenState extends State<StartScreen> {
                         mainAxisSize: MainAxisSize.min,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
+                          Text(
+                            "What kind of pet?",
+                            style: GoogleFonts.pressStart2p(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              PixelButton(
+                                label: 'Dog',
+                                icon: Icons.pets,
+                                color: selectedPetType == 'Dog' ? Colors.orangeAccent : Colors.grey,
+                                onPressed: () => setState(() {
+                                  selectedPetType = 'Dog';
+                                }),
+                              ),
+                              SizedBox(width: 10),
+                              PixelButton(
+                                label: 'Cat',
+                                icon: Icons.pets,
+                                color: selectedPetType == 'Cat' ? Colors.orangeAccent : Colors.grey,
+                                onPressed: () => setState(() {
+                                  selectedPetType = 'Cat';
+                                }),
+                              ),
+                              SizedBox(width: 10),
+                              PixelButton(
+                                label: 'Dragon',
+                                icon: Icons.pets,
+                                color: selectedPetType == 'Dragon' ? Colors.orangeAccent : Colors.grey,
+                                onPressed: () => setState(() {
+                                  selectedPetType = 'Dragon';
+                                }),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20),
+                          Text(
+                            "Name Your Pet",
+                            style: GoogleFonts.pressStart2p(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          ),
+                          SizedBox(height: 10),
                           TextField(
                             controller: _nameController,
                             decoration: InputDecoration(
-                              labelText: "Name Your Pixel Pet",
-                              labelStyle: GoogleFonts.pressStart2p(
-                                fontSize: 12,
-                                color: Colors.black,
-                              ),
+                              border: OutlineInputBorder(),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                             ),
                             style: GoogleFonts.pressStart2p(
                               fontSize: 12,
@@ -162,27 +209,28 @@ class _StartScreenState extends State<StartScreen> {
                           SizedBox(height: 20),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
+
                             children: [
                               PixelButton(
                                 label: 'Adopt',
                                 icon: Icons.pets,
                                 color: Colors.orangeAccent,
-                                isEnabled: _nameController.text.trim().isNotEmpty,
-                                onPressed:
-                                    _nameController.text.trim().isNotEmpty
-                                        ? () {
-                                          petProvider.loadPetStats(
-                                            petName: _nameController.text.trim(),
-                                          ); //get name from text field
-                                          coinProvider.loadInventory();
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => PetScreen(),
-                                            ),
-                                          );
-                                        }
-                                        : null,
+                                isEnabled: _nameController.text.trim().isNotEmpty && selectedPetType.isNotEmpty,
+                                onPressed: (_nameController.text.trim().isNotEmpty && selectedPetType.isNotEmpty)
+                                    ? () {
+                                        petProvider.loadPetStats(
+                                          petName: _nameController.text.trim(),
+                                          petType: selectedPetType.toLowerCase(),
+                                        );
+                                        coinProvider.loadInventory();
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => PetScreen(),
+                                          ),
+                                        );
+                                      }
+                                    : null,
                               ),
                               SizedBox(width: 10),
                               PixelButton(

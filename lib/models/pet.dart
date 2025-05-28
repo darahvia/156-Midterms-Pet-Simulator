@@ -3,6 +3,7 @@
 class Pet {
   String _name = "";
   String _petState = "normal";
+  String _type = "";
   double _hunger = 0;
   double _energy = 0;
   double _hygiene = 0;
@@ -81,6 +82,10 @@ class Pet {
     _name = n;
   }
 
+  void setType(String type) {
+      _type = type;
+    }
+
   void setHunger(double h) {
     _hunger = h;
     _lastUpdatedHunger = DateTime.now();
@@ -127,6 +132,10 @@ class Pet {
     return _name;
   }
 
+  String getType() {
+    return _type;
+  }
+
   double getHunger() {
     return _hunger;
   }
@@ -171,4 +180,5 @@ class Pet {
       '$action - Hunger: $_hunger, Hygiene: $_hygiene, Happiness: $_happiness, Energy: $_energy Health: $_isSick',
     );
   }
+
 }
