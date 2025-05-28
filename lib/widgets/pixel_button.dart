@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/music_manager.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 //button pixel design
 class PixelButton extends StatefulWidget {
@@ -66,17 +67,24 @@ class _PixelButtonState extends State<PixelButton> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(
-                  widget.icon,
-                  size: 16,
-                  color: widget.isEnabled ? Colors.black : Colors.grey,
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  widget.label,
-                  style: GoogleFonts.pressStart2p(
-                    fontSize: 6,
+                Padding(padding: const EdgeInsets.all(3.0),
+                child: Icon(
+                    widget.icon,
+                    size: 16,
                     color: widget.isEnabled ? Colors.black : Colors.grey,
+                  ),
+                ),
+                Expanded( // Make sure it can shrink
+                  child: AutoSizeText(
+                    widget.label,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.pressStart2p(
+                      fontSize: 10,
+                      color: widget.isEnabled ? Colors.black : Colors.grey,
+                    ),
+                    minFontSize: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
               ],

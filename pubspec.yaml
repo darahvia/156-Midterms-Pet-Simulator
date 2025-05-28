@@ -46,6 +46,8 @@ dependencies:
   firebase_core: ^3.13.0
   firebase_auth: ^5.5.3
   cloud_firestore: ^5.6.7
+  auto_size_text: ^3.0.0
+  flame:
 
 dev_dependencies:
   flutter_test:
@@ -132,6 +134,7 @@ flutter:
     - assets/images/cat_normal_necktie.png
     - assets/images/cat_normal_bowtie.png
     - assets/images/cabinet.png
+    - assets/images/vet_background.png
 
     #audio
     - assets/audio/background_music.mp3
@@ -145,6 +148,8 @@ flutter:
     - assets/audio/button_tap.mp3
     - assets/audio/angry_meow.mp3
     - assets/audio/angry.mp3
+
+    - assets/images/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

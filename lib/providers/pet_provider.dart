@@ -10,6 +10,9 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   Timer? _timer;
   String mood = "normal";
   String? currentClothing;
+  Timer? _autoDecreaseTimer;
+  bool death = false;
+
 
   PetProvider() {
     WidgetsBinding.instance.addObserver(this);
@@ -37,10 +40,26 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
 
   //handles autodecrease of stats: currently set at 5s intervals
   void startAutoDecrease() {
-    Timer.periodic(Duration(seconds: 5), (timer) {
-      pet.applyElapsedTime();
+    _autoDecreaseTimer?.cancel();
+    _autoDecreaseTimer = Timer.periodic(Duration(seconds: 5), (timer) {
+      pet.applyElapsedTime(5);
       savePetStats();
     });
+  }
+
+  void stopAutoDecrease() {
+    _autoDecreaseTimer?.cancel();
+    _autoDecreaseTimer = null;
+  }
+
+  void checkDeath() {
+    if((pet.getHunger()==0) && (pet.getHygiene()==0) && (pet.getHappiness()==0) && (pet.getEnergy()==0)){
+      death = true;
+    }
+  }
+
+  void petReset(){
+    death = false;
   }
 
   //takes map of pet stats and assigns it to current Pet object
@@ -60,28 +79,28 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     pet.setLastUpdated(
       'hunger',
       stats["lastUpdatedHunger"] != null
-          ? DateTime.parse(stats["lastUpdated"])
+          ? DateTime.parse(stats["lastUpdatedHunger"])
           : DateTime.now(),
     );
     pet.setLastUpdated(
       'hygiene',
       stats["lastUpdatedHygiene"] != null
-          ? DateTime.parse(stats["lastUpdated"])
+          ? DateTime.parse(stats["lastUpdatedHygiene"])
           : DateTime.now(),
     );
     pet.setLastUpdated(
       'happiness',
       stats["lastUpdatedHappiness"] != null
-          ? DateTime.parse(stats["lastUpdated"])
+          ? DateTime.parse(stats["lastUpdatedHappiness"])
           : DateTime.now(),
     );
     pet.setLastUpdated(
       'energy',
       stats["lastUpdatedEnergy"] != null
-          ? DateTime.parse(stats["lastUpdated"])
+          ? DateTime.parse(stats["lastUpdatedEnergy"])
           : DateTime.now(),
     );
-    pet.applyElapsedTime();
+    pet.applyElapsedTime(10);
     savePetStats();
     //checks if pet sick upon loading
     if ((pet.getHunger() == 0) &&
@@ -97,6 +116,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   void savePetStats() {
     mood = pet.getPetState();
     storage.savePetStats(pet);
+    checkDeath();
     notifyListeners();
   }
 

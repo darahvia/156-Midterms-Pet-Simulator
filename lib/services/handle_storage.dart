@@ -26,6 +26,7 @@ class HandleStorage {
       food:${inventory.getFood()}
       soap:${inventory.getSoap()}
       medicine:${inventory.getMedicine()}
+      lastUpdated:${DateTime.now().toIso8601String()}
       ''';
     await file.writeAsString(content);
 
@@ -59,7 +60,13 @@ class HandleStorage {
           if (parts.length == 2) {
             final key = parts[0].trim();
             final value = parts[1];
-            localData[key] = int.tryParse(value) ?? 0;
+            if (key == 'lastUpdated'){
+              localData[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+              localLastUpdated = localData[key];
+            }
+            else{
+              localData[key] = int.tryParse(value) ?? 0;
+            }
           }
         }
       }
@@ -85,6 +92,7 @@ class HandleStorage {
               food:${fbData['food']}
               soap:${fbData['soap']}
               medicine:${fbData['medicine']}
+              lastUpdated:${DateTime.now().toIso8601String()}
               ''';
             await file.writeAsString(content);
 
@@ -94,6 +102,7 @@ class HandleStorage {
               'food': fbData['food'],
               'soap': fbData['soap'],
               'medicine': fbData['medicine'],
+              'lastUpdated': DateTime.now(),
             };
           }
         }
@@ -121,6 +130,7 @@ class HandleStorage {
       lastUpdatedHygiene:${pet.getLastUpdated('hygiene').toIso8601String()}
       lastUpdatedEnergy:${pet.getLastUpdated('energy').toIso8601String()}
       lastUpdatedHappiness:${pet.getLastUpdated('happiness').toIso8601String()}
+      lastUpdated:${DateTime.now().toIso8601String()}
       ''';
     await file.writeAsString(content);
     print('Pet data saved locally to ${file.path}');
@@ -138,9 +148,10 @@ class HandleStorage {
         'lastUpdatedHygiene': pet.getLastUpdated('hygiene').toIso8601String(),
         'lastUpdatedEnergy': pet.getLastUpdated('energy').toIso8601String(),
         'lastUpdatedHappiness': pet.getLastUpdated('happiness').toIso8601String(),
+        'lastUpdated': DateTime.now().toIso8601String(),
       };
       await _firestore.collection('users').doc(uid).set(
-        {'petStats': petData},
+        {'petData': petData},
         SetOptions(merge: true),
       );
       print('Pet data saved to Firebase for user $uid');
@@ -150,8 +161,7 @@ class HandleStorage {
   // ---------------- Load Pet Stats (Local first, then Firebase to update local if newer)
   Future<Map<String, dynamic>> loadPetStats() async {
     Map<String, dynamic> localData = {};
-    Map<String, DateTime> localTimestamps = {};
-
+    DateTime? localLastUpdated;
     try {
       final path = await _getFilePath('petData');
       final file = File(path);
@@ -162,9 +172,11 @@ class HandleStorage {
           if (parts.length == 2) {
             final key = parts[0].trim();
             final value = parts[1];
-
-            if (key == 'lastUpdatedHunger' || key == 'lastUpdatedHygiene' || key == 'lastUpdatedEnergy' || key == 'lastUpdatedHappiness') {
-              localTimestamps[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+            if (key == 'lastUpdated') {
+              localData[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+              localLastUpdated = localData[key];
+            } else if (key == 'lastUpdatedHunger' || key == 'lastUpdatedHygiene' || key == 'lastUpdatedEnergy' || key == 'lastUpdatedHappiness') {
+              localData[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
             } else if (key == 'name') {
               localData[key] = value;
             } else if (key == 'health') {
@@ -182,30 +194,13 @@ class HandleStorage {
     if (uid != null) {
       final doc = await _firestore.collection('users').doc(uid).get();
       if (doc.exists) {
-        final fbData = doc.data()?['petStats'];
+        final fbData = doc.data()?['petData'];
         if (fbData != null) {
-          bool firebaseIsNewer = false;
+          final fbLastUpdatedStr = fbData['lastUpdated'] as String?;
+          DateTime? fbLastUpdated = fbLastUpdatedStr != null ? DateTime.tryParse(fbLastUpdatedStr) : null;
 
-          // Compare timestamps to check if Firebase data is newer
-          for (var tsKey in [
-            'lastUpdatedHunger',
-            'lastUpdatedHygiene',
-            'lastUpdatedEnergy',
-            'lastUpdatedHappiness'
-          ]) {
-            final fbTsStr = fbData[tsKey] as String?;
-            if (fbTsStr == null) continue;
-            final fbTs = DateTime.tryParse(fbTsStr);
-            final localTs = localTimestamps[tsKey] ?? DateTime.fromMillisecondsSinceEpoch(0);
-
-            if (fbTs != null && fbTs.isAfter(localTs)) {
-              firebaseIsNewer = true;
-              break;
-            }
-          }
-
-          if (firebaseIsNewer) {
-            // Update local file with Firebase data
+          if (fbLastUpdated != null && (localLastUpdated == null || fbLastUpdated.isAfter(localLastUpdated))) {
+            // Update local file
             final file = File(await _getFilePath('petData'));
             final content = '''
               name:${fbData['name']}
@@ -218,16 +213,106 @@ class HandleStorage {
               lastUpdatedHygiene:${fbData['lastUpdatedHygiene']}
               lastUpdatedEnergy:${fbData['lastUpdatedEnergy']}
               lastUpdatedHappiness:${fbData['lastUpdatedHappiness']}
+              lastUpdated:${fbLastUpdated.toIso8601String()}
               ''';
             await file.writeAsString(content);
 
-            // Return firebase data
-            return Map<String, dynamic>.from(fbData);
+            return {
+              'name': fbData['name'],
+              'hunger': (fbData['hunger'] as num).toDouble(),
+              'hygiene': (fbData['hygiene'] as num).toDouble(),
+              'happiness': (fbData['happiness'] as num).toDouble(),
+              'energy': (fbData['energy'] as num).toDouble(),
+              'health': fbData['health'],
+              'lastUpdatedHunger': fbData['lastUpdatedHunger'],
+              'lastUpdatedHygiene': fbData['lastUpdatedHygiene'],
+              'lastUpdatedEnergy': fbData['lastUpdatedEnergy'],
+              'lastUpdatedHappiness': fbData['lastUpdatedHappiness'],
+              'lastUpdated': fbLastUpdated,
+            };
           }
         }
       }
     }
 
     return localData;
+  }
+
+  Future<void> savePetHistory(String historyEntry) async {
+    final path = await _getFilePath('petHistory');
+    final file = File(path);
+
+    List<String> historyList = [];
+    if (await file.exists()) {
+      historyList = await file.readAsLines();
+    }
+    historyList.add(historyEntry);
+    await file.writeAsString(historyList.join('\n'));
+
+    if (uid != null) {
+      final doc = await _firestore.collection('users').doc(uid).get();
+      List<String> fbHistory = [];
+      if (doc.exists && doc.data()?['petHistory'] != null) {
+        fbHistory = List<String>.from(doc.data()!['petHistory']);
+      }
+      fbHistory.add(historyEntry);
+      await _firestore.collection('users').doc(uid).set(
+        {'petHistory': fbHistory},
+        SetOptions(merge: true),
+      );
+    }
+  }
+
+  Future<List<String>> loadPetHistory() async {
+    final path = await _getFilePath('petHistory');
+    final file = File(path);
+
+    List<String> localHistory = [];
+    if (await file.exists()) {
+      localHistory = await file.readAsLines();
+    }
+
+    if (uid != null) {
+      final doc = await _firestore.collection('users').doc(uid).get();
+      if (doc.exists && doc.data()?['petHistory'] != null) {
+        List<String> fbHistory = List<String>.from(doc.data()!['petHistory']);
+
+        if (fbHistory.length > localHistory.length) {
+          await file.writeAsString(fbHistory.join('\n'));
+          return fbHistory;
+        }
+      }
+    }
+
+    return localHistory;
+  }
+
+
+  Future<void> deleteLocalData(String filename) async {
+    try {
+      final petFile = File(await _getFilePath(filename));
+
+      if (await petFile.exists()) {
+        await petFile.delete();
+      }
+
+    } catch (e) {
+      print("Error deleting local data: $e");
+    }
+  }
+
+  Future<void> deleteFbData(String filename) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      return;
+    }
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({
+          filename : FieldValue.delete(),
+        });
+
   }
 }

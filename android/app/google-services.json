@@ -1,10 +1,30 @@
 {
   "project_info": {
     "project_number": "605626389783",
+    "firebase_url": "https://pixel-pal-640c5-default-rtdb.firebaseio.com",
     "project_id": "pixel-pal-640c5",
     "storage_bucket": "pixel-pal-640c5.firebasestorage.app"
   },
   "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:605626389783:android:07110c356111131d595352",
+        "android_client_info": {
+          "package_name": "com.example.mgpp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQVum7dWK56NkOgmCqc1TzaRfW_iYXsgk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
     {
       "client_info": {
         "mobilesdk_app_id": "1:605626389783:android:2600680046a6f268595352",

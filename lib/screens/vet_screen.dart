@@ -13,19 +13,18 @@ import '../widgets/pixel_progress_bar.dart';
 import '../services/music_manager.dart';
 import 'game_screen.dart';
 import 'shop_screen.dart';
-import 'vet_screen.dart';
 import 'death_screen.dart';
 import 'dart:math';
 
 //ui for main pet screen
-class PetScreen extends StatefulWidget {
-  const PetScreen({super.key});
+class VetScreen extends StatefulWidget {
+  const VetScreen({super.key});
 
   @override
-  _PetScreenState createState() => _PetScreenState();
+  _VetScreenState createState() => _VetScreenState();
 }
 
-class _PetScreenState extends State<PetScreen> {
+class _VetScreenState extends State<VetScreen> {
   final List<Widget> bubbles = [];
   final List<String> hearts = [
     'assets/images/heart_blue.gif',
@@ -36,28 +35,14 @@ class _PetScreenState extends State<PetScreen> {
   ];
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final petProvider = Provider.of<PetProvider>(context);
-
-    if (petProvider.death) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (_) => DeathScreen("death")),
-        );
-      });
-    }
-  }
-
-  @override
   Widget build(BuildContext context) {
     final petProvider = Provider.of<PetProvider>(context);
     final coinProvider = Provider.of<CoinProvider>(context);
 
     //button keys for tracking positions
-    final GlobalKey feedButtonKey = GlobalKey();
-    final GlobalKey cleanButtonKey = GlobalKey();
-    final GlobalKey playButtonKey = GlobalKey();
+    final GlobalKey unquirkButtonKey = GlobalKey();
+    final GlobalKey medicateButtonKey = GlobalKey();
+    final GlobalKey rehomeButtonKey = GlobalKey();
 
     // handle creation of image bubbles with bubble animation 
     @override
@@ -125,7 +110,7 @@ class _PetScreenState extends State<PetScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          Image.asset('assets/images/livingRoom.png', fit: BoxFit.cover),
+          Image.asset('assets/images/vet_background.png', fit: BoxFit.cover),
 
           SingleChildScrollView(
             child: Column(
@@ -250,112 +235,46 @@ class _PetScreenState extends State<PetScreen> {
                 //pet interaction buttons
                 SizedBox(height: 20),
                 Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      alignment: WrapAlignment.center,
-                      children: [
-                        PixelButton(
-                          label: 'Feed',
-                          icon: Icons.fastfood,
-                          color: Colors.redAccent,
-                          key: feedButtonKey,
-                          isEnabled:
-                              coinProvider.inventory.getFood() > 0 &&
-                              petProvider.pet.getHunger() < 100,
-                          onPressed:
-                              coinProvider.inventory.getFood() > 0 &&
-                                      petProvider.pet.getHunger() < 100 &&
-                                      petProvider.pet.getPetState() != "sick"
-                                  ? () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/eat.mp3',
-                                    );
-                                    addBubble(
-                                      key: feedButtonKey,
-                                      imagePath: 'assets/images/cat_bowl.png',
-                                    );
-                                    petProvider.feedPet();
-                                    coinProvider.useItem('food');
-                                  }
-                                  : () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/angry.mp3',
-                                    );
-                                    addBubble(
-                                      key: feedButtonKey,
-                                      imagePath: 'assets/images/cat_bowl.png',
-                                    );
-                                    coinProvider.useItem('food');
-                                  },
-                        ),
-                        PixelButton(
-                          label: 'Clean',
-                          icon: Icons.bathtub,
-                          color: Colors.blueAccent,
-                          key: cleanButtonKey,
-                          isEnabled:
-                              coinProvider.inventory.getSoap() > 0 &&
-                              petProvider.pet.getHygiene() < 100,
-                          onPressed:
-                              coinProvider.inventory.getSoap() > 0 &&
-                                      petProvider.pet.getHygiene() < 100 &&
-                                      petProvider.pet.getPetState() != "sick"
-                                  ? () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/bubbles.mp3',
-                                    );
-                                    addBubble(
-                                      key: cleanButtonKey,
-                                      imagePath: 'assets/images/soap.png',
-                                    );
-                                    petProvider.cleanPet();
-                                    coinProvider.useItem('soap');
-                                  }
-                                  : () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/angry.mp3',
-                                    );
-                                    addBubble(
-                                      key: cleanButtonKey,
-                                      imagePath: 'assets/images/soap.png',
-                                    );
-                                    coinProvider.useItem('soap');
-                                  },
-                        ),
-                        PixelButton(
-                          label: 'Play',
-                          icon: Icons.play_arrow,
-                          color: Colors.purpleAccent,
-                          key: playButtonKey,
-                          isEnabled:
-                              petProvider.pet.getEnergy() > 10 &&
-                              petProvider.pet.getHappiness() < 100,
-                          onPressed:
-                              petProvider.pet.getEnergy() > 10 &&
-                                      petProvider.pet.getHappiness() < 100 &&
-                                      petProvider.pet.getPetState() != "sick"
-                                  ? () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/toy.mp3',
-                                    );
-                                    addBubble(
-                                      key: playButtonKey,
-                                      imagePath: 'assets/images/toy_mouse.png',
-                                    );
-                                    petProvider.playWithPet();
-                                  }
-                                  : () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/angry.mp3',
-                                    );
-                                    addBubble(
-                                      key: playButtonKey,
-                                      imagePath: 'assets/images/toy_mouse.png',
-                                    );
-                                  },
-                        ),
-                      ],
+                  spacing: 8,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    //change quirk of pet
+                    PixelButton(
+                      label: 'Unquirk',
+                      icon: Icons.vaccines,
+                      color: Colors.redAccent,
+                      key: unquirkButtonKey,
+                      onPressed: null,
                     ),
+                    PixelButton(
+                      label: 'Medicate',
+                      icon: Icons.medication,
+                      color: Colors.greenAccent,
+                      key: medicateButtonKey,
+                      onPressed: () {
+                        MusicManager.playSoundEffect('audio/angry.mp3');
+                        _confirmPurchase(context, coinProvider, 50, () {petProvider.healPet();}, "Do you want to fully heal your pet for 50 coins?");
+                      },
+                    ),
+                    PixelButton(
+                      label: 'Rehome',
+                      icon: Icons.medication,
+                      color: Colors.yellowAccent,
+                      key: rehomeButtonKey,
+                      onPressed: (){
+                        MusicManager.playSoundEffect('audio/angry.mp3');
+                        _confirmPurchase(context, coinProvider, 200, () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => DeathScreen("rehomed")),
+                          );
+                        }, 
+                        "Do you want to rehome your pet for 200 coins?");
+                      },
+                    ),
+                  ],
+                ),
                 SizedBox(height: 10),
                 //navigation buttons: Shop & Game
                 Wrap(
@@ -365,7 +284,7 @@ class _PetScreenState extends State<PetScreen> {
                     PixelButton(
                       label: 'Shop',
                       icon: Icons.shopping_cart,
-                      color: Colors.purpleAccent,
+                      color: Colors.orangeAccent,
                       onPressed:
                           () => Navigator.push(
                             context,
@@ -375,14 +294,14 @@ class _PetScreenState extends State<PetScreen> {
                           ),
                     ),
                     PixelButton(
-                      label: 'Vet',
+                      label: 'Game',
                       icon: Icons.sports_esports,
                       color: Colors.pinkAccent,
                       onPressed:
                           () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => VetScreen(),
+                              builder: (context) => GameScreen(),
                             ),
                           ),
                     ),
@@ -418,6 +337,73 @@ class _PetScreenState extends State<PetScreen> {
           ...bubbles, //renders bubbles list
         ],
       ),
+      
+    );
+  }
+  //handles purchases with confirmation query
+  void _confirmPurchase(
+    BuildContext context,
+    CoinProvider coinProvider,
+    int cost,
+    VoidCallback onSuccess,
+    String message,
+  ) {
+    showDialog(
+      context: context,
+      builder:
+          (ctx) => AlertDialog(
+            backgroundColor: Color(0xFFFF6F71),
+            title: Text(
+              'Confirm Purchase',
+              style: GoogleFonts.pressStart2p(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            content: Text(
+              message,
+              style: GoogleFonts.pressStart2p(
+                fontSize: 16,
+                color: Colors.white,
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pop(),
+                child: Text(
+                  'Cancel',
+                  style: GoogleFonts.pressStart2p(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(ctx).pop();
+                  if (coinProvider.inventory.getCoin() >= cost) {
+                    coinProvider.spendCoins(cost); // Deduct coins
+                    onSuccess(); // Add item to inventory
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Payment Received!')),
+                    );
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Not enough coins!')),
+                    );
+                  }
+                },
+                child: Text(
+                  'Pay',
+                  style: GoogleFonts.pressStart2p(
+                    fontSize: 16,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
     );
   }
 }
