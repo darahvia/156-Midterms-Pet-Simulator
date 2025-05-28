@@ -58,6 +58,7 @@ class _StartScreenState extends State<StartScreen> {
     petProvider.stopAutoDecrease();
     await petProvider.storage.deleteLocalData("petData");
     await petProvider.storage.deleteLocalData("inventoryData");
+    await petProvider.storage.deleteLocalData("petHistory");
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(
       context,
@@ -110,12 +111,20 @@ class _StartScreenState extends State<StartScreen> {
                               );
                             },
                           ),
-                          SizedBox(width: 12),
                           PixelButton(
                             label: 'Logout',
                             icon: Icons.logout,
                             color: Colors.red,
                             onPressed: _logout,
+                          ),
+                          PixelButton(
+                            label: 'Pets',
+                            icon: Icons.book,
+                            color: Colors.red,
+                            onPressed: () async {
+                              List<String> history = await petProvider.storage.loadPetHistory();
+                              showPetHistoryDialog(context, history);
+                            },
                           ),
                         ],
                       )
@@ -141,33 +150,45 @@ class _StartScreenState extends State<StartScreen> {
                             onChanged: (_) => setState(() {}),
                           ),
                           SizedBox(height: 20),
-                          PixelButton(
-                            label: 'Adopt',
-                            icon: Icons.pets,
-                            color: Colors.orangeAccent,
-                            isEnabled: _nameController.text.trim().isNotEmpty,
-                            onPressed:
-                                _nameController.text.trim().isNotEmpty
-                                    ? () {
-                                      petProvider.loadPetStats(
-                                        petName: _nameController.text.trim(),
-                                      ); //get name from text field
-                                      coinProvider.loadInventory();
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => PetScreen(),
-                                        ),
-                                      );
-                                    }
-                                    : null,
-                          ),
-                          SizedBox(width: 12),
-                          PixelButton(
-                            label: 'Logout',
-                            icon: Icons.logout,
-                            color: Colors.red,
-                            onPressed: _logout,
+                          Row(
+                            children: [
+                              PixelButton(
+                                label: 'Adopt',
+                                icon: Icons.pets,
+                                color: Colors.orangeAccent,
+                                isEnabled: _nameController.text.trim().isNotEmpty,
+                                onPressed:
+                                    _nameController.text.trim().isNotEmpty
+                                        ? () {
+                                          petProvider.loadPetStats(
+                                            petName: _nameController.text.trim(),
+                                          ); //get name from text field
+                                          coinProvider.loadInventory();
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => PetScreen(),
+                                            ),
+                                          );
+                                        }
+                                        : null,
+                              ),
+                              PixelButton(
+                                label: 'Logout',
+                                icon: Icons.logout,
+                                color: Colors.red,
+                                onPressed: _logout,
+                              ),
+                              PixelButton(
+                                label: 'Pets',
+                                icon: Icons.book,
+                                color: Colors.red,
+                                onPressed: () async {
+                                  List<String> history = await petProvider.storage.loadPetHistory();
+                                  showPetHistoryDialog(context, history);
+                                },
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -175,6 +196,37 @@ class _StartScreenState extends State<StartScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  void showPetHistoryDialog(BuildContext context, List<String> historyList) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Pet History'),
+          content: historyList.isEmpty
+              ? Text('No history yet.')
+              : Container(
+                  width: double.maxFinite,
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: historyList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(historyList[index]),
+                      );
+                    },
+                  ),
+                ),
+          actions: [
+            TextButton(
+              child: Text('Close'),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        );
+      },
     );
   }
 }

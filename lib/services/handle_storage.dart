@@ -238,6 +238,56 @@ class HandleStorage {
     return localData;
   }
 
+  Future<void> savePetHistory(String historyEntry) async {
+    final path = await _getFilePath('petHistory');
+    final file = File(path);
+
+    List<String> historyList = [];
+    if (await file.exists()) {
+      historyList = await file.readAsLines();
+    }
+    historyList.add(historyEntry);
+    await file.writeAsString(historyList.join('\n'));
+
+    if (uid != null) {
+      final doc = await _firestore.collection('users').doc(uid).get();
+      List<String> fbHistory = [];
+      if (doc.exists && doc.data()?['petHistory'] != null) {
+        fbHistory = List<String>.from(doc.data()!['petHistory']);
+      }
+      fbHistory.add(historyEntry);
+      await _firestore.collection('users').doc(uid).set(
+        {'petHistory': fbHistory},
+        SetOptions(merge: true),
+      );
+    }
+  }
+
+  Future<List<String>> loadPetHistory() async {
+    final path = await _getFilePath('petHistory');
+    final file = File(path);
+
+    List<String> localHistory = [];
+    if (await file.exists()) {
+      localHistory = await file.readAsLines();
+    }
+
+    if (uid != null) {
+      final doc = await _firestore.collection('users').doc(uid).get();
+      if (doc.exists && doc.data()?['petHistory'] != null) {
+        List<String> fbHistory = List<String>.from(doc.data()!['petHistory']);
+
+        if (fbHistory.length > localHistory.length) {
+          await file.writeAsString(fbHistory.join('\n'));
+          return fbHistory;
+        }
+      }
+    }
+
+    return localHistory;
+  }
+
+
   Future<void> deleteLocalData(String filename) async {
     try {
       final petFile = File(await _getFilePath(filename));

@@ -3,9 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/pet_provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../widgets/pixel_button.dart';
-import 'package:path_provider/path_provider.dart';
 import '../providers/coin_provider.dart';
-import 'dart:io';
 import 'start_screen.dart';
 
 //if death condition met, navigate to this screen
@@ -80,6 +78,7 @@ class DeathScreen extends StatelessWidget {
                         (route) => false,
                       );
                     });
+                    petProvider.storage.savePetHistory('${petProvider.pet.getName()} - $cause');
                     petProvider.petReset();
                     await _deleteAllData(context);
                   },
