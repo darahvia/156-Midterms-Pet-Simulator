@@ -11,6 +11,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   String mood = "normal";
   String? currentClothing;
   Timer? _autoDecreaseTimer;
+  bool death = false;
 
 
   PetProvider() {
@@ -49,6 +50,16 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   void stopAutoDecrease() {
     _autoDecreaseTimer?.cancel();
     _autoDecreaseTimer = null;
+  }
+
+  void checkDeath() {
+    if((pet.getHunger()==0) && (pet.getHygiene()==0) && (pet.getHappiness()==0) && (pet.getEnergy()==0)){
+      death = true;
+    }
+  }
+
+  void petReset(){
+    death = false;
   }
 
   //takes map of pet stats and assigns it to current Pet object
@@ -105,6 +116,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   void savePetStats() {
     mood = pet.getPetState();
     storage.savePetStats(pet);
+    checkDeath();
     notifyListeners();
   }
 

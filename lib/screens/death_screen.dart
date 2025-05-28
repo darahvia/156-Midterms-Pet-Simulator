@@ -10,22 +10,26 @@ import 'start_screen.dart';
 
 //if death condition met, navigate to this screen
 class DeathScreen extends StatelessWidget {
-  const DeathScreen({super.key});
+  String cause = "";
 
-  Future<void> _deleteAllData(BuildContext context) async {
-    final petProvider = Provider.of<PetProvider>(context, listen: false);
-    print("All files deleted and local storage disabled.");
-
-    final directory = await getApplicationDocumentsDirectory();
-    directory.listSync().forEach((file) {
-      if (file is File) file.deleteSync();
-    });
+  DeathScreen(String petCause){
+    cause = petCause;
   }
 
+  Future<void> _deleteAllData(BuildContext context) async{
+    final petProvider = Provider.of<PetProvider>(context, listen: false);
+
+    petProvider.storage.deleteFbData("petData");
+    petProvider.storage.deleteLocalData("petData");
+  }
+  
   @override
   Widget build(BuildContext context) {
     final petProvider = Provider.of<PetProvider>(context);
     final coinProvider = Provider.of<CoinProvider>(context);
+
+    petProvider.stopAutoDecrease();
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -48,7 +52,8 @@ class DeathScreen extends StatelessWidget {
               children: [
                 SizedBox(height: 300),
                 Text(
-                  '${petProvider.pet.getName()} passed away',
+                  cause == "death" ?
+                  '${petProvider.pet.getName()} passed away':'${petProvider.pet.getName()} will find a new home',
                   style: GoogleFonts.pressStart2p(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
@@ -57,32 +62,25 @@ class DeathScreen extends StatelessWidget {
                 ),
                 // Cat picture
                 Image.asset(
-                  'assets/images/cat_dead.png',
+                  cause == "death" ?
+                  'assets/images/cat_dead.png' : 'assets/images/cat_hungry.png',
                   height: 150,
                   width: 500,
                 ),
                 const SizedBox(height: 20),
                 PixelButton(
-                  label: 'Main Menu',
-                  icon: Icons.home,
+                  label: 'Goodbye',
+                  icon: Icons.pets,
                   color: Colors.redAccent,
                   //navigate back to start screen and delete petData
                   onPressed: () async {
-                    print('Pet Name: ${petProvider.pet.getName()}');
-                    print('Hunger: ${petProvider.pet.getHunger()}');
-                    print('Happiness: ${petProvider.pet.getHappiness()}');
-                    print('Energy: ${petProvider.pet.getEnergy()}');
-                    print('Hygiene: ${petProvider.pet.getHygiene()}');
-                    print('Inventory:');
-                    print('Coins: ${coinProvider.inventory.getCoin()}');
-                    print('Food: ${coinProvider.inventory.getFood()}');
-                    print('Soap: ${coinProvider.inventory.getSoap()}');
-                    Navigator.of(context).pushAndRemoveUntil(
-                      MaterialPageRoute(
-                        builder: (context) => StartScreen(),
-                      ), // Replace with your start screen widget
-                      (route) => false, // Remove all previous routes
-                    );
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => StartScreen()),
+                        (route) => false,
+                      );
+                    });
+                    petProvider.petReset();
                     await _deleteAllData(context);
                   },
                 ),

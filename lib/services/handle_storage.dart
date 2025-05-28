@@ -151,7 +151,7 @@ class HandleStorage {
         'lastUpdated': DateTime.now().toIso8601String(),
       };
       await _firestore.collection('users').doc(uid).set(
-        {'petStats': petData},
+        {'petData': petData},
         SetOptions(merge: true),
       );
       print('Pet data saved to Firebase for user $uid');
@@ -194,7 +194,7 @@ class HandleStorage {
     if (uid != null) {
       final doc = await _firestore.collection('users').doc(uid).get();
       if (doc.exists) {
-        final fbData = doc.data()?['petStats'];
+        final fbData = doc.data()?['petData'];
         if (fbData != null) {
           final fbLastUpdatedStr = fbData['lastUpdated'] as String?;
           DateTime? fbLastUpdated = fbLastUpdatedStr != null ? DateTime.tryParse(fbLastUpdatedStr) : null;
@@ -238,19 +238,31 @@ class HandleStorage {
     return localData;
   }
 
-  Future<void> deleteLocalData() async {
+  Future<void> deleteLocalData(String filename) async {
     try {
-      final petFile = File(await _getFilePath("petData"));
-      final inventoryFile = File(await _getFilePath("inventoryData"));
+      final petFile = File(await _getFilePath(filename));
 
       if (await petFile.exists()) {
         await petFile.delete();
       }
-      if (await inventoryFile.exists()) {
-        await inventoryFile.delete();
-      }
+
     } catch (e) {
       print("Error deleting local data: $e");
     }
+  }
+
+  Future<void> deleteFbData(String filename) async {
+    final uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) {
+      return;
+    }
+
+    await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({
+          filename : FieldValue.delete(),
+        });
+
   }
 }

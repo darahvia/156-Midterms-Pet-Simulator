@@ -120,6 +120,7 @@ flutter:
     - assets/images/cat_dislikes.png
     - assets/images/teddy.png
     - assets/images/scary_teddy.png
+    - assets/images/vet_background.png
 
     #audio
     - assets/audio/background_music.mp3

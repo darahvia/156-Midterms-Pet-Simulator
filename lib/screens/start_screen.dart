@@ -56,7 +56,8 @@ class _StartScreenState extends State<StartScreen> {
   Future<void> _logout() async {
     final petProvider = Provider.of<PetProvider>(context, listen: false);
     petProvider.stopAutoDecrease();
-    await petProvider.storage.deleteLocalData();
+    await petProvider.storage.deleteLocalData("petData");
+    await petProvider.storage.deleteLocalData("inventoryData");
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(
       context,
