@@ -62,15 +62,17 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     death = false;
   }
 
+  String getPetType() {
+      return pet.getType();
+    }
   //takes map of pet stats and assigns it to current Pet object
-  Future<void> loadPetStats({String? petName}) async {
+  Future<void> loadPetStats({String? petName, String? petType}) async {
     final stats = await storage.loadPetStats();
     stats.forEach((key, value) {
-      print(
-        'Key: $key, Value: $value',
-      ); // Print each key and its corresponding value
+      print('Key: $key, Value: $value');
     });
     pet.setName(stats["name"] ?? petName);
+    pet.setType(stats["type"] ?? petType);
     pet.setHunger(stats["hunger"] ?? 100);
     pet.setHygiene(stats["hygiene"] ?? 100);
     pet.setHappiness(stats["happiness"] ?? 100);
