@@ -8,6 +8,7 @@ class PixelButton extends StatefulWidget {
   final String label;
   final IconData icon;
   final VoidCallback? onPressed;
+  final VoidCallback? onHold;
   final bool isEnabled;
   final Color color;
 
@@ -16,6 +17,7 @@ class PixelButton extends StatefulWidget {
     required this.label,
     required this.icon,
     required this.onPressed,
+    this.onHold,
     this.isEnabled = true,
     required this.color,
   });
@@ -49,6 +51,14 @@ class _PixelButtonState extends State<PixelButton> {
         widget.onPressed?.call();
       },
       onTapCancel: () => _updatePressed(false),
+      onLongPress: () {
+        if (widget.isEnabled && widget.onHold != null) {
+          _updatePressed(true);
+          MusicManager.playSoundEffect('audio/button_tap.mp3');
+          widget.onHold?.call();
+        }
+      },
+      onLongPressEnd: (_) => _updatePressed(false),
       child: Stack(
         children: [
           if (!_isPressed && widget.isEnabled)
@@ -67,14 +77,16 @@ class _PixelButtonState extends State<PixelButton> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Padding(padding: const EdgeInsets.all(3.0),
-                child: Icon(
+                Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Icon(
                     widget.icon,
                     size: 16,
                     color: widget.isEnabled ? Colors.black : Colors.grey,
                   ),
                 ),
-                Expanded( // Make sure it can shrink
+                Expanded(
+                  // Make sure it can shrink
                   child: AutoSizeText(
                     widget.label,
                     maxLines: 1,
