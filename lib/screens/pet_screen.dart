@@ -465,6 +465,8 @@ class _PetScreenState extends State<PetScreen> {
                             ),
                           ),
                     ),
+
+
                     PixelButton(
                       label: 'Games',
                       icon: Icons.sports_esports,
@@ -472,6 +474,8 @@ class _PetScreenState extends State<PetScreen> {
                       onPressed:
                           () => chooseGame(context)
                     ),
+
+
                   ],
                 ),
 
