@@ -1,6 +1,5 @@
 // screens/shop_screen.dart
 import 'package:flutter/material.dart';
-import 'package:pet_simulator/widgets/pet_display.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/coin_provider.dart';

@@ -752,7 +752,7 @@ class _PetScreenState extends State<PetScreen> {
                               coinProvider.inventory.getToy('bear') > 0),
                       onPressed:
                           coinProvider.inventory.getToy(
-                                        selectedFood.toLowerCase(),
+                                        selectedToy.toLowerCase(),
                                       ) >
                                       0 &&
                                   petProvider.pet.getHappiness() < 100 &&
