@@ -566,15 +566,17 @@ class _PetScreenState extends State<PetScreen> {
                             ),
                           ),
                     ),
+
+                    PixelButton(
+                      label: 'Games',
+                      icon: Icons.sports_esports,
+                      color: Colors.pinkAccent,
+                      onPressed:
+                          () => chooseGame(context)
+                    ),
                   ],
                 ),
-                SizedBox(height: 10),
-                PixelButton(
-                  label: 'Games',
-                  icon: Icons.sports_esports,
-                  color: Colors.pinkAccent,
-                  onPressed: () => chooseGame(context),
-                ),
+
               ],
             ),
           ),
