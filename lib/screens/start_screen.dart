@@ -81,12 +81,20 @@ class _StartScreenState extends State<StartScreen> {
         children: [
           Image.asset('assets/images/outdoor.png', fit: BoxFit.cover),
           SizedBox(height: 20),
-          Center(
-            child: Image.asset(
-              'assets/images/PixelPawLogo_fin.png',
-              fit: BoxFit.cover,
+          Align(
+            alignment: Alignment.topCenter,
+            child: Padding(
+              padding: EdgeInsets.only(top: 40),
+              child: SizedBox(
+                height: 200, // adjust size as needed
+                child: Image.asset(
+                  'assets/images/PixelPawLogo_fin.png',
+                  fit: BoxFit.contain,
+                ),
+              ),
             ),
           ),
+
           SizedBox(height: 20),
           Align(
             alignment: Alignment.bottomCenter,
@@ -154,7 +162,7 @@ class _StartScreenState extends State<StartScreen> {
                             ),
                           ),
                           SizedBox(height: 10),
-                          Row(
+                          Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               PixelButton(
@@ -165,7 +173,7 @@ class _StartScreenState extends State<StartScreen> {
                                   selectedPetType = 'Dog';
                                 }),
                               ),
-                              SizedBox(width: 10),
+                              SizedBox(height: 10),
                               PixelButton(
                                 label: 'Cat',
                                 icon: Icons.pets,
@@ -174,7 +182,7 @@ class _StartScreenState extends State<StartScreen> {
                                   selectedPetType = 'Cat';
                                 }),
                               ),
-                              SizedBox(width: 10),
+                              SizedBox(height: 10),
                               PixelButton(
                                 label: 'Dragon',
                                 icon: Icons.pets,
