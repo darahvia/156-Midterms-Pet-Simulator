@@ -36,20 +36,24 @@ class ShopScreen extends StatelessWidget {
             child: Image.asset('assets/images/store.png', fit: BoxFit.cover),
           ),
           // Cat image positioned in the lower-right corner
+          // Positioned(
+          //   bottom: 50,
+          //   right: 50,
+          //   child: SizedBox(
+          //     width: 10,
+          //     height: 10,
+          //     child: PetDisplay(onTap: (tapPosition) {}),
+          //   ),
+          // ),
           Positioned(
-            bottom: 16,
-            right: 16,
-            child: PetDisplay(onTap: (tapPosition) {}),
-          ),
-          Positioned(
-            top: 16,
+            top: 8,
             right: 16,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 const SizedBox(height: 8),
+                // Food inventory
                 Row(
-                  //food inventory
                   children: [
                     Image.asset(
                       'assets/images/food_biscuit.png',
@@ -91,16 +95,42 @@ class ShopScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
+                // Soap inventory
                 Row(
                   children: [
                     Image.asset(
-                      'assets/images/soap.png',
+                      'assets/images/pet_wipes.png',
                       width: 40,
                       height: 40,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '${coinProvider.inventory.getSoap()}',
+                      '${coinProvider.inventory.getSoap('wipes')}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/pet_soap.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${coinProvider.inventory.getSoap('soap')}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/pet_shampoo.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                    Text(
+                      '${coinProvider.inventory.getSoap('shampoo')}',
                       style: GoogleFonts.pressStart2p(
                         fontSize: 15,
                         color: Colors.black,
@@ -108,7 +138,6 @@ class ShopScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
                 Row(
                   children: [
                     Image.asset(
@@ -137,8 +166,8 @@ class ShopScreen extends StatelessWidget {
                 // Board image
                 Image.asset(
                   'assets/images/board.png',
-                  width: 1300,
-                  height: 1200,
+                  width: 350,
+                  height: 350,
                   fit: BoxFit.contain,
                 ),
                 // Buttons inside the board
@@ -148,7 +177,7 @@ class ShopScreen extends StatelessWidget {
                     //Food Items
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      spacing: 25.0,
+                      spacing: 7.0,
                       children: [
                         PixelButton(
                           label: 'Biscuit - 5',
@@ -194,17 +223,56 @@ class ShopScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                    SizedBox(height: 16),
-                    PixelButton(
-                      label: 'Soap - 10',
-                      icon: Icons.soap,
-                      color: Colors.blue,
-                      onPressed:
-                          () => _confirmPurchase(context, coinProvider, 10, () {
-                            coinProvider.buySoap(1); // Add 1 soap to inventory
-                          }),
+                    SizedBox(height: 60),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 7.0,
+                      children: [
+                        PixelButton(
+                          label: 'Wipes - 5',
+                          icon: Icons.soap,
+                          color: Colors.blue,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                5,
+                                () {
+                                  coinProvider.buySoap('wipes', 1);
+                                },
+                              ),
+                        ),
+                        PixelButton(
+                          label: 'Soap - 10',
+                          icon: Icons.soap,
+                          color: Colors.blue,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                10,
+                                () {
+                                  coinProvider.buySoap('soap', 1);
+                                },
+                              ),
+                        ),
+                        PixelButton(
+                          label: 'Shampoo - 20',
+                          icon: Icons.soap,
+                          color: Colors.blue,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                5,
+                                () {
+                                  coinProvider.buySoap('shampoo', 1);
+                                },
+                              ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 16),
+                    SizedBox(height: 60),
                     PixelButton(
                       label: 'Meds - 20',
                       icon: Icons.medical_services,
@@ -216,7 +284,6 @@ class ShopScreen extends StatelessWidget {
                             ); // Add 1 medicine to inventory
                           }),
                     ),
-                    SizedBox(height: 16),
                     //Clothing Shop Button
                     // PixelButton(
                     //   label: 'Clothing',
@@ -231,7 +298,6 @@ class ShopScreen extends StatelessWidget {
                     //     );
                     //   },
                     // ),
-                    const SizedBox(height: 82),
                   ],
                 ),
               ],

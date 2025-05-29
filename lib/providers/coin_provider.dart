@@ -39,7 +39,7 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
     });
     inventory.setCoin(bag["coin"] ?? 50);
     inventory.setFood('can', bag["can"] ?? 10);
-    inventory.setSoap(bag["soap"] ?? 10);
+    inventory.setSoap('soap', bag["soap"] ?? 10);
     inventory.setMedicine(bag["medicine"] ?? 3);
     saveInventory();
     notifyListeners();
@@ -68,15 +68,15 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
   void useItem(String item) {
     if (item == 'biscuit' || item == 'can' || item == 'bag') {
       if (inventory.getFood(item) > 0) {
-        print('Before: ${inventory.getFood(item)}');
         inventory.setFood(item, inventory.getFood(item) - 1);
-        print('After: ${inventory.getFood(item)}');
         saveInventory();
       }
     }
-    if (item == 'soap') {
-      inventory.setSoap(inventory.getSoap() - 1);
-      saveInventory();
+    if (item == 'wipes' || item == 'soap' || item == 'shampoo') {
+      if (inventory.getSoap(item) > 0) {
+        inventory.setSoap(item, inventory.getSoap(item) - 1);
+        saveInventory();
+      }
     }
     if (item == 'medicine') {
       inventory.setMedicine(inventory.getMedicine() - 1);
@@ -84,14 +84,14 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
-  //item buying interactions
+  // Item buying interactions
   void buyFood(String food, int num) {
     inventory.addFood(food, num);
     saveInventory();
   }
 
-  void buySoap(int num) {
-    inventory.setSoap(inventory.getSoap() + num);
+  void buySoap(String soap, int num) {
+    inventory.addSoap(soap, num);
     saveInventory();
   }
 

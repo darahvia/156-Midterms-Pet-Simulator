@@ -142,6 +142,9 @@ flutter:
     - assets/images/food_biscuit.png
     - assets/images/food_can.png
     - assets/images/food_bag.png
+    - assets/images/pet_wipes.png
+    - assets/images/pet_soap.png
+    - assets/images/pet_shampoo.png
 
     #audio
     - assets/audio/background_music.mp3

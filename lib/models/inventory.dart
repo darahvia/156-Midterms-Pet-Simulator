@@ -1,13 +1,8 @@
-//tracks inventory items
+// Tracks inventory items
 class Inventory {
   int _coin = 0;
-  //soap items
-  int _soap = 0;
   //medicine items
   int _medicine = 0;
-
-  // Clothing inventory
-  List<String> ownedClothing = [];
 
   // Toy inventory
   List<String> ownedToys = [];
@@ -15,14 +10,32 @@ class Inventory {
   // Food inventory
   Map<String, int> ownedFoods = {'biscuit': 0, 'can': 0, 'bag': 0};
 
-  void addClothing(String clothing) {
-    if (!ownedClothing.contains(clothing)) {
-      ownedClothing.add(clothing);
+  // Soap inventory
+  Map<String, int> ownedSoaps = {'wipes': 0, 'soap': 0, 'shampoo': 0};
+
+  // Clothing inventory
+  List<String> ownedClothing = [];
+
+  // Food methods
+  void addFood(String food, int num) {
+    if (ownedFoods.containsKey(food)) {
+      ownedFoods[food] = ownedFoods[food]! + num;
     }
   }
 
-  bool ownsClothing(String clothing) {
-    return ownedClothing.contains(clothing);
+  bool ownsFood(String food) {
+    return ownedFoods.containsKey(food) && ownedFoods[food]! > 0;
+  }
+
+  // Soap methods
+  void addSoap(String soap, int num) {
+    if (ownedSoaps.containsKey(soap)) {
+      ownedSoaps[soap] = ownedSoaps[soap]! + num;
+    }
+  }
+
+  bool ownsSoap(String soap) {
+    return ownedSoaps.containsKey(soap) && ownedSoaps[soap]! > 0;
   }
 
   // Toy methods
@@ -36,18 +49,19 @@ class Inventory {
     return ownedToys.contains(toy);
   }
 
-  // Food methods (for special foods)
-  void addFood(String food, int num) {
-    if (ownedFoods.containsKey(food)) {
-      ownedFoods[food] = ownedFoods[food]! + num;
+  // Clothes methods
+
+  void addClothing(String clothing) {
+    if (!ownedClothing.contains(clothing)) {
+      ownedClothing.add(clothing);
     }
   }
 
-  bool ownsFood(String food) {
-    return ownedFoods.containsKey(food) && ownedFoods[food]! > 0;
+  bool ownsClothing(String clothing) {
+    return ownedClothing.contains(clothing);
   }
 
-  // getter
+  // Getter
   int getCoin() {
     return _coin;
   }
@@ -56,15 +70,15 @@ class Inventory {
     return ownedFoods.containsKey(food) ? ownedFoods[food]! : 0;
   }
 
-  int getSoap() {
-    return _soap;
+  int getSoap(String soap) {
+    return ownedSoaps.containsKey(soap) ? ownedSoaps[soap]! : 0;
   }
 
   int getMedicine() {
     return _medicine;
   }
 
-  // setter
+  // Setter
   void setCoin(int c) {
     _coin = c;
   }
@@ -75,8 +89,10 @@ class Inventory {
     }
   }
 
-  void setSoap(int s) {
-    _soap = s;
+  void setSoap(String soap, int num) {
+    if (ownedSoaps.containsKey(soap)) {
+      ownedSoaps[soap] = num;
+    }
   }
 
   void setMedicine(int m) {

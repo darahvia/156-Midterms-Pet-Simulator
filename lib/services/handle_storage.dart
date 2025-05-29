@@ -25,7 +25,9 @@ class HandleStorage {
       biscuit:${inventory.getFood('biscuit')}
       can:${inventory.getFood('can')}
       bag:${inventory.getFood('bag')}
-      soap:${inventory.getSoap()}
+      wipes:${inventory.getSoap('wipes')}
+      soap:${inventory.getSoap('soap')}
+      shampoo:${inventory.getSoap('shampoo')}
       medicine:${inventory.getMedicine()}
       lastUpdated:${DateTime.now().toIso8601String()}
       ''';
@@ -37,7 +39,9 @@ class HandleStorage {
         'biscuit': inventory.getFood('biscuit'),
         'can': inventory.getFood('can'),
         'bag': inventory.getFood('bag'),
-        'soap': inventory.getSoap(),
+        'wipes': inventory.getSoap('wipes'),
+        'soap': inventory.getSoap('soap'),
+        'shampoo': inventory.getSoap('shampoo'),
         'medicine': inventory.getMedicine(),
         'lastUpdated': DateTime.now().toIso8601String(),
       };
@@ -100,7 +104,9 @@ class HandleStorage {
               biscuit:${fbData['biscuit']}
               can:${fbData['can']}
               bag:${fbData['bag']}
+              wipes:${fbData['wipes']}
               soap:${fbData['soap']}
+              shampoo:${fbData['shampoo']}
               medicine:${fbData['medicine']}
               lastUpdated:${fbLastUpdated.toIso8601String()}
               ''';
@@ -112,7 +118,9 @@ class HandleStorage {
               'biscuit': fbData['biscuit'],
               'can': fbData['can'],
               'bag': fbData['bag'],
+              'wipes': fbData['wipes'],
               'soap': fbData['soap'],
+              'shampoo': fbData['shampoo'],
               'medicine': fbData['medicine'],
               'lastUpdated': fbLastUpdated,
             };

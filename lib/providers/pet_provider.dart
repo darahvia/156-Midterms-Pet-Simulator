@@ -127,7 +127,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
 
   //pet interactions
   void feedPet(String food) {
-    if (food == 'bisuit') {
+    if (food == 'biscuit') {
       pet.setHunger((pet.getHunger() + 10).clamp(0, 100));
       savePetStats();
     } else if (food == 'can') {
@@ -139,9 +139,17 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
-  void cleanPet() {
-    pet.setHygiene((pet.getHygiene() + 30).clamp(0, 100));
-    savePetStats();
+  void cleanPet(String soap) {
+    if (soap == 'wipes') {
+      pet.setHygiene((pet.getHygiene() + 15).clamp(0, 100));
+      savePetStats();
+    } else if (soap == 'soap') {
+      pet.setHygiene((pet.getHygiene() + 30).clamp(0, 100));
+      savePetStats();
+    } else if (soap == 'shampoo') {
+      pet.setHygiene((pet.getHygiene() + 50).clamp(0, 100));
+      savePetStats();
+    }
   }
 
   void playWithPet() {

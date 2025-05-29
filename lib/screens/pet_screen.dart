@@ -36,6 +36,7 @@ class _PetScreenState extends State<PetScreen> {
     'assets/images/heart_red.gif',
   ];
   String selectedFood = 'Feed';
+  String selectedSoap = 'Clean';
 
   @override
   void didChangeDependencies() {
@@ -179,7 +180,6 @@ class _PetScreenState extends State<PetScreen> {
     final GlobalKey cleanButtonKey = GlobalKey();
     final GlobalKey playButtonKey = GlobalKey();
 
-    // Map food types to their respective image assets
     final Map<String, String> foodImages = {
       'Biscuit': 'assets/images/food_biscuit.png',
       'Can': 'assets/images/food_can.png',
@@ -259,7 +259,7 @@ class _PetScreenState extends State<PetScreen> {
                                   );
                                   Navigator.pop(context);
                                 }
-                                : null, // Explicitly set to null when disabled
+                                : null,
                       ),
                       SizedBox(height: 5),
                       PixelButton(
@@ -272,6 +272,114 @@ class _PetScreenState extends State<PetScreen> {
                                 ? () {
                                   setState(() {
                                     selectedFood = 'Bag';
+                                  });
+                                  MusicManager.playSoundEffect(
+                                    'audio/button_tap.mp3',
+                                  );
+                                  Navigator.pop(context);
+                                }
+                                : null,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+      );
+    }
+
+    final Map<String, String> soapImages = {
+      'Wipes': 'assets/images/pet_wipes.png',
+      'Soap': 'assets/images/pet_soap.png',
+      'Shampoo': 'assets/images/pet_shampoo.png',
+    };
+
+    void chooseSoap(BuildContext context) {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder:
+            (context) => AlertDialog(
+              backgroundColor: Colors.grey[900],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "Choose Soap",
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.yellowAccent,
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Icon(Icons.close, color: Colors.grey),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      PixelButton(
+                        label: 'Wipes',
+                        icon: Icons.restaurant,
+                        color: Colors.pinkAccent,
+                        isEnabled: coinProvider.inventory.getSoap('wipes') > 0,
+                        onPressed:
+                            coinProvider.inventory.getSoap('wipes') > 0
+                                ? () {
+                                  setState(() {
+                                    selectedSoap = 'Wipes';
+                                  });
+                                  MusicManager.playSoundEffect(
+                                    'audio/button_tap.mp3',
+                                  );
+                                  Navigator.pop(context);
+                                }
+                                : null,
+                      ),
+                      SizedBox(height: 5),
+                      PixelButton(
+                        label: 'Soap',
+                        icon: Icons.restaurant,
+                        color: Colors.blueAccent,
+                        isEnabled: coinProvider.inventory.getSoap('soap') > 0,
+                        onPressed:
+                            coinProvider.inventory.getSoap('soap') > 0
+                                ? () {
+                                  setState(() {
+                                    selectedSoap = 'Soap';
+                                  });
+                                  MusicManager.playSoundEffect(
+                                    'audio/button_tap.mp3',
+                                  );
+                                  Navigator.pop(context);
+                                }
+                                : null,
+                      ),
+                      SizedBox(height: 5),
+                      PixelButton(
+                        label: 'Shampoo',
+                        icon: Icons.restaurant,
+                        color: Colors.greenAccent,
+                        isEnabled:
+                            coinProvider.inventory.getSoap('shampoo') > 0,
+                        onPressed:
+                            coinProvider.inventory.getSoap('shampoo') > 0
+                                ? () {
+                                  setState(() {
+                                    selectedSoap = 'Shampoo';
                                   });
                                   MusicManager.playSoundEffect(
                                     'audio/button_tap.mp3',
@@ -474,15 +582,21 @@ class _PetScreenState extends State<PetScreen> {
                               },
                     ),
                     PixelButton(
-                      label: 'Clean',
-                      icon: Icons.bathtub,
+                      label: selectedSoap,
+                      icon: Icons.soap,
                       color: Colors.blueAccent,
                       key: cleanButtonKey,
+                      onHold: () => chooseSoap(context),
                       isEnabled:
-                          coinProvider.inventory.getSoap() > 0 &&
-                          petProvider.pet.getHygiene() < 100,
+                          petProvider.pet.getHygiene() < 100 &&
+                          (coinProvider.inventory.getSoap('wipes') > 0 ||
+                              coinProvider.inventory.getSoap('soap') > 0 ||
+                              coinProvider.inventory.getSoap('shampoo') > 0),
                       onPressed:
-                          coinProvider.inventory.getSoap() > 0 &&
+                          coinProvider.inventory.getSoap(
+                                        selectedSoap.toLowerCase(),
+                                      ) >
+                                      0 &&
                                   petProvider.pet.getHygiene() < 100 &&
                                   petProvider.pet.getPetState() != "sick"
                               ? () {
@@ -491,23 +605,29 @@ class _PetScreenState extends State<PetScreen> {
                                 );
                                 addBubble(
                                   key: cleanButtonKey,
-                                  imagePath: 'assets/images/soap.png',
+                                  imagePath: soapImages[selectedSoap]!,
                                 );
-                                petProvider.cleanPet();
-                                coinProvider.useItem('soap');
+                                petProvider.cleanPet(
+                                  selectedSoap.toLowerCase(),
+                                );
+                                coinProvider.useItem(
+                                  selectedSoap.toLowerCase(),
+                                );
                               }
                               : () {
                                 MusicManager.playSoundEffect('audio/angry.mp3');
                                 addBubble(
                                   key: cleanButtonKey,
-                                  imagePath: 'assets/images/soap.png',
+                                  imagePath: soapImages[selectedSoap]!,
                                 );
-                                coinProvider.useItem('soap');
+                                coinProvider.useItem(
+                                  selectedSoap.toLowerCase(),
+                                );
                               },
                     ),
                     PixelButton(
                       label: 'Play',
-                      icon: Icons.play_arrow,
+                      icon: Icons.toys,
                       color: Colors.purpleAccent,
                       key: playButtonKey,
                       isEnabled:
@@ -556,7 +676,7 @@ class _PetScreenState extends State<PetScreen> {
                     ),
                     PixelButton(
                       label: 'Vet',
-                      icon: Icons.sports_esports,
+                      icon: Icons.medical_services,
                       color: Colors.pinkAccent,
                       onPressed:
                           () => Navigator.push(
@@ -572,7 +692,7 @@ class _PetScreenState extends State<PetScreen> {
                 PixelButton(
                   label: 'Games',
                   icon: Icons.sports_esports,
-                  color: Colors.pinkAccent,
+                  color: Colors.blueAccent,
                   onPressed: () => chooseGame(context),
                 ),
               ],
