@@ -161,7 +161,7 @@ class _StartScreenState extends State<StartScreen> {
                               color: Colors.black,
                             ),
                           ),
-                          SizedBox(height: 10),
+                          SizedBox(height: 5),
                           Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -173,7 +173,7 @@ class _StartScreenState extends State<StartScreen> {
                                   selectedPetType = 'Dog';
                                 }),
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 5),
                               PixelButton(
                                 label: 'Cat',
                                 icon: Icons.pets,
@@ -182,7 +182,7 @@ class _StartScreenState extends State<StartScreen> {
                                   selectedPetType = 'Cat';
                                 }),
                               ),
-                              SizedBox(height: 10),
+                              SizedBox(height: 5),
                               PixelButton(
                                 label: 'Dragon',
                                 icon: Icons.pets,
