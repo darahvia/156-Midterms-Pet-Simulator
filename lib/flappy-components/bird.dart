@@ -25,9 +25,9 @@ class Bird extends SpriteComponent with CollisionCallbacks {
   // LOAD
   @override
   FutureOr<void> onLoad() async {
-    upFlap = await Sprite.load('bird_cat_upflap.png');
-    midFlap = await Sprite.load('bird_cat_midflap.png');
-    downFlap = await Sprite.load('bird_cat_downflap.png');
+    upFlap = await Sprite.load('bird_dragon_upflap.png');
+    midFlap = await Sprite.load('bird_dragon_midflap.png');
+    downFlap = await Sprite.load('bird_dragon_downflap.png');
     sprite = midFlap; // load bird sprite image
     add(RectangleHitbox()); // add hit box
   }

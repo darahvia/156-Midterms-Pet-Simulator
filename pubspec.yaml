@@ -81,6 +81,16 @@ flutter:
     - assets/images/dragon/
     - assets/images/cat/
     - assets/images/dog/
+    # flappy
+    - assets/images/dragon/bird_dragon_upflap.png
+    - assets/images/dragon/bird_dragon_midflap.png
+    - assets/images/dragon/bird_dragon_downflap.png
+    - assets/images/cat/bird_cat_upflap.png
+    - assets/images/cat/bird_cat_midflap.png
+    - assets/images/cat/bird_cat_downflap.png
+    - assets/images/dog/bird_dog_upflap.png
+    - assets/images/dog/bird_dog_midflap.png
+    - assets/images/dog/bird_dog_downflap.png
     #images
     - assets/images/cat_normal.png
     - assets/images/cat_happy.png
