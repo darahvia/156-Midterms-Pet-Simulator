@@ -11,8 +11,10 @@ class Bird extends SpriteComponent with CollisionCallbacks {
   late Sprite upFlap;
   late Sprite midFlap;
   late Sprite downFlap;
-  // bird position and size
-  Bird()
+  final String petType;
+
+  // bird position and size 
+  Bird({this.petType = 'cat'}) // Default to cat if no type specified
     : super(
         position: Vector2(birdStartX, birdStartY),
         size: Vector2(birdWidth, birdHeight),
@@ -25,9 +27,11 @@ class Bird extends SpriteComponent with CollisionCallbacks {
   // LOAD
   @override
   FutureOr<void> onLoad() async {
-    upFlap = await Sprite.load('bird_dragon_upflap.png');
-    midFlap = await Sprite.load('bird_dragon_midflap.png');
-    downFlap = await Sprite.load('bird_dragon_downflap.png');
+    // Load sprites based on pet type
+    final type = petType.toLowerCase();
+    upFlap = await Sprite.load('$type/bird_${type}_upflap.png');
+    midFlap = await Sprite.load('$type/bird_${type}_midflap.png'); 
+    downFlap = await Sprite.load('$type/bird_${type}_downflap.png');
     sprite = midFlap; // load bird sprite image
     add(RectangleHitbox()); // add hit box
   }

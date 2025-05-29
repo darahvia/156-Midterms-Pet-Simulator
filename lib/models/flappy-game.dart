@@ -17,7 +17,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:pet_simulator/widgets/flappy_leaderboard_display.dart';
 import 'package:pet_simulator/widgets/pixel_button.dart';
-
+import 'package:provider/provider.dart';
+import 'package:pet_simulator/providers/pet_provider.dart';
 
 class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late Bird bird;
@@ -27,6 +28,11 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late ScoreText scoreText;
   bool isPlaying = false;
 
+// Add BuildContext field
+  final BuildContext context;
+  
+  // Add constructor to receive context
+  FlappyBirdGame(this.context);
   // LOAD
   @override
   FutureOr<void> onLoad() {
@@ -36,7 +42,8 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     background = Background(size);
     add(background);
     // load bird
-    bird = Bird();
+    final petProvider = Provider.of<PetProvider>(context, listen: false);
+    bird = Bird(petType: petProvider.getPetType());
     add(bird);
     // load ground
     ground = Ground();
@@ -78,7 +85,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     });
   }
 
-
   // GAME OVER
   bool isGameOver = false;
 
@@ -97,7 +103,7 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       final doc = FirebaseFirestore.instance.collection('users').doc(user.uid);
       final snapshot = await doc.get();
       if (snapshot.exists && snapshot.data() != null && snapshot.data()!.containsKey('highScore')) {
-      fetchedHighScore = snapshot.data()!['highScore'] ?? score;
+        fetchedHighScore = snapshot.data()!['highScore'] ?? score;
       }
     }
 
@@ -105,78 +111,77 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
       context: buildContext!,
       barrierDismissible: false, // Prevent closing by tapping outside
       builder: (context) => AlertDialog(
-      backgroundColor: Colors.grey[900],
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      title: Center(
-        child: Text(
-        "Game Over",
-        style: GoogleFonts.pressStart2p(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.yellowAccent,
+        backgroundColor: Colors.grey[900],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
         ),
-        ),
-      ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-        Text(
-          "Score: $score",
-          style: GoogleFonts.pressStart2p(
-          fontSize: 14,
-          color: Colors.white,
+        title: Center(
+          child: Text(
+            "Game Over",
+            style: GoogleFonts.pressStart2p(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.yellowAccent,
+            ),
           ),
         ),
-        const SizedBox(height: 8),
-        Text(
-          "High Score: $fetchedHighScore",
-          style: GoogleFonts.pressStart2p(
-          fontSize: 14,
-          color: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 24),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-          PixelButton(
-            label: 'Restart',
-            icon: Icons.refresh,
-            color: Colors.green,
-            onPressed: () {
-            Navigator.pop(context);
-            resetGame();
-            },
-          ),
-          const SizedBox(height: 12),
-          PixelButton(
-            label: 'Leaderboard',
-            icon: Icons.leaderboard,
-            color: Colors.orange,
-            onPressed: () {
-            Navigator.pop(context);
-            showLeaderboard();
-            },
-          ),
-          const SizedBox(height: 12),
-          PixelButton(
-            label: 'End Game',
-            icon: Icons.exit_to_app,
-            color: Colors.red,
-            onPressed: () {
-            Navigator.pop(context);
-            Navigator.of(context).pop(); // Go back to pet screen
-            },
-          ),
+            Text(
+              "Score: $score",
+              style: GoogleFonts.pressStart2p(
+                fontSize: 14,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              "High Score: $fetchedHighScore",
+              style: GoogleFonts.pressStart2p(
+                fontSize: 14,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                PixelButton(
+                  label: 'Restart',
+                  icon: Icons.refresh,
+                  color: Colors.green,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    resetGame();
+                  },
+                ),
+                const SizedBox(height: 12),
+                PixelButton(
+                  label: 'Leaderboard',
+                  icon: Icons.leaderboard,
+                  color: Colors.orange,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    showLeaderboard();
+                  },
+                ),
+                const SizedBox(height: 12),
+                PixelButton(
+                  label: 'End Game',
+                  icon: Icons.exit_to_app,
+                  color: Colors.red,
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.of(context).pop(); // Go back to pet screen
+                  },
+                ),
+              ],
+            ),
           ],
         ),
-        ],
-      ),
       ),
     );
-
   }
 
   Future<void> _saveHighScore() async {
@@ -220,8 +225,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     await doc.update({
       'inventoryData.coin': newCoins,
     });
-
-
   }
 
   void resetGame() {
