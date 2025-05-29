@@ -131,6 +131,8 @@ class HandleStorage {
       lastUpdatedEnergy:${pet.getLastUpdated('energy').toIso8601String()}
       lastUpdatedHappiness:${pet.getLastUpdated('happiness').toIso8601String()}
       lastUpdated:${DateTime.now().toIso8601String()}
+      like:${pet.getLastUpdated('quirks').toIso8601String()};
+      dislike:${pet.getLastUpdated('quirks').toIso8601String()};
       ''';
     await file.writeAsString(content);
     print('Pet data saved locally to ${file.path}');
@@ -215,6 +217,7 @@ class HandleStorage {
               lastUpdatedHappiness:${fbData['lastUpdatedHappiness']}
               lastUpdated:${fbLastUpdated.toIso8601String()}
               ''';
+              
             await file.writeAsString(content);
 
             return {

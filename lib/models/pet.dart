@@ -14,6 +14,8 @@ class Pet {
   DateTime _lastUpdatedHygiene = DateTime.now();
   DateTime _lastUpdatedEnergy = DateTime.now();
   DateTime _lastUpdatedHappiness = DateTime.now();
+  String _likes = "";
+  String _dislikes = "";
 
   // set pet state conditions based on stats
   void setState() {

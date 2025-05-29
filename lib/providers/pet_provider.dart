@@ -7,7 +7,7 @@ import 'dart:async';
 class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   Pet pet = Pet();
   late HandleStorage storage;
-  Timer? _timer;
+  Timer? _timer; 
   String mood = "normal";
   String? currentClothing;
   Timer? _autoDecreaseTimer;
@@ -68,6 +68,7 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   //takes map of pet stats and assigns it to current Pet object
   Future<void> loadPetStats({String? petName, String? petType}) async {
     final stats = await storage.loadPetStats();
+    String quirks = {"bag", "ball", "bear", "biscuit", "mouse", "shampoo", "soap", "wipes"}
     stats.forEach((key, value) {
       print('Key: $key, Value: $value');
     });
@@ -78,6 +79,8 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     pet.setHappiness(stats["happiness"] ?? 100);
     pet.setEnergy(stats["energy"] ?? 100);
     pet.setIsSick(stats["health"] ?? false);
+    pet.setType(stats["like"] ?? quirks[random.nextInt(quirks.length)]);
+    pet.setType(stats["dislike"] ?? quirks[random.nextInt(quirks.length)]);
     pet.setLastUpdated(
       'hunger',
       stats["lastUpdatedHunger"] != null
