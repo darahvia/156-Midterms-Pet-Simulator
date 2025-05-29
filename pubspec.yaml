@@ -162,6 +162,9 @@ flutter:
     - assets/audio/button_tap.mp3
     - assets/audio/angry_meow.mp3
     - assets/audio/angry.mp3
+    - assets/audio/dragon.mp3
+    - assets/audio/cat.mp3
+    - assets/audio/dog.mp3
 
     - assets/images/
 
