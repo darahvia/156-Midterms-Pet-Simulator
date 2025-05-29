@@ -1,8 +1,9 @@
 //tracks inventory items
 class Inventory {
   int _coin = 0;
-  int _food = 0;
+  //soap items
   int _soap = 0;
+  //medicine items
   int _medicine = 0;
 
   // Clothing inventory
@@ -11,8 +12,8 @@ class Inventory {
   // Toy inventory
   List<String> ownedToys = [];
 
-  // Food inventory (for special foods)
-  List<String> ownedFoods = [];
+  // Food inventory
+  Map<String, int> ownedFoods = {'biscuit': 0, 'can': 0, 'bag': 0};
 
   void addClothing(String clothing) {
     if (!ownedClothing.contains(clothing)) {
@@ -36,23 +37,23 @@ class Inventory {
   }
 
   // Food methods (for special foods)
-  void addFood(String food) {
-    if (!ownedFoods.contains(food)) {
-      ownedFoods.add(food);
+  void addFood(String food, int num) {
+    if (ownedFoods.containsKey(food)) {
+      ownedFoods[food] = ownedFoods[food]! + num;
     }
   }
 
   bool ownsFood(String food) {
-    return ownedFoods.contains(food);
+    return ownedFoods.containsKey(food) && ownedFoods[food]! > 0;
   }
-  
+
   // getter
   int getCoin() {
     return _coin;
   }
 
-  int getFood() {
-    return _food;
+  int getFood(String food) {
+    return ownedFoods.containsKey(food) ? ownedFoods[food]! : 0;
   }
 
   int getSoap() {
@@ -68,8 +69,10 @@ class Inventory {
     _coin = c;
   }
 
-  void setFood(int f) {
-    _food = f;
+  void setFood(String food, int num) {
+    if (ownedFoods.containsKey(food)) {
+      ownedFoods[food] = num;
+    }
   }
 
   void setSoap(int s) {

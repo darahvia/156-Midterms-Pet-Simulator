@@ -38,7 +38,7 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
       ); // Print each key and its corresponding value
     });
     inventory.setCoin(bag["coin"] ?? 50);
-    inventory.setFood(bag["food"] ?? 10);
+    inventory.setFood('can', bag["can"] ?? 10);
     inventory.setSoap(bag["soap"] ?? 10);
     inventory.setMedicine(bag["medicine"] ?? 3);
     saveInventory();
@@ -66,9 +66,13 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
 
   //item usage interaction: everytime an item is used -1
   void useItem(String item) {
-    if (item == 'food') {
-      inventory.setFood(inventory.getFood() - 1);
-      saveInventory();
+    if (item == 'biscuit' || item == 'can' || item == 'bag') {
+      if (inventory.getFood(item) > 0) {
+        print('Before: ${inventory.getFood(item)}');
+        inventory.setFood(item, inventory.getFood(item) - 1);
+        print('After: ${inventory.getFood(item)}');
+        saveInventory();
+      }
     }
     if (item == 'soap') {
       inventory.setSoap(inventory.getSoap() - 1);
@@ -81,29 +85,27 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   //item buying interactions
-  void buyFood(int num) {
-    inventory.setFood(inventory.getFood() + num);
+  void buyFood(String food, int num) {
+    inventory.addFood(food, num);
     saveInventory();
   }
 
   void buySoap(int num) {
-    inventory.setSoap(inventory.getFood() + num);
+    inventory.setSoap(inventory.getSoap() + num);
     saveInventory();
   }
 
   void buyMedicine(int num) {
-    inventory.setMedicine(
-      inventory.getMedicine() + num,
-    ); 
+    inventory.setMedicine(inventory.getMedicine() + num);
     saveInventory();
   }
 
   void buyClothing(String clothing) {
     if (inventory.getCoin() >= 5 && !inventory.ownsClothing(clothing)) {
-    inventory.setCoin(inventory.getCoin() - 5);
-    inventory.addClothing(clothing);
-    saveInventory();
-    notifyListeners();
+      inventory.setCoin(inventory.getCoin() - 5);
+      inventory.addClothing(clothing);
+      saveInventory();
+      notifyListeners();
     }
   }
 }

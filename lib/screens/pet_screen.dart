@@ -18,7 +18,7 @@ import 'vet_screen.dart';
 import 'death_screen.dart';
 import 'dart:math';
 
-//ui for main pet screen
+// UI for main pet screen
 class PetScreen extends StatefulWidget {
   const PetScreen({super.key});
 
@@ -35,6 +35,7 @@ class _PetScreenState extends State<PetScreen> {
     'assets/images/heart_purple.gif',
     'assets/images/heart_red.gif',
   ];
+  String selectedFood = 'Feed';
 
   @override
   void didChangeDependencies() {
@@ -49,139 +50,242 @@ class _PetScreenState extends State<PetScreen> {
       });
     }
   }
-  
-    void chooseGame(BuildContext context) {
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (context) => AlertDialog(
-          backgroundColor: Colors.white,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Center(
-                  child: Text(
-                    "Choose Game",
-                    style: GoogleFonts.pressStart2p(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: const Color.fromARGB(255, 0, 0, 0),
+
+  void chooseGame(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder:
+          (context) => AlertDialog(
+            backgroundColor: Colors.grey[900],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      "Choose Game",
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.yellowAccent,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              GestureDetector(
-                onTap: () => Navigator.pop(context),
-                child: Icon(
-                  Icons.close,
-                  color: Colors.black,
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(Icons.close, color: Colors.grey),
                 ),
-              ),
-            ],
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    PixelButton(
+                      label: 'Tic Tac Toe',
+                      icon: Icons.sports_esports,
+                      color: Colors.pinkAccent,
+                      onPressed: () {
+                        Navigator.pop(context); // close dialog first
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TicTacToeScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 5),
+                    PixelButton(
+                      label: 'Flappy Bird',
+                      icon: Icons.sports_esports,
+                      color: Colors.greenAccent,
+                      onPressed: () {
+                        Navigator.pop(context); // close dialog first
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => FlappyBirdGameScreen(),
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  PixelButton(
-                    label: 'Tic Tac Toe',
-                    icon: Icons.sports_esports,
-                    color: Colors.pinkAccent,
-                    onPressed: () {
-                      Navigator.pop(context); // close dialog first
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TicTacToeScreen(),
-                        ),
-                      );
-                    },
+    );
+  }
 
-                  ),
-                  SizedBox(height: 5),
+  void addBubble({
+    GlobalKey? key,
+    Offset? position,
+    required String imagePath,
+  }) {
+    double startLeft;
+    double startBottom;
 
-                  PixelButton(
-                    label: 'Flappy Bird',
-                    icon: Icons.sports_esports,
-                    color: Colors.greenAccent,
-                    onPressed: () {
-                      Navigator.pop(context); // close dialog first
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => FlappyBirdGameScreen(),
-                        ),
-                      );
-                    },
+    if (key != null) {
+      final RenderBox box = key.currentContext!.findRenderObject() as RenderBox;
+      final Offset widgetPosition = box.localToGlobal(Offset.zero);
 
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
+      startLeft = widgetPosition.dx + box.size.width / 2 - 20;
+      startBottom =
+          MediaQuery.of(context).size.height -
+          widgetPosition.dy -
+          box.size.height / 2;
+    } else if (position != null) {
+      startLeft = position.dx - 20;
+      startBottom = MediaQuery.of(context).size.height - position.dy;
+    } else {
+      throw ArgumentError('Either key or position must be provided');
     }
 
+    final bubbleKey = UniqueKey();
+
+    // Adds bubble object to bubbles list
+    setState(() {
+      bubbles.add(
+        Bubble(
+          key: bubbleKey,
+          left: startLeft,
+          bottom: startBottom,
+          image: imagePath,
+          onComplete: () {
+            setState(() {
+              bubbles.removeWhere((b) => b.key == bubbleKey);
+            });
+          },
+        ),
+      );
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final petProvider = Provider.of<PetProvider>(context);
     final coinProvider = Provider.of<CoinProvider>(context);
 
-    //button keys for tracking positions
+    // Button keys for tracking positions
     final GlobalKey feedButtonKey = GlobalKey();
     final GlobalKey cleanButtonKey = GlobalKey();
     final GlobalKey playButtonKey = GlobalKey();
 
-    // handle creation of image bubbles with bubble animation 
-    @override
-    void addBubble({
-      GlobalKey? key,
-      Offset? position,
-      required String imagePath,
-    }) {
-      double startLeft;
-      double startBottom;
+    // Map food types to their respective image assets
+    final Map<String, String> foodImages = {
+      'Biscuit': 'assets/images/food_biscuit.png',
+      'Can': 'assets/images/food_can.png',
+      'Bag': 'assets/images/food_bag.png',
+    };
 
-      if (key != null) {
-        final RenderBox box =
-            key.currentContext!.findRenderObject() as RenderBox;
-        final Offset widgetPosition = box.localToGlobal(Offset.zero);
-
-        startLeft = widgetPosition.dx + box.size.width / 2 - 20;
-        startBottom =
-            MediaQuery.of(context).size.height -
-            widgetPosition.dy -
-            box.size.height / 2;
-      } else if (position != null) {
-        startLeft = position.dx - 20;
-        startBottom = MediaQuery.of(context).size.height - position.dy;
-      } else {
-        throw ArgumentError('Either key or position must be provided');
-      }
-
-      final bubbleKey = UniqueKey();
-
-      //adds bubble object to bubbles list
-      setState(() {
-        bubbles.add(
-          Bubble(
-            key: bubbleKey,
-            left: startLeft,
-            bottom: startBottom,
-            image: imagePath,
-            onComplete: () {
-              setState(() {
-                bubbles.removeWhere((b) => b.key == bubbleKey);
-              });
-            },
-          ),
-        );
-      });
+    void chooseFeed(BuildContext context) {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder:
+            (context) => AlertDialog(
+              backgroundColor: Colors.grey[900],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "Choose Feed",
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.yellowAccent,
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Icon(Icons.close, color: Colors.grey),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      PixelButton(
+                        label: 'Biscuit',
+                        icon: Icons.restaurant,
+                        color: Colors.pinkAccent,
+                        isEnabled:
+                            coinProvider.inventory.getFood('biscuit') > 0,
+                        onPressed:
+                            coinProvider.inventory.getFood('biscuit') > 0
+                                ? () {
+                                  setState(() {
+                                    selectedFood = 'Biscuit';
+                                  });
+                                  MusicManager.playSoundEffect(
+                                    'audio/button_tap.mp3',
+                                  );
+                                  Navigator.pop(context);
+                                }
+                                : null,
+                      ),
+                      SizedBox(height: 5),
+                      PixelButton(
+                        label: 'Can',
+                        icon: Icons.restaurant,
+                        color: Colors.blueAccent,
+                        isEnabled: coinProvider.inventory.getFood('can') > 0,
+                        onPressed:
+                            coinProvider.inventory.getFood('can') > 0
+                                ? () {
+                                  setState(() {
+                                    selectedFood = 'Can';
+                                  });
+                                  MusicManager.playSoundEffect(
+                                    'audio/button_tap.mp3',
+                                  );
+                                  Navigator.pop(context);
+                                }
+                                : null, // Explicitly set to null when disabled
+                      ),
+                      SizedBox(height: 5),
+                      PixelButton(
+                        label: 'Bag',
+                        icon: Icons.restaurant,
+                        color: Colors.greenAccent,
+                        isEnabled: coinProvider.inventory.getFood('bag') > 0,
+                        onPressed:
+                            coinProvider.inventory.getFood('bag') > 0
+                                ? () {
+                                  setState(() {
+                                    selectedFood = 'Bag';
+                                  });
+                                  MusicManager.playSoundEffect(
+                                    'audio/button_tap.mp3',
+                                  );
+                                  Navigator.pop(context);
+                                }
+                                : null,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+      );
     }
 
     return Scaffold(
@@ -215,9 +319,7 @@ class _PetScreenState extends State<PetScreen> {
                     horizontal: 16.0,
                   ),
                   child: Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment
-                            .spaceBetween, // Space between label and progress bar
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         'Hunger:',
@@ -311,131 +413,130 @@ class _PetScreenState extends State<PetScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                //showing petDisplay and handles tapping
+                // Showing petDisplay and handles tapping
                 PetDisplay(
                   onTap: (tapPosition) {
                     addBubble(
                       position: tapPosition,
                       imagePath:
-                          //creates heart bubbles when petDisplay is tapped
                           petProvider.pet.getPetState() != "sick"
-                              ? (hearts[Random().nextInt(hearts.length)])//from hearts list
-                              : ('assets/images/heart_broken.png'),//broken heart for when sick
+                              ? (hearts[Random().nextInt(hearts.length)])
+                              : ('assets/images/heart_broken.png'),
                     );
                   },
                 ),
 
-                //pet interaction buttons
+                // Pet interaction buttons
                 SizedBox(height: 20),
                 Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      alignment: WrapAlignment.center,
-                      children: [
-                        PixelButton(
-                          label: 'Feed',
-                          icon: Icons.fastfood,
-                          color: Colors.redAccent,
-                          key: feedButtonKey,
-                          isEnabled:
-                              coinProvider.inventory.getFood() > 0 &&
-                              petProvider.pet.getHunger() < 100,
-                          onPressed:
-                              coinProvider.inventory.getFood() > 0 &&
-                                      petProvider.pet.getHunger() < 100 &&
-                                      petProvider.pet.getPetState() != "sick"
-                                  ? () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/eat.mp3',
-                                    );
-                                    addBubble(
-                                      key: feedButtonKey,
-                                      imagePath: 'assets/images/cat_bowl.png',
-                                    );
-                                    petProvider.feedPet();
-                                    coinProvider.useItem('food');
-                                  }
-                                  : () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/angry.mp3',
-                                    );
-                                    addBubble(
-                                      key: feedButtonKey,
-                                      imagePath: 'assets/images/cat_bowl.png',
-                                    );
-                                    coinProvider.useItem('food');
-                                  },
-                        ),
-                        PixelButton(
-                          label: 'Clean',
-                          icon: Icons.bathtub,
-                          color: Colors.blueAccent,
-                          key: cleanButtonKey,
-                          isEnabled:
-                              coinProvider.inventory.getSoap() > 0 &&
-                              petProvider.pet.getHygiene() < 100,
-                          onPressed:
-                              coinProvider.inventory.getSoap() > 0 &&
-                                      petProvider.pet.getHygiene() < 100 &&
-                                      petProvider.pet.getPetState() != "sick"
-                                  ? () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/bubbles.mp3',
-                                    );
-                                    addBubble(
-                                      key: cleanButtonKey,
-                                      imagePath: 'assets/images/soap.png',
-                                    );
-                                    petProvider.cleanPet();
-                                    coinProvider.useItem('soap');
-                                  }
-                                  : () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/angry.mp3',
-                                    );
-                                    addBubble(
-                                      key: cleanButtonKey,
-                                      imagePath: 'assets/images/soap.png',
-                                    );
-                                    coinProvider.useItem('soap');
-                                  },
-                        ),
-                        PixelButton(
-                          label: 'Play',
-                          icon: Icons.play_arrow,
-                          color: Colors.purpleAccent,
-                          key: playButtonKey,
-                          isEnabled:
-                              petProvider.pet.getEnergy() > 10 &&
-                              petProvider.pet.getHappiness() < 100,
-                          onPressed:
-                              petProvider.pet.getEnergy() > 10 &&
-                                      petProvider.pet.getHappiness() < 100 &&
-                                      petProvider.pet.getPetState() != "sick"
-                                  ? () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/toy.mp3',
-                                    );
-                                    addBubble(
-                                      key: playButtonKey,
-                                      imagePath: 'assets/images/toy_mouse.png',
-                                    );
-                                    petProvider.playWithPet();
-                                  }
-                                  : () {
-                                    MusicManager.playSoundEffect(
-                                      'audio/angry.mp3',
-                                    );
-                                    addBubble(
-                                      key: playButtonKey,
-                                      imagePath: 'assets/images/toy_mouse.png',
-                                    );
-                                  },
-                        ),
-                      ],
+                  spacing: 8,
+                  runSpacing: 8,
+                  alignment: WrapAlignment.center,
+                  children: [
+                    PixelButton(
+                      label: selectedFood,
+                      icon: Icons.restaurant,
+                      color: Colors.redAccent,
+                      key: feedButtonKey,
+                      onHold: () => chooseFeed(context),
+                      isEnabled:
+                          petProvider.pet.getHunger() < 100 &&
+                          (coinProvider.inventory.getFood('biscuits') > 0 ||
+                              coinProvider.inventory.getFood('can') > 0 ||
+                              coinProvider.inventory.getFood('bag') > 0),
+                      onPressed:
+                          coinProvider.inventory.getFood(
+                                        selectedFood.toLowerCase(),
+                                      ) >
+                                      0 &&
+                                  petProvider.pet.getHunger() < 100 &&
+                                  petProvider.pet.getPetState() != "sick"
+                              ? () {
+                                MusicManager.playSoundEffect('audio/eat.mp3');
+                                addBubble(
+                                  key: feedButtonKey,
+                                  imagePath: foodImages[selectedFood]!,
+                                );
+                                petProvider.feedPet(selectedFood.toLowerCase());
+                                coinProvider.useItem(
+                                  selectedFood.toLowerCase(),
+                                );
+                              }
+                              : () {
+                                MusicManager.playSoundEffect('audio/angry.mp3');
+                                addBubble(
+                                  key: feedButtonKey,
+                                  imagePath: foodImages[selectedFood]!,
+                                );
+                                coinProvider.useItem(
+                                  selectedFood.toLowerCase(),
+                                );
+                              },
                     ),
-                    SizedBox(height: 10),
-                //navigation buttons: Shop & Game
+                    PixelButton(
+                      label: 'Clean',
+                      icon: Icons.bathtub,
+                      color: Colors.blueAccent,
+                      key: cleanButtonKey,
+                      isEnabled:
+                          coinProvider.inventory.getSoap() > 0 &&
+                          petProvider.pet.getHygiene() < 100,
+                      onPressed:
+                          coinProvider.inventory.getSoap() > 0 &&
+                                  petProvider.pet.getHygiene() < 100 &&
+                                  petProvider.pet.getPetState() != "sick"
+                              ? () {
+                                MusicManager.playSoundEffect(
+                                  'audio/bubbles.mp3',
+                                );
+                                addBubble(
+                                  key: cleanButtonKey,
+                                  imagePath: 'assets/images/soap.png',
+                                );
+                                petProvider.cleanPet();
+                                coinProvider.useItem('soap');
+                              }
+                              : () {
+                                MusicManager.playSoundEffect('audio/angry.mp3');
+                                addBubble(
+                                  key: cleanButtonKey,
+                                  imagePath: 'assets/images/soap.png',
+                                );
+                                coinProvider.useItem('soap');
+                              },
+                    ),
+                    PixelButton(
+                      label: 'Play',
+                      icon: Icons.play_arrow,
+                      color: Colors.purpleAccent,
+                      key: playButtonKey,
+                      isEnabled:
+                          petProvider.pet.getEnergy() > 10 &&
+                          petProvider.pet.getHappiness() < 100,
+                      onPressed:
+                          petProvider.pet.getEnergy() > 10 &&
+                                  petProvider.pet.getHappiness() < 100 &&
+                                  petProvider.pet.getPetState() != "sick"
+                              ? () {
+                                MusicManager.playSoundEffect('audio/toy.mp3');
+                                addBubble(
+                                  key: playButtonKey,
+                                  imagePath: 'assets/images/toy_mouse.png',
+                                );
+                                petProvider.playWithPet();
+                              }
+                              : () {
+                                MusicManager.playSoundEffect('audio/angry.mp3');
+                                addBubble(
+                                  key: playButtonKey,
+                                  imagePath: 'assets/images/toy_mouse.png',
+                                );
+                              },
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10),
+                // Navigation buttons: Shop & Vet
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
@@ -466,7 +567,6 @@ class _PetScreenState extends State<PetScreen> {
                           ),
                     ),
 
-
                     PixelButton(
                       label: 'Games',
                       icon: Icons.sports_esports,
@@ -474,15 +574,13 @@ class _PetScreenState extends State<PetScreen> {
                       onPressed:
                           () => chooseGame(context)
                     ),
-
-
                   ],
                 ),
 
               ],
             ),
           ),
-          ...bubbles, //renders bubbles list
+          ...bubbles, // Renders bubbles list
         ],
       ),
     );
