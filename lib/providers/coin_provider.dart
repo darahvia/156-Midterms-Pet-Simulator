@@ -40,7 +40,7 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
     inventory.setCoin(bag["coin"] ?? 50);
     inventory.setFood('can', bag["can"] ?? 10);
     inventory.setSoap('soap', bag["soap"] ?? 10);
-    inventory.setMedicine(bag["medicine"] ?? 3);
+    inventory.setToy('ball', bag["ball"] ?? 3);
     saveInventory();
     notifyListeners();
   }
@@ -78,9 +78,11 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
         saveInventory();
       }
     }
-    if (item == 'medicine') {
-      inventory.setMedicine(inventory.getMedicine() - 1);
-      saveInventory();
+    if (item == 'mouse' || item == 'ball' || item == 'bear') {
+      if (inventory.getToy(item) > 0) {
+        inventory.setToy(item, inventory.getToy(item) - 1);
+        saveInventory();
+      }
     }
   }
 
@@ -95,8 +97,8 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
     saveInventory();
   }
 
-  void buyMedicine(int num) {
-    inventory.setMedicine(inventory.getMedicine() + num);
+  void buyToy(String toy, int num) {
+    inventory.addToy(toy, num);
     saveInventory();
   }
 

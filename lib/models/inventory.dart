@@ -1,17 +1,15 @@
 // Tracks inventory items
 class Inventory {
   int _coin = 0;
-  //medicine items
-  int _medicine = 0;
-
-  // Toy inventory
-  List<String> ownedToys = [];
 
   // Food inventory
   Map<String, int> ownedFoods = {'biscuit': 0, 'can': 0, 'bag': 0};
 
   // Soap inventory
   Map<String, int> ownedSoaps = {'wipes': 0, 'soap': 0, 'shampoo': 0};
+
+  // Toy inventory
+  Map<String, int> ownedToys = {'mouse': 0, 'ball': 0, 'bear': 0};
 
   // Clothing inventory
   List<String> ownedClothing = [];
@@ -39,14 +37,14 @@ class Inventory {
   }
 
   // Toy methods
-  void addToy(String toy) {
-    if (!ownedToys.contains(toy)) {
-      ownedToys.add(toy);
+  void addToy(String toy, int num) {
+    if (ownedToys.containsKey(toy)) {
+      ownedToys[toy] = ownedToys[toy]! + num;
     }
   }
 
   bool ownsToy(String toy) {
-    return ownedToys.contains(toy);
+    return ownedToys.containsKey(toy) && ownedToys[toy]! > 0;
   }
 
   // Clothes methods
@@ -74,8 +72,8 @@ class Inventory {
     return ownedSoaps.containsKey(soap) ? ownedSoaps[soap]! : 0;
   }
 
-  int getMedicine() {
-    return _medicine;
+  int getToy(String toy) {
+    return ownedToys.containsKey(toy) ? ownedToys[toy]! : 0;
   }
 
   // Setter
@@ -95,7 +93,9 @@ class Inventory {
     }
   }
 
-  void setMedicine(int m) {
-    _medicine = m;
+  void setToy(String toy, int num) {
+    if (ownedToys.containsKey(toy)) {
+      ownedToys[toy] = num;
+    }
   }
 }

@@ -37,6 +37,7 @@ class _PetScreenState extends State<PetScreen> {
   ];
   String selectedFood = 'Feed';
   String selectedSoap = 'Clean';
+  String selectedToy = 'Play';
 
   @override
   void didChangeDependencies() {
@@ -396,6 +397,119 @@ class _PetScreenState extends State<PetScreen> {
       );
     }
 
+    final Map<String, String> toyImages = {
+      'Mouse': 'assets/images/toy_mouse.png',
+      'Ball': 'assets/images/toy_ball.png',
+      'Bear': 'assets/images/toy_bear.png',
+    };
+
+    void chooseToy(BuildContext context) {
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder:
+            (context) => AlertDialog(
+              backgroundColor: Colors.grey[900],
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "Choose Toy",
+                        style: GoogleFonts.pressStart2p(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.yellowAccent,
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    child: Icon(Icons.close, color: Colors.grey),
+                  ),
+                ],
+              ),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      PixelButton(
+                        label: 'Mouse',
+                        icon: Icons.restaurant,
+                        color: Colors.pinkAccent,
+                        isEnabled:
+                            coinProvider.inventory.getToy('mouse') > 0 &&
+                            petProvider.pet.getEnergy() > 5,
+                        onPressed:
+                            coinProvider.inventory.getToy('mouse') > 0
+                                ? () {
+                                  setState(() {
+                                    selectedToy = 'Mouse';
+                                  });
+                                  MusicManager.playSoundEffect(
+                                    'audio/button_tap.mp3',
+                                  );
+                                  Navigator.pop(context);
+                                }
+                                : null,
+                      ),
+                      SizedBox(height: 5),
+                      PixelButton(
+                        label: 'Ball',
+                        icon: Icons.restaurant,
+                        color: Colors.blueAccent,
+                        isEnabled:
+                            coinProvider.inventory.getToy('ball') > 0 &&
+                            petProvider.pet.getEnergy() > 10,
+                        onPressed:
+                            coinProvider.inventory.getToy('ball') > 0
+                                ? () {
+                                  setState(() {
+                                    selectedToy = 'Ball';
+                                  });
+                                  MusicManager.playSoundEffect(
+                                    'audio/button_tap.mp3',
+                                  );
+                                  Navigator.pop(context);
+                                }
+                                : null,
+                      ),
+                      SizedBox(height: 5),
+                      PixelButton(
+                        label: 'Bear',
+                        icon: Icons.restaurant,
+                        color: Colors.greenAccent,
+                        isEnabled:
+                            coinProvider.inventory.getToy('bear') > 0 &&
+                            petProvider.pet.getEnergy() > 20,
+                        onPressed:
+                            coinProvider.inventory.getToy('bear') > 0
+                                ? () {
+                                  setState(() {
+                                    selectedToy = 'Bear';
+                                  });
+                                  MusicManager.playSoundEffect(
+                                    'audio/button_tap.mp3',
+                                  );
+                                  Navigator.pop(context);
+                                }
+                                : null,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: Colors.transparent,
       appBar: AppBar(
@@ -626,30 +740,39 @@ class _PetScreenState extends State<PetScreen> {
                               },
                     ),
                     PixelButton(
-                      label: 'Play',
+                      label: selectedToy,
                       icon: Icons.toys,
                       color: Colors.purpleAccent,
                       key: playButtonKey,
+                      onHold: () => chooseToy(context),
                       isEnabled:
-                          petProvider.pet.getEnergy() > 10 &&
-                          petProvider.pet.getHappiness() < 100,
+                          petProvider.pet.getHappiness() < 100 &&
+                          (coinProvider.inventory.getToy('mouse') > 0 ||
+                              coinProvider.inventory.getToy('ball') > 0 ||
+                              coinProvider.inventory.getToy('bear') > 0),
                       onPressed:
-                          petProvider.pet.getEnergy() > 10 &&
+                          coinProvider.inventory.getToy(
+                                        selectedFood.toLowerCase(),
+                                      ) >
+                                      0 &&
                                   petProvider.pet.getHappiness() < 100 &&
                                   petProvider.pet.getPetState() != "sick"
                               ? () {
                                 MusicManager.playSoundEffect('audio/toy.mp3');
                                 addBubble(
                                   key: playButtonKey,
-                                  imagePath: 'assets/images/toy_mouse.png',
+                                  imagePath: toyImages[selectedToy]!,
                                 );
-                                petProvider.playWithPet();
+                                petProvider.playWithPet(
+                                  selectedToy.toLowerCase(),
+                                );
+                                coinProvider.useItem(selectedToy.toLowerCase());
                               }
                               : () {
                                 MusicManager.playSoundEffect('audio/angry.mp3');
                                 addBubble(
                                   key: playButtonKey,
-                                  imagePath: 'assets/images/toy_mouse.png',
+                                  imagePath: toyImages[selectedToy]!,
                                 );
                               },
                     ),

@@ -138,16 +138,43 @@ class ShopScreen extends StatelessWidget {
                     ),
                   ],
                 ),
+                // Toy inventory
                 Row(
                   children: [
                     Image.asset(
-                      'assets/images/medicine.png',
+                      'assets/images/toy_mouse.png',
                       width: 40,
                       height: 40,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '${coinProvider.inventory.getMedicine()}',
+                      '${coinProvider.inventory.getToy('mouse')}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/toy_ball.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${coinProvider.inventory.getToy('ball')}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/toy_bear.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${coinProvider.inventory.getToy('bear')}',
                       style: GoogleFonts.pressStart2p(
                         fontSize: 15,
                         color: Colors.black,
@@ -224,6 +251,7 @@ class ShopScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 60),
+                    // Wash Items
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       spacing: 7.0,
@@ -273,16 +301,54 @@ class ShopScreen extends StatelessWidget {
                       ],
                     ),
                     SizedBox(height: 60),
-                    PixelButton(
-                      label: 'Meds - 20',
-                      icon: Icons.medical_services,
-                      color: Colors.red,
-                      onPressed:
-                          () => _confirmPurchase(context, coinProvider, 20, () {
-                            coinProvider.buyMedicine(
-                              1,
-                            ); // Add 1 medicine to inventory
-                          }),
+                    // Toy Items
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 7.0,
+                      children: [
+                        PixelButton(
+                          label: 'Mouse - 10',
+                          icon: Icons.toys,
+                          color: Colors.red,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                20,
+                                () {
+                                  coinProvider.buyToy('mouse', 1);
+                                },
+                              ),
+                        ),
+                        PixelButton(
+                          label: 'Ball - 15',
+                          icon: Icons.toys,
+                          color: Colors.red,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                20,
+                                () {
+                                  coinProvider.buyToy('ball', 1);
+                                },
+                              ),
+                        ),
+                        PixelButton(
+                          label: 'Bear - 20',
+                          icon: Icons.toys,
+                          color: Colors.red,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                20,
+                                () {
+                                  coinProvider.buyToy('bear', 1);
+                                },
+                              ),
+                        ),
+                      ],
                     ),
                     //Clothing Shop Button
                     // PixelButton(
@@ -303,7 +369,6 @@ class ShopScreen extends StatelessWidget {
               ],
             ),
           ),
-
           // Back button
         ],
       ),

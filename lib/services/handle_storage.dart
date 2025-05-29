@@ -28,7 +28,9 @@ class HandleStorage {
       wipes:${inventory.getSoap('wipes')}
       soap:${inventory.getSoap('soap')}
       shampoo:${inventory.getSoap('shampoo')}
-      medicine:${inventory.getMedicine()}
+      mouse:${inventory.getToy('mouse')}
+      ball:${inventory.getToy('ball')}
+      bear:${inventory.getToy('bear')}
       lastUpdated:${DateTime.now().toIso8601String()}
       ''';
     await file.writeAsString(content);
@@ -42,7 +44,9 @@ class HandleStorage {
         'wipes': inventory.getSoap('wipes'),
         'soap': inventory.getSoap('soap'),
         'shampoo': inventory.getSoap('shampoo'),
-        'medicine': inventory.getMedicine(),
+        'mouse': inventory.getToy('mouse'),
+        'ball': inventory.getToy('ball'),
+        'bear': inventory.getToy('bear'),
         'lastUpdated': DateTime.now().toIso8601String(),
       };
       await _firestore.collection('users').doc(uid).set({
@@ -107,7 +111,9 @@ class HandleStorage {
               wipes:${fbData['wipes']}
               soap:${fbData['soap']}
               shampoo:${fbData['shampoo']}
-              medicine:${fbData['medicine']}
+              mouse:${fbData['mouse']}
+              ball:${fbData['ball']}
+              bear:${fbData['bear']}
               lastUpdated:${fbLastUpdated.toIso8601String()}
               ''';
             await file.writeAsString(content);
@@ -121,7 +127,9 @@ class HandleStorage {
               'wipes': fbData['wipes'],
               'soap': fbData['soap'],
               'shampoo': fbData['shampoo'],
-              'medicine': fbData['medicine'],
+              'mouse': fbData['mouse'],
+              'ball': fbData['ball'],
+              'bear': fbData['bear'],
               'lastUpdated': fbLastUpdated,
             };
           }

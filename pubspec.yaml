@@ -97,8 +97,6 @@ flutter:
     - assets/images/heart_purple.gif
     - assets/images/heart_red.gif
     - assets/images/heart_broken.png
-    - assets/images/soap.png
-    - assets/images/toy_mouse.png
     - assets/images/board.png
     - assets/images/X.png
     - assets/images/O.png
@@ -115,12 +113,10 @@ flutter:
     - assets/images/cowboyhat.png
     - assets/images/necktie.png
     - assets/images/bone.png
-    - assets/images/ball.png
     - assets/images/chicken.png
     - assets/images/fish_bone.png
     - assets/images/cat_likes.png
     - assets/images/cat_dislikes.png
-    - assets/images/teddy.png
     - assets/images/scary_teddy.png
     - assets/images/fresh_meat.png
     - assets/images/wet_canned_food.png
@@ -145,6 +141,9 @@ flutter:
     - assets/images/pet_wipes.png
     - assets/images/pet_soap.png
     - assets/images/pet_shampoo.png
+    - assets/images/toy_mouse.png
+    - assets/images/toy_ball.png
+    - assets/images/toy_bear.png
 
     #audio
     - assets/audio/background_music.mp3

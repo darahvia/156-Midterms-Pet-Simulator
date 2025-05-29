@@ -152,10 +152,18 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
     }
   }
 
-  void playWithPet() {
-    if (pet.getEnergy() > 10) {
+  void playWithPet(String toy) {
+    if (toy == 'mouse' && pet.getEnergy() > 5) {
+      pet.setEnergy((pet.getEnergy() - 5).clamp(0, 100));
+      pet.setHappiness((pet.getHappiness() + 10).clamp(0, 100));
+      savePetStats();
+    } else if (toy == 'ball' && pet.getEnergy() > 10) {
       pet.setEnergy((pet.getEnergy() - 10).clamp(0, 100));
       pet.setHappiness((pet.getHappiness() + 15).clamp(0, 100));
+      savePetStats();
+    } else if (toy == 'bear' && pet.getEnergy() > 20) {
+      pet.setEnergy((pet.getEnergy() - 20).clamp(0, 100));
+      pet.setHappiness((pet.getHappiness() + 25).clamp(0, 100));
       savePetStats();
     }
   }
