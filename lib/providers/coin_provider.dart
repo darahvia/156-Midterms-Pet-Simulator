@@ -38,9 +38,9 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
       ); // Print each key and its corresponding value
     });
     inventory.setCoin(bag["coin"] ?? 50);
-    inventory.setFood(bag["food"] ?? 10);
-    inventory.setSoap(bag["soap"] ?? 10);
-    inventory.setMedicine(bag["medicine"] ?? 3);
+    inventory.setFood('can', bag["can"] ?? 10);
+    inventory.setSoap('soap', bag["soap"] ?? 10);
+    inventory.setToy('ball', bag["ball"] ?? 3);
     saveInventory();
     notifyListeners();
   }
@@ -66,44 +66,48 @@ class CoinProvider with ChangeNotifier, WidgetsBindingObserver {
 
   //item usage interaction: everytime an item is used -1
   void useItem(String item) {
-    if (item == 'food') {
-      inventory.setFood(inventory.getFood() - 1);
-      saveInventory();
+    if (item == 'biscuit' || item == 'can' || item == 'bag') {
+      if (inventory.getFood(item) > 0) {
+        inventory.setFood(item, inventory.getFood(item) - 1);
+        saveInventory();
+      }
     }
-    if (item == 'soap') {
-      inventory.setSoap(inventory.getSoap() - 1);
-      saveInventory();
+    if (item == 'wipes' || item == 'soap' || item == 'shampoo') {
+      if (inventory.getSoap(item) > 0) {
+        inventory.setSoap(item, inventory.getSoap(item) - 1);
+        saveInventory();
+      }
     }
-    if (item == 'medicine') {
-      inventory.setMedicine(inventory.getMedicine() - 1);
-      saveInventory();
+    if (item == 'mouse' || item == 'ball' || item == 'bear') {
+      if (inventory.getToy(item) > 0) {
+        inventory.setToy(item, inventory.getToy(item) - 1);
+        saveInventory();
+      }
     }
   }
 
-  //item buying interactions
-  void buyFood(int num) {
-    inventory.setFood(inventory.getFood() + num);
+  // Item buying interactions
+  void buyFood(String food, int num) {
+    inventory.addFood(food, num);
     saveInventory();
   }
 
-  void buySoap(int num) {
-    inventory.setSoap(inventory.getFood() + num);
+  void buySoap(String soap, int num) {
+    inventory.addSoap(soap, num);
     saveInventory();
   }
 
-  void buyMedicine(int num) {
-    inventory.setMedicine(
-      inventory.getMedicine() + num,
-    ); 
+  void buyToy(String toy, int num) {
+    inventory.addToy(toy, num);
     saveInventory();
   }
 
   void buyClothing(String clothing) {
     if (inventory.getCoin() >= 5 && !inventory.ownsClothing(clothing)) {
-    inventory.setCoin(inventory.getCoin() - 5);
-    inventory.addClothing(clothing);
-    saveInventory();
-    notifyListeners();
+      inventory.setCoin(inventory.getCoin() - 5);
+      inventory.addClothing(clothing);
+      saveInventory();
+      notifyListeners();
     }
   }
 }

@@ -7,14 +7,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 //handles manipulation of data saved in txt files
 class HandleStorage {
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final String? uid = FirebaseAuth.instance.currentUser?.uid;
 
   //getting file path of needed file
   static Future<String> _getFilePath(String filename) async {
     final dir = await getApplicationDocumentsDirectory();
-    return '${dir.path}/$filename.txtR';
+    return '${dir.path}/$filename.txt';
   }
 
   //saves inventoryData
@@ -23,9 +22,15 @@ class HandleStorage {
     final file = File(path);
     final content = '''
       coin:${inventory.getCoin()}
-      food:${inventory.getFood()}
-      soap:${inventory.getSoap()}
-      medicine:${inventory.getMedicine()}
+      biscuit:${inventory.getFood('biscuit')}
+      can:${inventory.getFood('can')}
+      bag:${inventory.getFood('bag')}
+      wipes:${inventory.getSoap('wipes')}
+      soap:${inventory.getSoap('soap')}
+      shampoo:${inventory.getSoap('shampoo')}
+      mouse:${inventory.getToy('mouse')}
+      ball:${inventory.getToy('ball')}
+      bear:${inventory.getToy('bear')}
       lastUpdated:${DateTime.now().toIso8601String()}
       ''';
     await file.writeAsString(content);
@@ -33,15 +38,20 @@ class HandleStorage {
     if (uid != null) {
       final inventoryData = {
         'coin': inventory.getCoin(),
-        'food': inventory.getFood(),
-        'soap': inventory.getSoap(),
-        'medicine': inventory.getMedicine(),
+        'biscuit': inventory.getFood('biscuit'),
+        'can': inventory.getFood('can'),
+        'bag': inventory.getFood('bag'),
+        'wipes': inventory.getSoap('wipes'),
+        'soap': inventory.getSoap('soap'),
+        'shampoo': inventory.getSoap('shampoo'),
+        'mouse': inventory.getToy('mouse'),
+        'ball': inventory.getToy('ball'),
+        'bear': inventory.getToy('bear'),
         'lastUpdated': DateTime.now().toIso8601String(),
       };
-      await _firestore.collection('users').doc(uid).set(
-        {'inventoryData': inventoryData},
-        SetOptions(merge: true),
-      );
+      await _firestore.collection('users').doc(uid).set({
+        'inventoryData': inventoryData,
+      }, SetOptions(merge: true));
     }
   }
 
@@ -60,11 +70,12 @@ class HandleStorage {
           if (parts.length == 2) {
             final key = parts[0].trim();
             final value = parts[1];
-            if (key == 'lastUpdated'){
-              localData[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+            if (key == 'lastUpdated') {
+              localData[key] =
+                  DateTime.tryParse(value) ??
+                  DateTime.fromMillisecondsSinceEpoch(0);
               localLastUpdated = localData[key];
-            }
-            else{
+            } else {
               localData[key] = int.tryParse(value) ?? 0;
             }
           }
@@ -81,17 +92,28 @@ class HandleStorage {
         final fbData = doc.data()?['inventoryData'];
         if (fbData != null) {
           final fbLastUpdatedStr = fbData['lastUpdated'] as String?;
-          DateTime? fbLastUpdated = fbLastUpdatedStr != null ? DateTime.tryParse(fbLastUpdatedStr) : null;
+          DateTime? fbLastUpdated =
+              fbLastUpdatedStr != null
+                  ? DateTime.tryParse(fbLastUpdatedStr)
+                  : null;
 
           // If Firebase data is newer than local, overwrite local
-          if (fbLastUpdated != null && (localLastUpdated == null || fbLastUpdated.isAfter(localLastUpdated))) {
+          if (fbLastUpdated != null &&
+              (localLastUpdated == null ||
+                  fbLastUpdated.isAfter(localLastUpdated))) {
             // Update local file with Firebase data
             final file = File(await _getFilePath('inventoryData'));
             final content = '''
               coin:${fbData['coin']}
-              food:${fbData['food']}
+              biscuit:${fbData['biscuit']}
+              can:${fbData['can']}
+              bag:${fbData['bag']}
+              wipes:${fbData['wipes']}
               soap:${fbData['soap']}
-              medicine:${fbData['medicine']}
+              shampoo:${fbData['shampoo']}
+              mouse:${fbData['mouse']}
+              ball:${fbData['ball']}
+              bear:${fbData['bear']}
               lastUpdated:${fbLastUpdated.toIso8601String()}
               ''';
             await file.writeAsString(content);
@@ -99,10 +121,16 @@ class HandleStorage {
             // Return Firebase data as map
             return {
               'coin': fbData['coin'],
-              'food': fbData['food'],
+              'biscuit': fbData['biscuit'],
+              'can': fbData['can'],
+              'bag': fbData['bag'],
+              'wipes': fbData['wipes'],
               'soap': fbData['soap'],
-              'medicine': fbData['medicine'],
-              'lastUpdated': DateTime.now(),
+              'shampoo': fbData['shampoo'],
+              'mouse': fbData['mouse'],
+              'ball': fbData['ball'],
+              'bear': fbData['bear'],
+              'lastUpdated': fbLastUpdated,
             };
           }
         }
@@ -149,13 +177,13 @@ class HandleStorage {
         'lastUpdatedHunger': pet.getLastUpdated('hunger').toIso8601String(),
         'lastUpdatedHygiene': pet.getLastUpdated('hygiene').toIso8601String(),
         'lastUpdatedEnergy': pet.getLastUpdated('energy').toIso8601String(),
-        'lastUpdatedHappiness': pet.getLastUpdated('happiness').toIso8601String(),
+        'lastUpdatedHappiness':
+            pet.getLastUpdated('happiness').toIso8601String(),
         'lastUpdated': DateTime.now().toIso8601String(),
       };
-      await _firestore.collection('users').doc(uid).set(
-        {'petData': petData},
-        SetOptions(merge: true),
-      );
+      await _firestore.collection('users').doc(uid).set({
+        'petData': petData,
+      }, SetOptions(merge: true));
       print('Pet data saved to Firebase for user $uid');
     }
   }
@@ -175,10 +203,17 @@ class HandleStorage {
             final key = parts[0].trim();
             final value = parts[1];
             if (key == 'lastUpdated') {
-              localData[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+              localData[key] =
+                  DateTime.tryParse(value) ??
+                  DateTime.fromMillisecondsSinceEpoch(0);
               localLastUpdated = localData[key];
-            } else if (key == 'lastUpdatedHunger' || key == 'lastUpdatedHygiene' || key == 'lastUpdatedEnergy' || key == 'lastUpdatedHappiness') {
-              localData[key] = DateTime.tryParse(value) ?? DateTime.fromMillisecondsSinceEpoch(0);
+            } else if (key == 'lastUpdatedHunger' ||
+                key == 'lastUpdatedHygiene' ||
+                key == 'lastUpdatedEnergy' ||
+                key == 'lastUpdatedHappiness') {
+              localData[key] =
+                  DateTime.tryParse(value) ??
+                  DateTime.fromMillisecondsSinceEpoch(0);
             } else if (key == 'name' || key == 'type') {
               localData[key] = value;
             } else if (key == 'health') {
@@ -199,9 +234,14 @@ class HandleStorage {
         final fbData = doc.data()?['petData'];
         if (fbData != null) {
           final fbLastUpdatedStr = fbData['lastUpdated'] as String?;
-          DateTime? fbLastUpdated = fbLastUpdatedStr != null ? DateTime.tryParse(fbLastUpdatedStr) : null;
+          DateTime? fbLastUpdated =
+              fbLastUpdatedStr != null
+                  ? DateTime.tryParse(fbLastUpdatedStr)
+                  : null;
 
-          if (fbLastUpdated != null && (localLastUpdated == null || fbLastUpdated.isAfter(localLastUpdated))) {
+          if (fbLastUpdated != null &&
+              (localLastUpdated == null ||
+                  fbLastUpdated.isAfter(localLastUpdated))) {
             // Update local file
             final file = File(await _getFilePath('petData'));
             final content = '''
@@ -260,10 +300,9 @@ class HandleStorage {
         fbHistory = List<String>.from(doc.data()!['petHistory']);
       }
       fbHistory.add(historyEntry);
-      await _firestore.collection('users').doc(uid).set(
-        {'petHistory': fbHistory},
-        SetOptions(merge: true),
-      );
+      await _firestore.collection('users').doc(uid).set({
+        'petHistory': fbHistory,
+      }, SetOptions(merge: true));
     }
   }
 
@@ -291,7 +330,6 @@ class HandleStorage {
     return localHistory;
   }
 
-
   Future<void> deleteLocalData(String filename) async {
     try {
       final petFile = File(await _getFilePath(filename));
@@ -299,7 +337,6 @@ class HandleStorage {
       if (await petFile.exists()) {
         await petFile.delete();
       }
-
     } catch (e) {
       print("Error deleting local data: $e");
     }
@@ -311,12 +348,8 @@ class HandleStorage {
       return;
     }
 
-    await FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .update({
-          filename : FieldValue.delete(),
-        });
-
+    await FirebaseFirestore.instance.collection('users').doc(uid).update({
+      filename: FieldValue.delete(),
+    });
   }
 }

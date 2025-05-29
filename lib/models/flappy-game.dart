@@ -199,7 +199,6 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
     // only update if the new high score is greater
     if (score > storedHighScore) {
       await doc.set({
-        'username': user.displayName ?? user.email ?? 'Anonymous',
         'highScore': score,
       }, SetOptions(merge: true));
     }

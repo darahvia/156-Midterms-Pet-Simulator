@@ -32,6 +32,7 @@ class Bird extends SpriteComponent with CollisionCallbacks {
     upFlap = await Sprite.load('$type/bird_${type}_upflap.png');
     midFlap = await Sprite.load('$type/bird_${type}_midflap.png'); 
     downFlap = await Sprite.load('$type/bird_${type}_downflap.png');
+
     sprite = midFlap; // load bird sprite image
     add(RectangleHitbox()); // add hit box
   }

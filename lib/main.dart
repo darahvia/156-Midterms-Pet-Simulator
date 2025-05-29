@@ -61,6 +61,9 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final user = FirebaseAuth.instance.currentUser;
 
     return MaterialApp(
+      theme: ThemeData(
+        colorSchemeSeed: Colors.black,
+      ),
       home: user != null ? StartScreen() : LoginPage(),
       debugShowCheckedModeBanner: false,
     );

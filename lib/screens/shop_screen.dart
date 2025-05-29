@@ -1,6 +1,5 @@
 // screens/shop_screen.dart
 import 'package:flutter/material.dart';
-import 'package:pet_simulator/widgets/pet_display.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../providers/coin_provider.dart';
@@ -33,34 +32,60 @@ class ShopScreen extends StatelessWidget {
         children: [
           // Background image
           Positioned.fill(
-            child: Image.asset(
-              'assets/images/store.png',
-              fit: BoxFit.cover,
-            ),
+            child: Image.asset('assets/images/store.png', fit: BoxFit.cover),
           ),
           // Cat image positioned in the lower-right corner
+          // Positioned(
+          //   bottom: 50,
+          //   right: 50,
+          //   child: SizedBox(
+          //     width: 10,
+          //     height: 10,
+          //     child: PetDisplay(onTap: (tapPosition) {}),
+          //   ),
+          // ),
           Positioned(
-            bottom: 16,
-            right: 16, 
-            child: PetDisplay(onTap: (tapPosition) {}),
-          ),
-          Positioned(
-            top: 16,
+            top: 8,
             right: 16,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 const SizedBox(height: 8),
+                // Food inventory
                 Row(
                   children: [
                     Image.asset(
-                      'assets/images/cat_food_bag.png', 
+                      'assets/images/food_biscuit.png',
                       width: 40,
                       height: 40,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '${coinProvider.inventory.getFood()}',
+                      '${coinProvider.inventory.getFood('biscuit')}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/food_can.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                    Text(
+                      '${coinProvider.inventory.getFood('can')}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/food_bag.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                    Text(
+                      '${coinProvider.inventory.getFood('bag')}',
                       style: GoogleFonts.pressStart2p(
                         fontSize: 15,
                         color: Colors.black,
@@ -69,16 +94,42 @@ class ShopScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 8),
+                // Soap inventory
                 Row(
                   children: [
                     Image.asset(
-                      'assets/images/soap.png', 
+                      'assets/images/pet_wipes.png',
                       width: 40,
                       height: 40,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '${coinProvider.inventory.getSoap()}',
+                      '${coinProvider.inventory.getSoap('wipes')}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/pet_soap.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${coinProvider.inventory.getSoap('soap')}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/pet_shampoo.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                    Text(
+                      '${coinProvider.inventory.getSoap('shampoo')}',
                       style: GoogleFonts.pressStart2p(
                         fontSize: 15,
                         color: Colors.black,
@@ -86,17 +137,43 @@ class ShopScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 8),
+                // Toy inventory
                 Row(
                   children: [
                     Image.asset(
-                      'assets/images/medicine.png', 
+                      'assets/images/toy_mouse.png',
                       width: 40,
                       height: 40,
                     ),
                     const SizedBox(width: 8),
                     Text(
-                      '${coinProvider.inventory.getMedicine()}',
+                      '${coinProvider.inventory.getToy('mouse')}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/toy_ball.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${coinProvider.inventory.getToy('ball')}',
+                      style: GoogleFonts.pressStart2p(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
+                    Image.asset(
+                      'assets/images/toy_bear.png',
+                      width: 40,
+                      height: 40,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${coinProvider.inventory.getToy('bear')}',
                       style: GoogleFonts.pressStart2p(
                         fontSize: 15,
                         color: Colors.black,
@@ -114,47 +191,164 @@ class ShopScreen extends StatelessWidget {
               children: [
                 // Board image
                 Image.asset(
-                  'lib/assets/images/board.png',
-                  width: 1300,
-                  height: 1200,
+                  'assets/images/board.png',
+                  width: 350,
+                  height: 350,
                   fit: BoxFit.contain,
                 ),
                 // Buttons inside the board
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    PixelButton(
-                      label: 'Food - 10',
-                      icon: Icons.fastfood,
-                      color: Colors.orange,
-                      onPressed:
-                          () => _confirmPurchase(context, coinProvider, 10, () {
-                            coinProvider.buyFood(1); // Add 1 food to inventory
-                          }),
+                    //Food Items
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 7.0,
+                      children: [
+                        PixelButton(
+                          label: 'Biscuit - 5',
+                          icon: Icons.restaurant,
+                          color: Colors.orange,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                5,
+                                () {
+                                  coinProvider.buyFood('biscuit', 1);
+                                },
+                              ),
+                        ),
+                        PixelButton(
+                          label: 'Can - 10 ',
+                          icon: Icons.restaurant,
+                          color: Colors.orange,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                10,
+                                () {
+                                  coinProvider.buyFood('can', 1);
+                                },
+                              ),
+                        ),
+                        PixelButton(
+                          label: 'Bag - 20',
+                          icon: Icons.restaurant,
+                          color: Colors.orange,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                10,
+                                () {
+                                  coinProvider.buyFood('bag', 1);
+                                },
+                              ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 16),
-                    PixelButton(
-                      label: 'Soap - 10',
-                      icon: Icons.soap,
-                      color: Colors.blue,
-                      onPressed:
-                          () => _confirmPurchase(context, coinProvider, 10, () {
-                            coinProvider.buySoap(1); // Add 1 soap to inventory
-                          }),
+                    SizedBox(height: 60),
+                    // Wash Items
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 7.0,
+                      children: [
+                        PixelButton(
+                          label: 'Wipes - 5',
+                          icon: Icons.soap,
+                          color: Colors.blue,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                5,
+                                () {
+                                  coinProvider.buySoap('wipes', 1);
+                                },
+                              ),
+                        ),
+                        PixelButton(
+                          label: 'Soap - 10',
+                          icon: Icons.soap,
+                          color: Colors.blue,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                10,
+                                () {
+                                  coinProvider.buySoap('soap', 1);
+                                },
+                              ),
+                        ),
+                        PixelButton(
+                          label: 'Shampoo - 20',
+                          icon: Icons.soap,
+                          color: Colors.blue,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                5,
+                                () {
+                                  coinProvider.buySoap('shampoo', 1);
+                                },
+                              ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height: 16),
-                    PixelButton(
-                      label: 'Meds - 20',
-                      icon: Icons.medical_services,
-                      color: Colors.red,
-                      onPressed:
-                          () => _confirmPurchase(context, coinProvider, 20, () {
-                            coinProvider.buyMedicine(
-                              1,
-                            ); // Add 1 medicine to inventory
-                          }),
+                    SizedBox(height: 60),
+                    // Toy Items
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      spacing: 7.0,
+                      children: [
+                        PixelButton(
+                          label: 'Mouse - 10',
+                          icon: Icons.toys,
+                          color: Colors.red,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                20,
+                                () {
+                                  coinProvider.buyToy('mouse', 1);
+                                },
+                              ),
+                        ),
+                        PixelButton(
+                          label: 'Ball - 15',
+                          icon: Icons.toys,
+                          color: Colors.red,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                20,
+                                () {
+                                  coinProvider.buyToy('ball', 1);
+                                },
+                              ),
+                        ),
+                        PixelButton(
+                          label: 'Bear - 20',
+                          icon: Icons.toys,
+                          color: Colors.red,
+                          onPressed:
+                              () => _confirmPurchase(
+                                context,
+                                coinProvider,
+                                20,
+                                () {
+                                  coinProvider.buyToy('bear', 1);
+                                },
+                              ),
+                        ),
+                      ],
                     ),
-                    SizedBox(height:16),
                     //Clothing Shop Button
                     // PixelButton(
                     //   label: 'Clothing',
@@ -162,20 +356,18 @@ class ShopScreen extends StatelessWidget {
                     //   color: Colors.purple,
                     //   onPressed: (){
                     //     Navigator.push(
-                    //       context, 
+                    //       context,
                     //       MaterialPageRoute(
                     //         builder: (context) => ClothingShopScreen(),
                     //       ),
                     //     );
                     //   },
                     // ),
-                    const SizedBox(height: 82),
                   ],
                 ),
               ],
             ),
           ),
-
           // Back button
         ],
       ),
@@ -227,11 +419,27 @@ class ShopScreen extends StatelessWidget {
                     coinProvider.spendCoins(cost); // Deduct coins
                     onSuccess(); // Add item to inventory
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Purchase successful!')),
+                      SnackBar(
+                        content: Text(
+                          'Purchase successful!',
+                          style: GoogleFonts.pressStart2p(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     );
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Not enough coins!')),
+                      SnackBar(
+                        content: Text(
+                          'Not enough coins!',
+                          style: GoogleFonts.pressStart2p(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
                     );
                   }
                 },

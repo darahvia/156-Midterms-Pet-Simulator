@@ -13,7 +13,6 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   Timer? _autoDecreaseTimer;
   bool death = false;
 
-
   PetProvider() {
     WidgetsBinding.instance.addObserver(this);
   }
@@ -53,18 +52,22 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   void checkDeath() {
-    if((pet.getHunger()==0) && (pet.getHygiene()==0) && (pet.getHappiness()==0) && (pet.getEnergy()==0)){
+    if ((pet.getHunger() == 0) &&
+        (pet.getHygiene() == 0) &&
+        (pet.getHappiness() == 0) &&
+        (pet.getEnergy() == 0)) {
       death = true;
     }
   }
 
-  void petReset(){
+  void petReset() {
     death = false;
   }
 
   String getPetType() {
-      return pet.getType();
-    }
+    return pet.getType();
+  }
+
   //takes map of pet stats and assigns it to current Pet object
   Future<void> loadPetStats({String? petName, String? petType}) async {
     final stats = await storage.loadPetStats();
@@ -123,20 +126,44 @@ class PetProvider with ChangeNotifier, WidgetsBindingObserver {
   }
 
   //pet interactions
-  void feedPet() {
-    pet.setHunger((pet.getHunger() + 20).clamp(0, 100));
-    savePetStats();
+  void feedPet(String food) {
+    if (food == 'biscuit') {
+      pet.setHunger((pet.getHunger() + 10).clamp(0, 100));
+      savePetStats();
+    } else if (food == 'can') {
+      pet.setHunger((pet.getHunger() + 20).clamp(0, 100));
+      savePetStats();
+    } else if (food == 'bag') {
+      pet.setHunger((pet.getHunger() + 35).clamp(0, 100));
+      savePetStats();
+    }
   }
 
-  void cleanPet() {
-    pet.setHygiene((pet.getHygiene() + 30).clamp(0, 100));
-    savePetStats();
+  void cleanPet(String soap) {
+    if (soap == 'wipes') {
+      pet.setHygiene((pet.getHygiene() + 15).clamp(0, 100));
+      savePetStats();
+    } else if (soap == 'soap') {
+      pet.setHygiene((pet.getHygiene() + 30).clamp(0, 100));
+      savePetStats();
+    } else if (soap == 'shampoo') {
+      pet.setHygiene((pet.getHygiene() + 50).clamp(0, 100));
+      savePetStats();
+    }
   }
 
-  void playWithPet() {
-    if (pet.getEnergy() > 10) {
+  void playWithPet(String toy) {
+    if (toy == 'mouse' && pet.getEnergy() > 5) {
+      pet.setEnergy((pet.getEnergy() - 5).clamp(0, 100));
+      pet.setHappiness((pet.getHappiness() + 10).clamp(0, 100));
+      savePetStats();
+    } else if (toy == 'ball' && pet.getEnergy() > 10) {
       pet.setEnergy((pet.getEnergy() - 10).clamp(0, 100));
       pet.setHappiness((pet.getHappiness() + 15).clamp(0, 100));
+      savePetStats();
+    } else if (toy == 'bear' && pet.getEnergy() > 20) {
+      pet.setEnergy((pet.getEnergy() - 20).clamp(0, 100));
+      pet.setHappiness((pet.getHappiness() + 25).clamp(0, 100));
       savePetStats();
     }
   }
