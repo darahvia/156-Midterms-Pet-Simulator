@@ -28,10 +28,10 @@ class FlappyBirdGame extends FlameGame with TapDetector, HasCollisionDetection {
   late ScoreText scoreText;
   bool isPlaying = false;
 
-// Add BuildContext field
+
   final BuildContext context;
   
-  // Add constructor to receive context
+  
   FlappyBirdGame(this.context);
   // LOAD
   @override
