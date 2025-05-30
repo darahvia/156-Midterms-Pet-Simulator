@@ -14,7 +14,7 @@ class Bird extends SpriteComponent with CollisionCallbacks {
   final String petType;
 
   // bird position and size 
-  Bird({this.petType = 'cat'}) // Default to cat if no type specified
+  Bird({this.petType = 'cat'})
     : super(
         position: Vector2(birdStartX, birdStartY),
         size: Vector2(birdWidth, birdHeight),
