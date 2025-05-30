@@ -9,7 +9,7 @@ class FlappyBirdGameScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final game = FlappyBirdGame();
+    final game = FlappyBirdGame(context);
 
     return Scaffold(
       appBar: AppBar(

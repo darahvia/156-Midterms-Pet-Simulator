@@ -36,17 +36,38 @@ class PetDisplay extends StatelessWidget {
     return GestureDetector(
       onTapDown: (details) {
         if (onTap != null) {
-          if(mood != "sick"){
-            MusicManager.playSoundEffect('audio/meow.mp3');
-            petProvider.poke();
-          } else{
-            MusicManager.playSoundEffect('audio/angry_meow.mp3');
-            petProvider.poke();
-          }
-
-          onTap!(details.globalPosition);
-        }
-      },
+          String soundEffect;
+          if (mood != "sick") {
+      switch (petType) {
+        case 'dog':
+          soundEffect = 'audio/dog.mp3';
+          break;
+        case 'dragon':
+          soundEffect = 'audio/dragon.mp3';
+          break;
+        default: // cat
+          soundEffect = 'audio/cat.mp3';
+          break;
+      }
+    } else {
+      switch (petType) {
+        case 'dog':
+          soundEffect = 'audio/angry_woof.mp3';
+          break;
+        case 'dragon':
+          soundEffect = 'audio/angry_roar.mp3';
+          break;
+        default: // cat
+          soundEffect = 'audio/angry_meow.mp3';
+          break;
+      }
+    }
+    
+    MusicManager.playSoundEffect(soundEffect);
+    petProvider.poke();
+    onTap!(details.globalPosition);
+  }
+},
       child: Center(
         child: Stack(
           alignment: Alignment.center,
